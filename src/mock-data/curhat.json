@@ -1,0 +1,53 @@
+{
+  "starterPrompts": [
+    "Mimi, aku takut nilai sempro besok mengecewakan...",
+    "Gimana cara ngilangin rasa bersalah kalau lagi istirahat?",
+    "Tugas menumpuk banget dan aku mulai ngerasa burnout.",
+    "Dosen pembimbing revisinya banyak banget, aku bingung mulai dari mana.",
+    "Sering ngerasa imposter syndrome dibanding teman seangkatan."
+  ],
+  "initialMessages": [
+    {
+      "id": "msg_01",
+      "sender": "mimi",
+      "text": "Halo Nadira! 🌸 Aku Mimi, teman curhatmu di TemanKampus. Hari ini kuliahmu bagaimana? Kalau ada yang terasa berat atau bikin overthinking, ceritakan pelan-pelan ke aku ya. Aku di sini untuk mendengarkan tanpa menghakimi.",
+      "timestamp": "08:30 WIB"
+    },
+    {
+      "id": "msg_02",
+      "sender": "user",
+      "text": "Hai Mimi. Semalam aku kepikiran banget soal revisi bab 2. Rasanya belum maksimal tapi tenggat waktunya malam ini.",
+      "timestamp": "08:32 WIB"
+    },
+    {
+      "id": "msg_03",
+      "sender": "mimi",
+      "text": "Wajar sekali merasa begitu, Nadira. Menghadapi deadline tugas akhir memang sering bikin cemas. Ingat ya, 'selesai' itu jauh lebih baik daripada 'sempurna tapi tak pernah diserahkan'. \n\nCoba pecah tugasmu jadi langkah-langkah kecil 25 menit. Kamu sudah berjuang sejauh ini sampai semester 6, dan usaha kamu sangat berharga. Mau kita mulai dari bagian yang paling mudah dulu? ✨",
+      "timestamp": "08:33 WIB"
+    }
+  ],
+  "responseRules": [
+    {
+      "keywords": ["bunuh diri", "suicide", "menyakiti diri", "self-harm", "mati saja", "ga sanggup hidup", "akhiri hidup"],
+      "isCrisis": true,
+      "response": "Nadira, aku sangat peduli dengan keselamatanmu. Yang kamu rasakan saat ini sangat berat, tapi kamu tidak sendirian. Tolong segera hubungi orang terdekat atau layanan profesional yang siap mendampingimu 24 jam gratis tanpa dipungut biaya:\n\n📞 Hotline Sejiwa Kemenkes: 119 ext 8 (Bebas Pulsa)\n💬 Yayasan Pulih: +62 811-8436-633\n\nKamu berharga, dan ada bantuan untuk melewati masa sulit ini. Silakan klik tombol 'Hubungi Bantuan Profesional' di atas sekarang juga ya."
+    },
+    {
+      "keywords": ["istirahat", "bersalah", "rehat", "capek", "lelah"],
+      "response": "Rasa bersalah saat istirahat itu hal yang sangat sering dialami mahasiswa berdedikasi seperti kamu. Tapi ingat: Istirahat bukan hadiah setelah kerja keras, melainkan KEBUTUHAN biologis agar otakmu bisa terus berfungsi optimal. Bayangkan baterai HP yang dipaksa dipakai saat 2%, pasti performanya menurun kan? Izinkan dirimu bernapas sejenak tanpa syarat ya! 🌿"
+    },
+    {
+      "keywords": ["dosen", "bimbingan", "dospem", "revisi", "sempro", "skripsi"],
+      "response": "Bimbingan memang sering memicu deg-degan. Masukan dari dosen pembimbing adalah kritik terhadap karya akademiknya, BUKAN penilaian atas harga dirimu sebagai manusia. Coba rangkum masukan beliau ke dalam to-do list terpisah, beri tanda centang satu demi satu. Kalau butuh jeda, ambil napas 4-7-8 dulu ya. Aku percaya kamu mampu melaluinya! 💪"
+    },
+    {
+      "keywords": ["imposter", "bandingin", "kalah", "iri", "teman"],
+      "response": "Kita sering membandingkan 'proses di balik layar' kita dengan 'highlight panggung' orang lain di medsos atau kelas. Setiap mahasiswa punya timeline dan keunikannya sendiri. Yang penting adalah progres kamu hari ini dibanding kamu yang kemarin. Kamu berharga dengan caramu sendiri! ✨"
+    },
+    {
+      "keywords": ["tugas", "numpuk", "deadline", "overwhelmed", "stres", "bingung"],
+      "response": "Saat tugas terasa seperti gunung es yang mau runtuh, kunci pertamanya adalah: Jangan lihat seluruh gunungnya sekaligus. Pilih 1 tugas terkecil yang bisa selesai dalam 15-20 menit. Momentum kecil itu akan mengembalikan rasa kendalimu. Mau Mimi temani pakai Focus Timer? ⏱️"
+    }
+  ],
+  "defaultResponse": "Terima kasih sudah mau berbagi ceritamu, Nadira. Aku paham ini tidak mudah bagimu. Mengakui perasaanmu adalah langkah awal yang sangat berani. Tarik napas pelan-pelan ya, kamu tidak harus menyelesaikan semua beban ini dalam satu waktu. Ada hal spesifik lain yang ingin kamu tumpahkan ke Mimi?"
+}

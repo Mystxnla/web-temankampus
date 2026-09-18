@@ -1,0 +1,117 @@
+{
+  "categories": [
+    "Semua",
+    "Skripsi & Tugas Akhir",
+    "Manajemen Stres",
+    "Tips Belajar & Beasiswa",
+    "Curhat Anonim",
+    "Work-Life Balance"
+  ],
+  "threads": [
+    {
+      "id": "th_01",
+      "title": "Sering ngerasa imposter syndrome pas bimbingan dospem. Ada tips biar ga gugup pas ditanya metodologi?",
+      "content": "Halo teman-teman, setiap kali mau bimbingan sempro jantungku berdebar kencang banget. Rasanya kaya semua yang aku tulis itu salah dan dospem bakal ngira aku ga ngerti apa-apa, padahal aku udah baca belasan paper. Adakah yang punya tips grounding atau cara nyiapin mental sebelum masuk ruangan dosen?",
+      "category": "Skripsi & Tugas Akhir",
+      "author": "Mahasiswa Anonim",
+      "faculty": "Fakultas Psikologi UI",
+      "avatarColor": "#712AE2",
+      "isAnonymous": true,
+      "timeAgo": "15 menit lalu",
+      "hugs": 58,
+      "repliesCount": 24,
+      "replies": [
+        {
+          "id": "rep_01",
+          "author": "Dimas Saputra",
+          "faculty": "Teknik Elektro ITB",
+          "isAnonymous": false,
+          "timeAgo": "10 menit lalu",
+          "content": "Relatable banget kak! Dulu aku juga gitu. Tips dari mentorku: Bawa catatan kecil poin-poin utama di index card. Pas dospem nanya, jangan langsung panik jawab. Boleh minta jeda 3 detik sambil tarik napas, lalu bilang 'Terima kasih atas pertanyaannya Pak/Bu, berdasarkan literatur X yang saya baca...'. Itu bikin kita keliatan thoughtful bukan bingung.",
+          "hugs": 19
+        },
+        {
+          "id": "rep_02",
+          "author": "Mahasiswa Anonim",
+          "faculty": "Fasilkom UI",
+          "isAnonymous": true,
+          "timeAgo": "6 menit lalu",
+          "content": "Peluk jauh kak! Semangat ya. Ingat, dospem menguji karena ingin karya kita solid, bukan benci sama kitanya. Kamu pasti bisa!",
+          "hugs": 12
+        }
+      ]
+    },
+    {
+      "id": "th_02",
+      "title": "Cara bagi waktu kuliah, organisasi BEM, sama waktu tidur minimal 6 jam sehari tanpa ngerasa bersalah.",
+      "content": "Lagi di fase burnout parah karena proker BEM bentrok sama pekan UTS. Tiap tidur rasanya gelisah kepikiran notif grup WA dan revisi proposal dana. Gimana kalian manage boundary biar ga gampang ke-trigger sama chat organisasi pas malem?",
+      "category": "Work-Life Balance",
+      "author": "Fathir Rizky",
+      "faculty": "Fasilkom UI",
+      "avatarColor": "#FF2E93",
+      "isAnonymous": false,
+      "timeAgo": "1 jam lalu",
+      "hugs": 92,
+      "repliesCount": 41,
+      "replies": [
+        {
+          "id": "rep_03",
+          "author": "Anisa Rahma",
+          "faculty": "FEB UGM",
+          "isAnonymous": false,
+          "timeAgo": "45 menit lalu",
+          "content": "Tegas buat setting jam kerja organisasi! Aku selalu pasang status WA: 'Off duty setelah 21.00 WIB'. Kalau urgent mereka bakal telepon langsung. Kalau cuma chat berarti bisa dibalas besok pagi. Lindungi jam tidurmu dulu.",
+          "hugs": 28
+        }
+      ]
+    },
+    {
+      "id": "th_03",
+      "title": "Kumpulan template Notion dan Pomodoro tracker gratis untuk semester 3-6",
+      "content": "Buat temen-temen yang lagi kewalahan atur jadwal matkul yang makin padat, aku bikin template sederhana integrasi TemanKampus dengan to-do list mingguan. Semoga ngebantu ya!",
+      "category": "Tips Belajar & Beasiswa",
+      "author": "Nadira Az-Zahra",
+      "faculty": "Teknik Informatika UI",
+      "avatarColor": "#06B6D4",
+      "isAnonymous": false,
+      "timeAgo": "3 jam lalu",
+      "hugs": 140,
+      "repliesCount": 18,
+      "replies": [
+        {
+          "id": "rep_04",
+          "author": "Bima Arya",
+          "faculty": "Hukum UNDIP",
+          "isAnonymous": false,
+          "timeAgo": "2 jam lalu",
+          "content": "Keren banget template-nya kak Nadira! Makasih banyak, langsung aku terapin buat catat jadwal sidang semu.",
+          "hugs": 14
+        }
+      ]
+    },
+    {
+      "id": "th_04",
+      "title": "Kadang merasa kesepian di perantauan walau di kampus dikelilingi banyak orang",
+      "content": "Anak rantau semester 2 di sini. Di kelas sering ketawa-ketawa bareng temen, tapi pas balik ke kosan sepi banget dan homesick. Adakah komunitas atau temen jalan bareng weekend ini?",
+      "category": "Curhat Anonim",
+      "author": "Mahasiswa Rantau",
+      "faculty": "FIB UI",
+      "avatarColor": "#F59E0B",
+      "isAnonymous": true,
+      "timeAgo": "5 jam lalu",
+      "hugs": 115,
+      "repliesCount": 33,
+      "replies": [
+        {
+          "id": "rep_05",
+          "author": "Clara Sinta",
+          "faculty": "FISIP UI",
+          "isAnonymous": false,
+          "timeAgo": "4 jam lalu",
+          "content": "Wajar banget rasa begini pas tahun pertama. Yuk gabung study jam TemanKampus tiap Selasa & Kamis malam di Discord! Kita belajar bareng sambil ngobrol santai.",
+          "hugs": 22
+        }
+      ]
+    }
+  ]
+}

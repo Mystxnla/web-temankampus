@@ -1,0 +1,26 @@
+{
+  "presets": [
+    { "id": "focus", "label": "Fokus Belajar", "durationMinutes": 25, "badge": "Pomodoro" },
+    { "id": "short_break", "label": "Istirahat Pendek", "durationMinutes": 5, "badge": "Rehat Singkat" },
+    { "id": "long_break", "label": "Istirahat Panjang", "durationMinutes": 15, "badge": "Rehat Total" }
+  ],
+  "soundscapes": [
+    { "id": "rain", "name": "Hujan Kampus UI", "icon": "🌧️", "description": "Rintik hujan menenangkan di selasar fakultas" },
+    { "id": "cafe", "name": "Kafe Belajar Senja", "icon": "☕", "description": "Dentingan cangkir & obrolan lembut yang fokus" },
+    { "id": "lofi", "name": "Lo-Fi Beats Santai", "icon": "🎧", "description": "Ketukan chillhop tempo lambat bebas distraksi" },
+    { "id": "library", "name": "Perpustakaan Hening", "icon": "📚", "description": "Ketenangan rak buku dan lembaran kertas" }
+  ],
+  "stats": {
+    "todayMinutes": 105,
+    "weekMinutes": 540,
+    "completedSessions": 4,
+    "targetSessions": 6,
+    "streakDays": 5
+  },
+  "recentSessions": [
+    { "id": "sess_1", "task": "Revisi Bab 2: Tinjauan Pustaka", "course": "Metodologi Penelitian", "duration": 25, "time": "09:30 WIB", "status": "Completed" },
+    { "id": "sess_2", "task": "Finalisasi Low-Fi Wireframes Mobile", "course": "UI/UX Design Studio", "duration": 25, "time": "10:15 WIB", "status": "Completed" },
+    { "id": "sess_3", "task": "Finalisasi Low-Fi Wireframes Mobile", "course": "UI/UX Design Studio", "duration": 25, "time": "11:00 WIB", "status": "Completed" },
+    { "id": "sess_4", "task": "Latihan Query SQL Normalisasi 3NF", "course": "Sistem Basis Data", "duration": 30, "time": "13:30 WIB", "status": "Completed" }
+  ]
+}

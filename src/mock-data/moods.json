@@ -1,0 +1,125 @@
+{
+  "options": [
+    { "id": "baik", "label": "Semangat & Siap", "emoji": "✨", "color": "#10B981", "bgColor": "#ECFDF5", "score": 4 },
+    { "id": "biasa", "label": "Biasa Aja / Netral", "emoji": "🌤️", "color": "#712AE2", "bgColor": "#F3E8FF", "score": 3 },
+    { "id": "stres", "label": "Kewalahan & Stres", "emoji": "🌧️", "color": "#F59E0B", "bgColor": "#FEF3C7", "score": 2 },
+    { "id": "lelah", "label": "Butuh Rehat Dulu", "emoji": "☕", "color": "#FF2E93", "bgColor": "#FFD9E8", "score": 1 }
+  ],
+  "history": [
+    {
+      "id": "mood_07",
+      "date": "2026-09-18",
+      "dayName": "Jum",
+      "moodId": "baik",
+      "label": "Semangat & Siap",
+      "emoji": "✨",
+      "score": 4,
+      "energyLevel": 4,
+      "tags": ["Tidur Cukup", "Revisi Bab 2", "Ngopi Pagi"],
+      "note": "Alhamdulillah pagi ini bangun segar. Siap menuntaskan revisi metodologi penelitian!"
+    },
+    {
+      "id": "mood_06",
+      "date": "2026-09-17",
+      "dayName": "Kam",
+      "moodId": "biasa",
+      "label": "Biasa Aja / Netral",
+      "emoji": "🌤️",
+      "score": 3,
+      "energyLevel": 3,
+      "tags": ["Kuliah Siang", "Diskusi Kelompok"],
+      "note": "Kuliah lancar walau agak ngantuk di sesi kedua. Diskusi kelompok cukup produktif."
+    },
+    {
+      "id": "mood_05",
+      "date": "2026-09-16",
+      "dayName": "Rab",
+      "moodId": "stres",
+      "label": "Kewalahan & Stres",
+      "emoji": "🌧️",
+      "score": 2,
+      "energyLevel": 2,
+      "tags": ["Deadline Mepet", "Kuis Algoritma"],
+      "note": "Sempat overthinking karena kuis algoritma dan deadline tugas numpuk barengan."
+    },
+    {
+      "id": "mood_04",
+      "date": "2026-09-15",
+      "dayName": "Sel",
+      "moodId": "lelah",
+      "label": "Butuh Rehat Dulu",
+      "emoji": "☕",
+      "score": 1,
+      "energyLevel": 1,
+      "tags": ["Begadang", "Kurang Tidur"],
+      "note": "Tidur cuma 4 jam, kepala agak berat. Butuh napas sejenak sebelum kelas lab."
+    },
+    {
+      "id": "mood_03",
+      "date": "2026-09-14",
+      "dayName": "Sen",
+      "moodId": "biasa",
+      "label": "Biasa Aja / Netral",
+      "emoji": "🌤️",
+      "score": 3,
+      "energyLevel": 3,
+      "tags": ["Awal Minggu", "Bikin To-Do"],
+      "note": "Awal pekan yang cukup tenang. Menyusun rencana target minggu ini."
+    },
+    {
+      "id": "mood_02",
+      "date": "2026-09-13",
+      "dayName": "Min",
+      "moodId": "baik",
+      "label": "Semangat & Siap",
+      "emoji": "✨",
+      "score": 4,
+      "energyLevel": 5,
+      "tags": ["Olahraga Pagi", "Jalan Santai", "Keluarga"],
+      "note": "Quality time di akhir pekan. Refreshing jalan pagi keliling kampus UI."
+    },
+    {
+      "id": "mood_01",
+      "date": "2026-09-12",
+      "dayName": "Sab",
+      "moodId": "baik",
+      "label": "Semangat & Siap",
+      "emoji": "✨",
+      "score": 4,
+      "energyLevel": 4,
+      "tags": ["Santai", "Nonton Film"],
+      "note": "Istirahat total tanpa buka laptop kuliah seharian."
+    }
+  ],
+  "recommendations": {
+    "rest": [
+      {
+        "title": "Teknik Pernapasan 4-7-8",
+        "description": "Tarik napas 4 detik, tahan 7 detik, hembuskan 8 detik untuk meredakan kecemasan instan.",
+        "duration": "3 Menit",
+        "icon": "🌬️"
+      },
+      {
+        "title": "Stretching Leher & Pundak",
+        "description": "Regangkan otot leher setelah 60 menit menatap layar laptop untuk melancarkan sirkulasi darah.",
+        "duration": "5 Menit",
+        "icon": "🧘"
+      },
+      {
+        "title": "Audio Ambience Hujan Kampus",
+        "description": "Suara rintik hujan lembut dan gemerisik daun kampus penenang frekuensi gelombang otak.",
+        "duration": "10 Menit",
+        "icon": "🎧"
+      }
+    ],
+    "emergencySupport": {
+      "title": "Layanan Konseling & Bantuan Mahasiswa",
+      "hotlines": [
+        { "name": "Layanan Kesehatan Jiwa Kemenkes (Sejiwa)", "number": "119 ext 8", "type": "Gratis 24 Jam" },
+        { "name": "Yayasan Pulih (Dukungan Trauma & Konseling)", "number": "+62 811-8436-633", "type": "WhatsApp Konseling" },
+        { "name": "Pusat Konseling Mahasiswa (PKM Kampus)", "number": "(021) 786-7222", "type": "Senin-Jumat 08:00 - 16:00" },
+        { "name": "Halo Kemenkes", "number": "1500-567", "type": "Hotline Nasional" }
+      ]
+    }
+  }
+}

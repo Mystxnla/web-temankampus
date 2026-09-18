@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+  body {
+    background-color: #F8F3FC;
+    color: #1D192C;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  h1, h2, h3, .font-display, .font-headline {
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* Custom Lilac Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF5FF;
+}
+::-webkit-scrollbar-thumb {
+  background: #E2D4F8;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FF2E93;
+}
+
+/* Neo-Pop Tactile Buttons & Shadows */
+.btn-pop {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-pop:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #1D192C;
+}
+.btn-pop:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #1D192C;
+}
+
+.card-hover {
+  transition: all 0.2s ease-in-out;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: #E2CEFD;
+  box-shadow: 0 10px 25px -5px rgba(113, 42, 226, 0.08);
+}

@@ -1,0 +1,25 @@
+{
+  "id": "usr_01",
+  "name": "Nadira Az-Zahra",
+  "nim": "210401088",
+  "university": "Universitas Indonesia",
+  "faculty": "Fakultas Ilmu Komputer",
+  "major": "Teknik Informatika",
+  "semester": 6,
+  "email": "nadira.azzahra@ui.ac.id",
+  "isPremium": false,
+  "wellnessStreak": 5,
+  "focusMinutesToday": 105,
+  "urgentTasksCount": 3,
+  "avatar": "NA",
+  "bio": "Mahasiswa tingkat akhir pejuang skripsi & pencari keseimbangan hidup.",
+  "emergencyContact": {
+    "name": "Ibu / Wali",
+    "phone": "+6281234567890"
+  },
+  "settings": {
+    "dailyReminder": true,
+    "breakIntervalMinutes": 90,
+    "theme": "pop-lilac"
+  }
+}

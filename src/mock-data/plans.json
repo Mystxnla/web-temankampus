@@ -1,0 +1,97 @@
+{
+  "plans": [
+    {
+      "id": "free",
+      "name": "Paket Mahasiswa Hemat",
+      "tagline": "Cocok untuk memulai kebiasaan belajar sehat dan manajemen deadline dasar.",
+      "price": 0,
+      "priceFormatted": "Gratis Selamanya",
+      "billingCycle": "Tanpa biaya",
+      "popular": false,
+      "badge": "Dasar",
+      "features": [
+        "Task & Deadline Manager standar (hingga 30 tugas aktif)",
+        "Mood Check-In harian & riwayat 7 hari terakhir",
+        "Focus Timer Pomodoro standar (25/5 menit)",
+        "Sesi Curhat AI Mimi (hingga 10 pesan/hari)",
+        "Akses membaca & merespon forum komunitas mahasiswa",
+        "Pengingat istirahat berkala"
+      ],
+      "unavailableFeatures": [
+        "Sesi Curhat AI Mimi tanpa batas 24/7",
+        "Analisis korelasi performa akademik vs tren mood",
+        "Custom durasi Pomodoro & Audio Ambience lengkap",
+        "Export laporan evaluasi kesejahteraan ke format PDF",
+        "Badge donatur & prioritas konsultasi kampus"
+      ],
+      "ctaText": "Paket Saat Ini",
+      "isCurrent": true
+    },
+    {
+      "id": "pro_monthly",
+      "name": "TemanKampus Pro",
+      "tagline": "Dukungan penuh produktivitas akademik & kesehatan mental tanpa batasan.",
+      "price": 19000,
+      "priceFormatted": "Rp 19.000",
+      "billingCycle": "per bulan",
+      "popular": true,
+      "badge": "Paling Populer 🔥",
+      "features": [
+        "Semua fitur Paket Bebas Mahasiswa",
+        "Sesi Curhat AI Mimi UNLIMITED tanpa batasan kuota",
+        "Analisis tren mood & produktivitas mendalam (Bulanan & Semester)",
+        "Audio Ambience eksklusif (Hujan Kampus, Kafe Senja, Binaural Beats)",
+        "Unlimited tugas aktif, label mata kuliah & arsip skripsi",
+        "Export laporan PDF ringkasan kesehatan mental untuk konseling kampus",
+        "Badge verifikasi 'Pro Mahasiswa' di komunitas",
+        "Dukungan prioritas dari tim TemanKampus"
+      ],
+      "unavailableFeatures": [],
+      "ctaText": "Upgrade ke Pro Sekarang",
+      "isCurrent": false
+    },
+    {
+      "id": "pro_semester",
+      "name": "Paket Satu Semester",
+      "tagline": "Hemat 40% untuk pendampingan penuh satu semester aktif perkuliahan (6 bulan).",
+      "price": 49000,
+      "priceFormatted": "Rp 49.000",
+      "billingCycle": "per 6 bulan (Rp 8.100/bln)",
+      "popular": false,
+      "badge": "Hemat 40% 💡",
+      "features": [
+        "Seluruh keuntungan fitur TemanKampus Pro",
+        "Masa aktif langsung 6 bulan penuh",
+        "Bonus template Notion Academic OS versi TemanKampus",
+        "Akses webinar eksklusif mental health mahasiswa per semester"
+      ],
+      "unavailableFeatures": [],
+      "ctaText": "Pilih Paket Semester",
+      "isCurrent": false
+    }
+  ],
+  "paymentMethods": [
+    {
+      "category": "QRIS Instan",
+      "items": [
+        { "id": "qris", "name": "QRIS (GoPay, OVO, Dana, ShopeePay, BCA, All Bank)", "icon": "qr_code_scanner", "fee": 0 }
+      ]
+    },
+    {
+      "category": "E-Wallet",
+      "items": [
+        { "id": "gopay", "name": "GoPay", "icon": "account_balance_wallet", "fee": 0 },
+        { "id": "shopeepay", "name": "ShopeePay", "icon": "shopping_bag", "fee": 0 },
+        { "id": "dana", "name": "DANA", "icon": "wallet", "fee": 0 }
+      ]
+    },
+    {
+      "category": "Virtual Account (Transfer Bank)",
+      "items": [
+        { "id": "bca_va", "name": "BCA Virtual Account", "icon": "account_balance", "fee": 1000 },
+        { "id": "mandiri_va", "name": "Mandiri Virtual Account", "icon": "account_balance", "fee": 1000 },
+        { "id": "bni_va", "name": "BNI Virtual Account", "icon": "account_balance", "fee": 1000 }
+      ]
+    }
+  ]
+}
