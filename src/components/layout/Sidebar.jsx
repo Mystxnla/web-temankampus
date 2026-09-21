@@ -9,82 +9,56 @@ import {
   Users,
   Sparkles,
   LogOut,
-  ChevronRight
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTasks } from '../../context/TaskContext';
 
-const Sidebar = () => {
+const Sidebar = ({ screenColor = {} }) => {
   const { user } = useAuth();
   const { urgentTasks } = useTasks();
+  const bgColor = screenColor.bg || '#5C92D1';
 
   const navItems = [
+    { to: '/dashboard', label: 'Beranda', icon: Home, badge: null },
     {
-      to: '/dashboard',
-      label: 'Beranda',
-      icon: Home,
-      badge: null
-    },
-    {
-      to: '/tasks',
-      label: 'Tugas Kuliah',
-      icon: CheckSquare,
+      to: '/tasks', label: 'Tugas Kuliah', icon: CheckSquare,
       badge: urgentTasks.length > 0 ? urgentTasks.length : null,
-      badgeColor: 'bg-primary-container text-primary'
     },
+    { to: '/mood', label: 'Mood Tracker', icon: Smile, badge: null },
+    { to: '/focus', label: 'Ruang Fokus', icon: Clock, badge: 'LIVE' },
+    { to: '/curhat', label: 'Teman Curhat (Mimi)', icon: MessageCircle, badge: null },
+    { to: '/community', label: 'Komunitas Sebaya', icon: Users, badge: null },
     {
-      to: '/mood',
-      label: 'Mood Tracker',
-      icon: Smile,
-      badge: null
-    },
-    {
-      to: '/focus',
-      label: 'Ruang Fokus',
-      icon: Clock,
-      badge: 'LIVE',
-      badgeColor: 'bg-secondary-container text-secondary font-black'
-    },
-    {
-      to: '/curhat',
-      label: 'Teman Curhat (Mimi)',
-      icon: MessageCircle,
-      badge: null
-    },
-    {
-      to: '/community',
-      label: 'Komunitas Sebaya',
-      icon: Users,
-      badge: null
-    },
-    {
-      to: '/premium',
-      label: 'Langganan Pro',
-      icon: Sparkles,
+      to: '/premium', label: 'Langganan Pro', icon: Sparkles,
       badge: user?.isPremium ? 'PRO' : 'UPGRADE',
-      badgeColor: user?.isPremium ? 'bg-amber-100 text-amber-700 font-black' : 'bg-primary/10 text-primary font-bold'
-    }
+    },
   ];
 
   return (
-    <aside className="w-72 bg-white/95 backdrop-blur-md border-r border-border-light min-h-screen flex flex-col justify-between p-6 sticky top-0 shrink-0 select-none shadow-sm hidden lg:flex">
+    <aside
+      className="w-68 min-h-screen flex flex-col justify-between p-6 sticky top-0 shrink-0 select-none hidden lg:flex"
+      style={{ backgroundColor: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(12px)', borderRight: '1px solid rgba(255,255,255,0.20)', width: '272px' }}
+    >
       <div className="space-y-8">
-        {/* Brand Logo inspired by Pop Lilac style */}
+        {/* Brand Logo */}
         <Link to="/dashboard" className="flex items-center gap-3 group">
-          <div className="w-11 h-11 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 font-display text-2xl tracking-wider group-hover:scale-105 transition-transform">
+          <div
+            className="w-11 h-11 rounded-2xl text-white flex items-center justify-center font-display text-lg font-black shadow-lg group-hover:scale-105 transition-transform"
+            style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}
+          >
             TK
           </div>
           <div>
-            <span className="font-display text-2xl text-dark tracking-wide block leading-none">
-              TEMANKAMPUS
+            <span className="font-display text-xl text-white font-black tracking-tight block leading-none">
+              TemanKampus
             </span>
-            <span className="text-[10px] text-primary font-bold tracking-widest block uppercase mt-0.5">
+            <span className="text-[10px] text-white/70 font-bold tracking-widest block uppercase mt-0.5">
               Ruang Tenang & Tumbuh
             </span>
           </div>
         </Link>
 
-        {/* Main Navigation Menu */}
+        {/* Main Navigation */}
         <nav aria-label="Main Navigation" className="space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -93,34 +67,32 @@ const Sidebar = () => {
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-2xl text-sm transition-all group font-semibold ${
+                  `flex items-center gap-3 px-4 py-2.5 rounded-full text-sm transition-all group font-bold ${
                     isActive
-                      ? 'bg-primary text-white font-bold shadow-md shadow-primary/25'
-                      : 'text-[#3A3350] hover:bg-surface-container hover:text-primary'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-white/85 hover:bg-white/20 hover:text-white'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
                     <Icon
-                      className={`w-5 h-5 transition ${
-                        isActive ? 'text-white' : 'text-[#8E84A3] group-hover:text-primary'
+                      className={`w-4.5 h-4.5 shrink-0 transition ${
+                        isActive ? 'text-gray-700' : 'text-white/75 group-hover:text-white'
                       }`}
+                      style={{ width: '18px', height: '18px' }}
                     />
-                    <span>{item.label}</span>
+                    <span className="flex-1 text-sm">{item.label}</span>
                     {item.badge && (
                       <span
-                        className={`ml-auto text-[11px] px-2.5 py-0.5 rounded-full ${
+                        className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
                           isActive
-                            ? 'bg-white/25 text-white font-black'
-                            : item.badgeColor
+                            ? 'bg-gray-100 text-gray-700'
+                            : 'bg-white/25 text-white'
                         }`}
                       >
                         {item.badge}
                       </span>
-                    )}
-                    {isActive && !item.badge && (
-                      <span className="ml-auto w-2 h-2 rounded-full bg-white animate-ping" />
                     )}
                   </>
                 )}
@@ -130,15 +102,11 @@ const Sidebar = () => {
         </nav>
       </div>
 
-      {/* Sidebar Bottom: Gentle Wellness Quote & User Profile Card */}
-      <div className="space-y-4 pt-4 border-t border-border-light">
-        {/* Mini reminder callout */}
-        <div className="p-3.5 bg-surface-container-low border border-[#E9D5FF] rounded-2xl">
-          <div className="flex items-center gap-2 text-secondary font-bold text-xs mb-1">
-            <span className="inline-block w-2 h-2 rounded-full bg-primary" />
-            Pengingat Hangat
-          </div>
-          <p className="text-[12px] text-[#5A4F72] leading-relaxed">
+      {/* Sidebar Bottom */}
+      <div className="space-y-3 pt-4">
+        {/* Wellness quote */}
+        <div className="p-3.5 rounded-2xl" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
+          <p className="text-[11.5px] text-white/80 leading-relaxed italic">
             "Istirahat bukan tanda menyerah, tapi cara tubuhmu bersiap lebih kuat." 🌸
           </p>
         </div>
@@ -146,25 +114,26 @@ const Sidebar = () => {
         {/* User Profile Badge */}
         <Link
           to="/premium"
-          className="flex items-center gap-3 p-2.5 rounded-2xl bg-surface-container-low hover:bg-surface-container border border-border-light transition cursor-pointer group"
+          className="flex items-center gap-3 p-2.5 rounded-2xl hover:bg-white/15 transition cursor-pointer group"
+          style={{ border: '1px solid rgba(255,255,255,0.2)' }}
         >
-          <div className="w-10 h-10 rounded-full bg-primary text-white font-extrabold text-xs flex items-center justify-center shadow-sm shrink-0">
+          <div
+            className="w-10 h-10 rounded-full text-gray-800 font-extrabold text-xs flex items-center justify-center shadow-sm shrink-0"
+            style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}
+          >
             {user?.avatar || 'TK'}
           </div>
-          <div className="overflow-hidden min-w-0">
-            <div className="flex items-center gap-1.5">
-              <p className="text-xs font-bold text-dark truncate">{user?.name || 'Mahasiswa'}</p>
-              {user?.isPremium && (
-                <span className="text-[9px] bg-amber-200 text-amber-900 font-extrabold px-1.5 py-0.2 rounded">
-                  PRO
-                </span>
-              )}
-            </div>
-            <p className="text-[11px] text-[#786D94] truncate">
+          <div className="overflow-hidden min-w-0 flex-1">
+            <p className="text-xs font-bold text-white truncate">{user?.name || 'Mahasiswa'}</p>
+            <p className="text-[11px] text-white/65 truncate">
               {user?.major} · Smt {user?.semester}
             </p>
           </div>
-          <ChevronRight className="w-4 h-4 text-[#8E84A3] ml-auto shrink-0 group-hover:translate-x-0.5 transition-transform" />
+          {user?.isPremium && (
+            <span className="text-[9px] bg-yellow-300 text-yellow-900 font-extrabold px-2 py-0.5 rounded-full shrink-0">
+              PRO
+            </span>
+          )}
         </Link>
       </div>
     </aside>

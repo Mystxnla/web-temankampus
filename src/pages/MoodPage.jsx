@@ -1,57 +1,27 @@
 import React, { useState } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 import {
-  Smile,
-  Calendar,
-  AlertTriangle,
-  HeartHandshake,
-  Wind,
-  Headphones,
-  CheckCircle2,
-  Sparkles,
-  ArrowRight,
-  TrendingUp,
-  Tag
+  Smile, Calendar, AlertTriangle, HeartHandshake, Wind,
+  Headphones, CheckCircle2, Sparkles, ArrowRight, TrendingUp, Tag
 } from 'lucide-react';
 import { useMood } from '../context/MoodContext';
+import BobiMascot from '../components/BobiMascot';
+
+const BG = '#6FB899'; // Sage Mint Green
 
 const MoodPage = () => {
   const { openHelpModal } = useOutletContext();
-  const {
-    history,
-    options,
-    recommendations,
-    todayMood,
-    hasCheckedInToday,
-    isConsecutiveNegative,
-    logMood,
-    dismissAlert
-  } = useMood();
+  const { history, options, recommendations, todayMood, hasCheckedInToday, isConsecutiveNegative, logMood, dismissAlert } = useMood();
 
-  // Active form state
   const [selectedMoodId, setSelectedMoodId] = useState(todayMood?.moodId || 'baik');
   const [energyLevel, setEnergyLevel] = useState(todayMood?.energyLevel || 3);
   const [journalNote, setJournalNote] = useState(todayMood?.note || '');
   const [selectedTags, setSelectedTags] = useState(todayMood?.tags || ['Kuliah']);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  // Available emotion tags
-  const availableTags = [
-    'Tugas Menumpuk',
-    'Bimbingan Dospem',
-    'Kurang Tidur',
-    'Ujian / Kuis',
-    'Diskusi Kelompok',
-    'Organisasi Kampus',
-    'Olahraga Pagi',
-    'Waktu Istirahat'
-  ];
+  const availableTags = ['Tugas Menumpuk', 'Bimbingan Dospem', 'Kurang Tidur', 'Ujian / Kuis', 'Diskusi Kelompok', 'Organisasi Kampus', 'Olahraga Pagi', 'Waktu Istirahat'];
 
-  const toggleTag = (tag) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    );
-  };
+  const toggleTag = (tag) => setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,367 +30,163 @@ const MoodPage = () => {
     setTimeout(() => setSaveSuccess(false), 3000);
   };
 
-  // Calculate 7-day stats
-  const last7Days = history.slice(0, 7);
-  const avgScore = (
-    last7Days.reduce((acc, curr) => acc + (curr.score || 3), 0) / (last7Days.length || 1)
-  ).toFixed(1);
+  const moodColors = { baik: '#6FB899', semangat: '#F7BF52', biasa: '#5C92D1', lelah: '#F28E66', buruk: '#987DC7', anxious: '#E07070' };
 
   return (
-    <div className="space-y-8 select-none">
-      {/* Page Header */}
-      <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container text-secondary font-bold text-xs uppercase tracking-wider mb-2">
-          <Smile className="w-3.5 h-3.5" />
-          <span>Kesehatan Mental & Emosional</span>
+    <div>
+      {/* Header on sage green bg */}
+      <div className="px-5 sm:px-8 pt-6 pb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div>
+          <p className="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">Mood & Kesehatan Mental</p>
+          <h1 className="hs-headline text-white text-3xl sm:text-4xl">
+            Validasi perasaanmu<br />
+            <span className="text-white/80 text-2xl font-bold">tanpa menghakimi diri sendiri.</span>
+          </h1>
+          {hasCheckedInToday && (
+            <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 text-white text-xs font-bold">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Check-in hari ini sudah selesai ✨
+            </div>
+          )}
         </div>
-        <h1 className="text-3xl font-display uppercase tracking-wide text-dark">
-          Mood Tracker & Riwayat Kesejahteraan
-        </h1>
-        <p className="text-xs sm:text-sm text-[#786D94]">
-          Lacak ritme emosi perkuliahanmu, kenali pemicu kelelahan, dan pelihara keseimbangan diri.
-        </p>
+        <BobiMascot pose="hug" size={140} accentColor={BG} />
       </div>
 
-      {/* 1. CONSECUTIVE NEGATIVE MOOD SMART ALERT (PRD Section 5.3 & 6.3) */}
-      {isConsecutiveNegative && (
-        <div className="bg-gradient-to-r from-amber-500 via-primary to-secondary p-0.5 rounded-3xl shadow-lg animate-fadeIn">
-          <div className="bg-white rounded-[22px] p-6 sm:p-7 space-y-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-border-light">
-              <div className="flex items-center gap-2.5 text-primary">
-                <AlertTriangle className="w-6 h-6 shrink-0" />
-                <h3 className="text-lg font-display uppercase tracking-wide text-dark">
-                  Kamu Telah Mengalami Stres / Kelelahan Beberapa Hari Ini 🌱
-                </h3>
-              </div>
-              <button
-                onClick={dismissAlert}
-                className="text-xs font-bold text-[#786D94] hover:text-dark hover:underline"
-              >
-                Tutup Notifikasi ✕
-              </button>
-            </div>
+      {/* White card body */}
+      <div className="headspace-card px-5 sm:px-8 py-8 space-y-6">
 
-            <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
-              Sistem mendeteksi bahwa energimu sedang terkuras selama 3 sesi check-in terakhir. Jangan biarkan burnout menumpuk ya. Kamu pantas mendapatkan istirahat tanpa rasa bersalah.
-            </p>
-
-            {/* Smart Recommendations Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-              {recommendations.rest.map((rec, idx) => (
-                <div
-                  key={idx}
-                  className="p-3.5 rounded-2xl bg-surface-container-low border border-border-purple space-y-1.5"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xl">{rec.icon}</span>
-                    <span className="text-[10px] font-black bg-primary-container text-primary px-2 py-0.5 rounded-md">
-                      {rec.duration}
-                    </span>
-                  </div>
-                  <p className="text-xs font-bold text-dark">{rec.title}</p>
-                  <p className="text-[11px] text-[#786D94] leading-normal">{rec.description}</p>
-                </div>
-              ))}
+        {/* Crisis alert */}
+        {isConsecutiveNegative && (
+          <div className="p-4 rounded-2xl text-white flex items-start gap-3" style={{ background: '#E07070' }}>
+            <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-black text-sm">Hai, kami memperhatikanmu 💙</p>
+              <p className="text-xs text-white/85 leading-relaxed mt-1">Sudah beberapa hari kamu merasakan kondisi yang berat. Tidak ada salahnya berbicara dengan konselor profesional.</p>
             </div>
-
-            {/* Action Buttons */}
-            <div className="pt-3 flex flex-wrap items-center gap-3">
-              <button
-                onClick={openHelpModal}
-                className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase tracking-wider transition shadow-sm flex items-center gap-2"
-              >
-                <HeartHandshake className="w-4 h-4" />
-                <span>Hubungi Bantuan Profesional</span>
-              </button>
-              <Link
-                to="/curhat"
-                className="px-5 py-2.5 rounded-xl bg-secondary hover:bg-secondary-hover text-white text-xs font-bold uppercase tracking-wider transition flex items-center gap-2"
-              >
-                <span>Curhat ke Mimi AI</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+            <button onClick={openHelpModal} className="shrink-0 px-3 py-2 bg-white text-red-600 font-black text-xs rounded-full">Cari Bantuan</button>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* 2. DAILY CHECK-IN FORM & 7-DAY ANALYTICS */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Daily Check-In Form (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-border-light shadow-sm space-y-6">
-          <div className="flex items-center justify-between pb-3 border-b border-border-light">
-            <div>
-              <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
-                Jurnal Refleksi Hari Ini
-              </span>
-              <h2 className="text-xl font-display text-dark uppercase tracking-wide">
-                Catat Kondisi Emosimu
-              </h2>
-            </div>
-            {hasCheckedInToday && (
-              <span className="text-[11px] bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                Sudah Check-In
-              </span>
-            )}
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Check-in form */}
+          <div className="lg:col-span-7">
+            <form onSubmit={handleSubmit} className="headspace-card-full border border-gray-100 shadow-card-sm p-6 space-y-5">
+              <h2 className="font-black text-gray-900 text-xl">Check-In Hari Ini 🌱</h2>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* 4 Mood Choices */}
-            <div>
-              <label className="block text-xs font-bold text-dark uppercase tracking-wider mb-2">
-                1. Pilih Kondisi Dominan Hari Ini
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {options.map((opt) => {
-                  const isSelected = selectedMoodId === opt.id;
-                  return (
-                    <button
-                      type="button"
-                      key={opt.id}
-                      onClick={() => setSelectedMoodId(opt.id)}
-                      className={`p-3.5 rounded-2xl border text-center transition flex flex-col items-center gap-1.5 ${
-                        isSelected
-                          ? 'border-primary bg-primary text-white shadow-md scale-105 ring-2 ring-primary'
-                          : 'border-border-light bg-surface-container-low hover:border-primary text-dark'
-                      }`}
-                    >
-                      <span className="text-2xl">{opt.emoji}</span>
-                      <span className="text-[11px] font-bold leading-tight">{opt.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Energy Slider */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-dark uppercase tracking-wider">
-                  2. Tingkat Energi & Stamina (1 - 5)
-                </label>
-                <span className="text-xs font-extrabold text-primary px-2.5 py-0.5 rounded-full bg-primary-container">
-                  Level {energyLevel} dari 5
-                </span>
-              </div>
-              <input
-                type="range"
-                min="1"
-                max="5"
-                step="1"
-                value={energyLevel}
-                onChange={(e) => setEnergyLevel(Number(e.target.value))}
-                className="w-full h-2 bg-secondary-container rounded-lg appearance-none cursor-pointer accent-primary"
-              />
-              <div className="flex justify-between text-[10px] text-[#9E94B8] font-bold pt-1">
-                <span>1 (Habis Total)</span>
-                <span>3 (Cukup Stabil)</span>
-                <span>5 (Maksimal)</span>
-              </div>
-            </div>
-
-            {/* Tags Selector */}
-            <div>
-              <label className="block text-xs font-bold text-dark uppercase tracking-wider mb-2">
-                3. Apa yang Mempengaruhi Perasaanmu?
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {availableTags.map((tag) => {
-                  const active = selectedTags.includes(tag);
-                  return (
-                    <button
-                      type="button"
-                      key={tag}
-                      onClick={() => toggleTag(tag)}
-                      className={`text-xs px-3 py-1.5 rounded-full border font-bold transition flex items-center gap-1 ${
-                        active
-                          ? 'bg-secondary text-white border-secondary shadow-xs'
-                          : 'bg-surface-container-low text-[#5A4F72] border-border-light hover:border-secondary'
-                      }`}
-                    >
-                      <span># {tag}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Journal Note */}
-            <div>
-              <label className="block text-xs font-bold text-dark uppercase tracking-wider mb-1.5">
-                4. Cerita Singkat / Catatan Pribadi (Privat & Aman)
-              </label>
-              <textarea
-                rows="3"
-                value={journalNote}
-                onChange={(e) => setJournalNote(e.target.value)}
-                placeholder="Tulis apa saja yang sedang kamu pikirkan, keluhan tugas kuliah, atau rasa syukur kecil hari ini..."
-                className="w-full px-4 py-3 bg-surface-container-low text-xs rounded-xl border border-border-purple focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white text-dark placeholder-[#9E94B8] transition"
-              />
-            </div>
-
-            {saveSuccess && (
-              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-xl flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>Check-in emosi berhasil disimpan! Statistik mingguanmu telah diperbarui.</span>
-              </div>
-            )}
-
-            <button
-              type="submit"
-              className="w-full py-3.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-black uppercase tracking-wider transition shadow-md shadow-primary/30"
-            >
-              Simpan Check-In Hari Ini ✨
-            </button>
-          </form>
-        </div>
-
-        {/* 7-Day History Chart & Stats (5 cols) */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Visual Weekly Chart Card */}
-          <div className="bg-white rounded-3xl p-6 border border-border-light shadow-sm space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-border-light">
+              {/* Mood options */}
               <div>
-                <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">
-                  Tren 7 Hari Terakhir
-                </span>
-                <h3 className="text-xl font-display text-dark uppercase tracking-wide">
-                  Grafik Kesejahteraan
-                </h3>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Kondisi emosionalmu:</p>
+                <div className="flex flex-wrap gap-2">
+                  {options.map((opt) => {
+                    const isSelected = selectedMoodId === opt.id;
+                    return (
+                      <button key={opt.id} type="button" onClick={() => setSelectedMoodId(opt.id)}
+                        className={`hs-btn py-2 px-4 text-xs transition-all ${isSelected ? 'text-white shadow-md scale-105' : 'bg-gray-50 text-gray-700 border border-gray-200'}`}
+                        style={isSelected ? { backgroundColor: moodColors[opt.id] || BG } : {}}>
+                        <span className="text-base">{opt.emoji}</span> {opt.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="text-right">
-                <span className="text-xs font-display text-primary px-2.5 py-0.5 rounded-md bg-primary-container">
-                  Avg {avgScore}/4.0
-                </span>
-              </div>
-            </div>
 
-            {/* Bar Chart Visualization */}
-            <div className="h-44 flex items-end justify-between gap-2 pt-4 px-2">
-              {last7Days
-                .slice()
-                .reverse()
-                .map((item, idx) => {
-                  const heightPercent = (item.score / 4) * 100;
-                  const isToday = idx === last7Days.length - 1;
-                  return (
-                    <div key={idx} className="flex-1 flex flex-col items-center gap-2">
-                      <span className="text-base sm:text-lg">{item.emoji}</span>
-                      <div className="w-full bg-surface-container rounded-t-xl h-24 flex items-end overflow-hidden">
-                        <div
-                          className={`w-full rounded-t-xl transition-all duration-500 ${
-                            item.moodId === 'baik'
-                              ? 'bg-emerald-400'
-                              : item.moodId === 'biasa'
-                              ? 'bg-secondary'
-                              : item.moodId === 'stres'
-                              ? 'bg-amber-400'
-                              : 'bg-primary'
-                          }`}
-                          style={{ height: `${heightPercent}%` }}
-                        />
+              {/* Energy level */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Tingkat energi hari ini:</p>
+                  <span className="text-sm font-black" style={{ color: BG }}>{energyLevel}/5</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4, 5].map((lv) => (
+                    <button key={lv} type="button" onClick={() => setEnergyLevel(lv)}
+                      className="flex-1 h-8 rounded-xl border-2 transition-all font-black text-xs"
+                      style={{ borderColor: lv <= energyLevel ? BG : '#E5E7EB', backgroundColor: lv <= energyLevel ? BG : 'transparent', color: lv <= energyLevel ? 'white' : '#9CA3AF' }}>
+                      {lv}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tags */}
+              <div>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Apa yang memengaruhi harimu?</p>
+                <div className="flex flex-wrap gap-2">
+                  {availableTags.map((tag) => (
+                    <button key={tag} type="button" onClick={() => toggleTag(tag)}
+                      className={`hs-chip text-[11px] transition-all ${selectedTags.includes(tag) ? 'text-white' : 'bg-gray-100 text-gray-600 border border-gray-200'}`}
+                      style={selectedTags.includes(tag) ? { backgroundColor: BG } : {}}>
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Journal */}
+              <div>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Jurnal singkat (opsional):</p>
+                <textarea value={journalNote} onChange={(e) => setJournalNote(e.target.value)}
+                  rows={3} placeholder="Ceritakan apa yang kamu rasakan hari ini, tanpa filter..."
+                  className="w-full p-3 rounded-2xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 text-xs text-gray-700 resize-none transition" />
+              </div>
+
+              <button type="submit"
+                className="hs-btn w-full justify-center text-white"
+                style={{ backgroundColor: BG }}>
+                {saveSuccess ? '✅ Check-in Tersimpan!' : 'Simpan Check-in Hari Ini'}
+              </button>
+            </form>
+          </div>
+
+          {/* Right column */}
+          <div className="lg:col-span-5 space-y-5">
+            {/* Recommendations */}
+            {recommendations.length > 0 && (
+              <div className="headspace-card-full border border-gray-100 shadow-card-sm p-5">
+                <h3 className="font-black text-gray-900 mb-3">🌿 Rekomendasi Untukmu</h3>
+                <div className="space-y-2">
+                  {recommendations.slice(0, 3).map((rec, i) => (
+                    <div key={i} className="p-3 rounded-xl flex items-start gap-2.5" style={{ background: '#F0FFF8' }}>
+                      <span className="text-lg shrink-0">{rec.icon}</span>
+                      <div>
+                        <p className="text-xs font-bold text-gray-800">{rec.title}</p>
+                        <p className="text-[11px] text-gray-500">{rec.description}</p>
                       </div>
-                      <span
-                        className={`text-[11px] font-bold ${
-                          isToday ? 'text-primary font-black' : 'text-[#786D94]'
-                        }`}
-                      >
-                        {item.dayName}
-                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Mood history */}
+            <div className="headspace-card-full border border-gray-100 shadow-card-sm p-5">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-black text-gray-900">📈 Riwayat Mood</h3>
+                <span className="text-[10px] font-bold text-gray-400">7 hari terakhir</span>
+              </div>
+              <div className="flex items-end gap-2 h-20">
+                {history.slice(-7).map((m, i) => {
+                  const h = ((m.energyLevel || 3) / 5) * 100;
+                  return (
+                    <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                      <div className="w-full rounded-t-lg transition-all" style={{ height: `${h}%`, minHeight: '8px', backgroundColor: moodColors[m.moodId] || BG, opacity: 0.75 + i * 0.035 }} />
+                      <span className="text-[9px] text-gray-400">{m.date?.slice(5)}</span>
                     </div>
                   );
                 })}
+              </div>
             </div>
 
-            {/* Quick Chart Legend */}
-            <div className="pt-3 border-t border-border-light flex flex-wrap items-center justify-between text-[10px] font-bold text-[#786D94]">
-              <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" /> Semangat
-              </span>
-              <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-secondary" /> Biasa
-              </span>
-              <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-amber-400" /> Stres
-              </span>
-              <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-primary" /> Lelah
-              </span>
+            {/* Professional help */}
+            <div className="p-4 rounded-2xl text-white" style={{ background: 'linear-gradient(135deg, #6FB899, #419F98)' }}>
+              <HeartHandshake className="w-5 h-5 mb-2" />
+              <p className="font-black text-sm">Butuh bicara dengan profesional?</p>
+              <p className="text-xs text-white/80 mt-1 mb-3">Konselor kampus tersedia secara online. Privat dan tanpa biaya.</p>
+              <button onClick={openHelpModal} className="px-4 py-2 bg-white rounded-full text-xs font-black" style={{ color: BG }}>
+                Hubungi Sekarang →
+              </button>
             </div>
-          </div>
-
-          {/* Calming Audio & Breathing Shortcut */}
-          <div className="bg-gradient-to-br from-secondary to-[#5218A6] rounded-3xl p-6 text-white shadow-md space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase tracking-widest font-black bg-white/20 px-2.5 py-0.5 rounded-full">
-                Audio Relaksasi
-              </span>
-              <span className="text-xs text-pink-200 font-bold">10 Menit</span>
-            </div>
-            <h4 className="text-lg font-display uppercase tracking-wide">
-              Meditasi Singkat Melepas Stres Skripsi
-            </h4>
-            <p className="text-xs text-purple-200 leading-relaxed">
-              Panduan audio hening terarah untuk menormalkan detak jantung sebelum presentasi atau bimbingan.
-            </p>
-            <Link
-              to="/focus"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-dark text-xs font-bold uppercase tracking-wider hover:bg-pink-100 transition shadow-sm mt-1"
-            >
-              <span>Dengarkan di Ruang Fokus</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
           </div>
         </div>
       </div>
-
-      {/* 3. DETAILED LOG HISTORY CARDS */}
-      <section className="bg-white rounded-3xl p-6 sm:p-8 border border-border-light shadow-sm space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-border-light">
-          <h3 className="text-xl font-display text-dark uppercase tracking-wide">
-            Riwayat Catatan Jurnal Emosional
-          </h3>
-          <span className="text-xs text-[#786D94]">Tersimpan lokal & privat</span>
-        </div>
-
-        <div className="space-y-3">
-          {history.map((item) => (
-            <div
-              key={item.id}
-              className="p-4 rounded-2xl bg-surface-container-low border border-border-light hover:border-border-purple transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
-            >
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-white border border-border-light flex items-center justify-center text-xl shadow-xs shrink-0">
-                  {item.emoji}
-                </div>
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-bold text-dark">{item.label}</span>
-                    <span className="text-[10px] text-[#9E94B8]">
-                      {item.date} ({item.dayName})
-                    </span>
-                    <span className="text-[10px] bg-secondary-container text-secondary font-extrabold px-2 py-0.5 rounded-md">
-                      Energi {item.energyLevel || 3}/5
-                    </span>
-                  </div>
-                  <p className="text-xs text-[#5A4F72] mt-1 leading-relaxed">{item.note}</p>
-                  <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                    {item.tags?.map((t, i) => (
-                      <span
-                        key={i}
-                        className="text-[10px] bg-white border border-border-light text-[#786D94] px-2 py-0.5 rounded-full"
-                      >
-                        #{t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 };
