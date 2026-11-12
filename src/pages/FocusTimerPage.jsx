@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Clock, Play, Pause, RotateCcw, SkipForward, Volume2, VolumeX,
-  CheckCircle, Flame, AlertCircle, CheckSquare, Sparkles
+  Play, Pause, RotateCcw, SkipForward, Volume2, VolumeX,
+  CheckSquare,
 } from 'lucide-react';
 import { useTasks } from '../context/TaskContext';
 import timerData from '../mock-data/timer.json';
-import BobiMascot from '../components/BobiMascot';
 
-const BG = '#F28E66'; // Warm Peach Amber
+const ACCENT = '#8B0A0A';
 
 const FocusTimerPage = () => {
   const { tasks, activeFocusTaskId, setActiveFocusTaskId } = useTasks();
@@ -43,7 +42,9 @@ const FocusTimerPage = () => {
     return () => clearInterval(interval);
   }, [isRunning, timeLeft, activePreset, totalTime]);
 
-  useEffect(() => { if (continuousMinutes >= 90) setShowRestAlert(true); }, [continuousMinutes]);
+  useEffect(() => {
+    if (continuousMinutes >= 90) setShowRestAlert(true);
+  }, [continuousMinutes]);
 
   const handlePresetChange = (presetId) => {
     setIsRunning(false);
@@ -71,7 +72,6 @@ const FocusTimerPage = () => {
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (circumference * progressPercent) / 100;
 
-  // Session dot helpers
   const totalSessionDots = 6;
   const sessionDots = Array.from({ length: totalSessionDots }, (_, i) => {
     if (i < completedSessions) return 'done';
@@ -81,69 +81,117 @@ const FocusTimerPage = () => {
 
   return (
     <div>
-      {/* Header on peach bg */}
-      <div className="px-5 sm:px-8 pt-6 pb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div>
-          <p className="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">Ruang Fokus Pomodoro</p>
-          <h1 className="hs-headline text-white text-3xl sm:text-4xl">
-            Fokus lebih dalam,<br />
-            <span className="text-white/80 text-2xl font-bold">rehat secukupnya.</span>
-          </h1>
-          {/* Session dots — Headspace signature */}
-          <div className="flex items-center gap-2 mt-4">
-            <p className="text-white/70 text-xs font-bold">Sesi hari ini:</p>
-            <div className="flex items-center gap-1.5">
-              {sessionDots.map((status, i) => (
-                <div key={i}
-                  className={`session-dot ${status === 'active' ? 'session-dot-active' : ''}`}
-                  style={{
-                    backgroundColor: status === 'done' ? 'rgba(255,255,255,0.9)' : status === 'active' ? '#FFF1D0' : 'rgba(255,255,255,0.25)',
-                    color: status === 'done' ? BG : status === 'active' ? BG : 'rgba(255,255,255,0.5)',
-                    border: status === 'active' ? '2px solid white' : 'none',
-                  }}>
-                  {status === 'done' ? '✓' : i + 1}
-                </div>
-              ))}
-            </div>
-            <span className="text-white/60 text-[10px] ml-1">{completedSessions}/{totalSessionDots} sesi</span>
+      {/* ── Header Block ── */}
+      <div
+        className="px-5 sm:px-8 pt-6 pb-10"
+        style={{ backgroundColor: '#F7F0DA' }}
+      >
+        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#75685B' }}>
+          Ruang Fokus Pomodoro
+        </p>
+        <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
+          Fokus lebih dalam,
+        </h1>
+        <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
+          rehat secukupnya.
+        </p>
+        {/* Session dots */}
+        <div className="flex items-center gap-2 mt-4">
+          <p className="text-xs font-bold" style={{ color: '#75685B' }}>Sesi hari ini:</p>
+          <div className="flex items-center gap-1.5">
+            {sessionDots.map((status, i) => (
+              <div
+                key={i}
+                className={`session-dot ${status === 'active' ? 'session-dot-active' : ''}`}
+                style={{
+                  backgroundColor:
+                    status === 'done'
+                      ? '#8B0A0A'
+                      : status === 'active'
+                      ? '#F7F0DA'
+                      : 'rgba(117,104,91,0.25)',
+                  color:
+                    status === 'done'
+                      ? '#F7F0DA'
+                      : status === 'active'
+                      ? '#8B0A0A'
+                      : '#75685B',
+                  border: status === 'active' ? '2px solid #8B0A0A' : 'none',
+                }}
+              >
+                {status === 'done' ? '✓' : i + 1}
+              </div>
+            ))}
           </div>
+          <span className="text-[10px] ml-1" style={{ color: '#75685B' }}>
+            {completedSessions}/{totalSessionDots} sesi
+          </span>
         </div>
-        <BobiMascot pose="headphones" size={140} accentColor={BG} />
       </div>
 
-      {/* White card body */}
-      <div className="headspace-card px-5 sm:px-8 py-8 space-y-6">
+      {/* ── Card Body ── */}
+      <div className="px-5 sm:px-8 py-8 space-y-6">
 
         {/* Rest alert */}
         {showRestAlert && (
-          <div className="p-4 rounded-2xl text-white flex items-start sm:items-center gap-3 justify-between"
-            style={{ background: 'linear-gradient(135deg, #F28E66, #E07070)' }}>
+          <div
+            className="p-4 rounded-2xl flex items-start sm:items-center gap-3 justify-between"
+            style={{ background: 'linear-gradient(135deg, #8B0A0A, #4A2010)', color: '#F7F0DA' }}
+          >
             <div className="flex items-center gap-3">
               <span className="text-2xl">☕</span>
               <div>
                 <p className="font-black text-sm">Waktunya rehat! Sudah belajar lebih dari 90 menit.</p>
-                <p className="text-xs text-white/80">Berdiri, regangkan badan, dan minum air sebelum lanjut.</p>
+                <p className="text-xs" style={{ color: 'rgba(247,240,218,0.8)' }}>
+                  Berdiri, regangkan badan, dan minum air sebelum lanjut.
+                </p>
               </div>
             </div>
             <div className="flex gap-2 shrink-0">
-              <button onClick={() => { setShowRestAlert(false); setContinuousMinutes(0); handlePresetChange('long_break'); }}
-                className="px-3 py-1.5 bg-white text-orange-600 text-xs font-black rounded-full">
+              <button
+                onClick={() => {
+                  setShowRestAlert(false);
+                  setContinuousMinutes(0);
+                  handlePresetChange('long_break');
+                }}
+                className="px-3 py-1.5 text-xs font-black rounded-full"
+                style={{ background: '#F7F0DA', color: '#8B0A0A' }}
+              >
                 Istirahat 15 mnt
               </button>
-              <button onClick={() => setShowRestAlert(false)} className="px-3 py-1.5 bg-white/20 text-white text-xs font-bold rounded-full">Nanti</button>
+              <button
+                onClick={() => setShowRestAlert(false)}
+                className="px-3 py-1.5 text-xs font-bold rounded-full"
+                style={{ background: 'rgba(247,240,218,0.2)', color: '#F7F0DA' }}
+              >
+                Nanti
+              </button>
             </div>
           </div>
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Timer widget */}
-          <div className="lg:col-span-7 headspace-card-full border border-gray-100 shadow-card p-6 sm:p-8 flex flex-col items-center text-center">
+          <div
+            className="lg:col-span-7 p-6 sm:p-8 flex flex-col items-center text-center rounded-3xl"
+            style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+          >
             {/* Preset tabs */}
-            <div className="flex rounded-2xl bg-gray-100 p-1 mb-8 w-full max-w-sm">
+            <div
+              className="flex rounded-2xl p-1 mb-8 w-full max-w-sm"
+              style={{ background: '#F7F0DA', border: '1.5px solid #75685B' }}
+            >
               {presets.map((p) => (
-                <button key={p.id} onClick={() => handlePresetChange(p.id)}
-                  className={`flex-1 py-2 rounded-xl text-xs font-black transition-all uppercase tracking-wider ${activePreset === p.id ? 'text-white shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                  style={activePreset === p.id ? { backgroundColor: BG } : {}}>
+                <button
+                  key={p.id}
+                  onClick={() => handlePresetChange(p.id)}
+                  className="flex-1 py-2 rounded-xl text-xs font-black transition-all uppercase tracking-wider"
+                  style={
+                    activePreset === p.id
+                      ? { backgroundColor: '#8B0A0A', color: '#F7F0DA' }
+                      : { color: '#75685B' }
+                  }
+                >
                   {p.label}
                 </button>
               ))}
@@ -152,17 +200,27 @@ const FocusTimerPage = () => {
             {/* SVG Circular progress */}
             <div className="relative w-64 h-64 flex items-center justify-center my-2">
               <svg className="w-full h-full" viewBox="0 0 200 200" style={{ transform: 'rotate(-90deg)' }}>
-                <circle cx="100" cy="100" r={radius} fill="none" stroke="#F3F4F6" strokeWidth="12" />
-                <circle cx="100" cy="100" r={radius} fill="none"
-                  stroke={BG} strokeWidth="12"
-                  strokeDasharray={circumference} strokeDashoffset={strokeDashoffset}
+                <circle cx="100" cy="100" r={radius} fill="none" stroke="#F7F0DA" strokeWidth="12" />
+                <circle
+                  cx="100" cy="100" r={radius} fill="none"
+                  stroke="#8B0A0A" strokeWidth="12"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={strokeDashoffset}
                   strokeLinecap="round"
-                  className="transition-all duration-1000 ease-linear" />
+                  className="transition-all duration-1000 ease-linear"
+                />
               </svg>
               <div className="absolute flex flex-col items-center justify-center">
-                <span className="text-5xl font-black text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>{formatTime(timeLeft)}</span>
-                <span className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mt-2 text-white"
-                  style={{ backgroundColor: BG }}>
+                <span
+                  className="text-5xl font-black"
+                  style={{ fontFamily: 'Nunito, sans-serif', color: '#2B2B2B' }}
+                >
+                  {formatTime(timeLeft)}
+                </span>
+                <span
+                  className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mt-2"
+                  style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                >
                   {activePreset === 'focus' ? '🎯 Fokus Sesi' : '☕ Rehat Sehat'}
                 </span>
               </div>
@@ -170,28 +228,57 @@ const FocusTimerPage = () => {
 
             {/* Controls */}
             <div className="flex items-center gap-4 mt-6">
-              <button onClick={handleReset} className="w-12 h-12 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition icon-btn">
+              <button
+                onClick={handleReset}
+                className="w-12 h-12 rounded-2xl flex items-center justify-center transition icon-btn"
+                style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#75685B' }}
+              >
                 <RotateCcw className="w-5 h-5" />
               </button>
-              <button onClick={() => setIsRunning(!isRunning)}
-                className="px-8 py-4 rounded-2xl text-white font-black text-sm uppercase tracking-wider shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5"
-                style={{ backgroundColor: BG }}>
-                {isRunning ? <><Pause className="w-5 h-5" /><span>Jeda</span></> : <><Play className="w-5 h-5 fill-white" /><span>Mulai Belajar</span></>}
+              <button
+                onClick={() => setIsRunning(!isRunning)}
+                className="px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-wider shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5"
+                style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+              >
+                {isRunning
+                  ? <><Pause className="w-5 h-5" /><span>Jeda</span></>
+                  : <><Play className="w-5 h-5 fill-current" /><span>Mulai Belajar</span></>
+                }
               </button>
-              <button onClick={handleSkip} className="w-12 h-12 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition icon-btn">
+              <button
+                onClick={handleSkip}
+                className="w-12 h-12 rounded-2xl flex items-center justify-center transition icon-btn"
+                style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#75685B' }}
+              >
                 <SkipForward className="w-5 h-5" />
               </button>
             </div>
 
             {/* Task selector */}
-            <div className="mt-8 pt-5 border-t border-gray-100 w-full max-w-md text-left">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-                <CheckSquare className="w-3.5 h-3.5" style={{ color: BG }} /> Tugas yang sedang dikerjakan:
+            <div
+              className="mt-8 pt-5 w-full max-w-md text-left"
+              style={{ borderTop: '1px solid #F7F0DA' }}
+            >
+              <p
+                className="text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1"
+                style={{ color: '#75685B' }}
+              >
+                <CheckSquare className="w-3.5 h-3.5" style={{ color: '#8B0A0A' }} />
+                Tugas yang sedang dikerjakan:
               </p>
-              <select value={activeFocusTaskId} onChange={(e) => setActiveFocusTaskId(e.target.value)}
-                className="w-full text-xs font-bold p-3 rounded-2xl border border-gray-200 focus:ring-2 focus:border-orange-400 text-gray-800 bg-gray-50"
-                style={{ '--tw-ring-color': BG }}>
-                {tasks.map((t) => <option key={t.id} value={t.id}>{t.course} — {t.title}</option>)}
+              <select
+                value={activeFocusTaskId}
+                onChange={(e) => setActiveFocusTaskId(e.target.value)}
+                className="w-full text-xs font-bold p-3 rounded-2xl"
+                style={{
+                  background: '#F7F0DA',
+                  border: '1.5px solid #75685B',
+                  color: '#2B2B2B',
+                }}
+              >
+                {tasks.map((t) => (
+                  <option key={t.id} value={t.id}>{t.course} — {t.title}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -199,12 +286,21 @@ const FocusTimerPage = () => {
           {/* Right sidebar */}
           <div className="lg:col-span-5 space-y-5">
             {/* Audio Ambience */}
-            <div className="headspace-card-full border border-gray-100 shadow-card-sm p-5 space-y-4">
+            <div
+              className="p-5 space-y-4 rounded-3xl"
+              style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+            >
               <div className="flex items-center justify-between">
-                <h3 className="font-black text-gray-900">🎵 Study Ambience</h3>
-                <button onClick={() => setIsPlayingAudio(!isPlayingAudio)}
-                  className={`w-8 h-8 rounded-xl flex items-center justify-center transition ${isPlayingAudio ? 'text-white' : 'bg-gray-100 text-gray-500'}`}
-                  style={isPlayingAudio ? { backgroundColor: BG } : {}}>
+                <h3 className="font-black" style={{ color: '#2B2B2B' }}>🎵 Study Ambience</h3>
+                <button
+                  onClick={() => setIsPlayingAudio(!isPlayingAudio)}
+                  className="w-8 h-8 rounded-xl flex items-center justify-center transition"
+                  style={
+                    isPlayingAudio
+                      ? { backgroundColor: '#8B0A0A', color: '#F7F0DA' }
+                      : { background: '#F7F0DA', border: '1.5px solid #75685B', color: '#75685B' }
+                  }
+                >
                   {isPlayingAudio ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
                 </button>
               </div>
@@ -212,50 +308,87 @@ const FocusTimerPage = () => {
                 {soundscapes.map((sound) => {
                   const isSelected = activeSoundscape === sound.id;
                   return (
-                    <button key={sound.id} onClick={() => { setActiveSoundscape(sound.id); setIsPlayingAudio(true); }}
-                      className={`p-3 rounded-2xl border text-left transition flex flex-col gap-1 ${isSelected ? 'text-white shadow-sm' : 'bg-gray-50 border-gray-100 text-gray-700 hover:border-orange-200'}`}
-                      style={isSelected ? { backgroundColor: BG, borderColor: BG } : {}}>
+                    <button
+                      key={sound.id}
+                      onClick={() => { setActiveSoundscape(sound.id); setIsPlayingAudio(true); }}
+                      className="p-3 rounded-2xl text-left transition flex flex-col gap-1"
+                      style={
+                        isSelected
+                          ? { backgroundColor: '#4A8DB7', border: '2px solid #342B27', color: '#FFFBEF' }
+                          : { background: '#F7F0DA', border: '1px solid #75685B', color: '#2B2B2B' }
+                      }
+                    >
                       <span className="text-lg">{sound.icon}</span>
                       <p className="text-xs font-bold">{sound.name}</p>
-                      <p className={`text-[10px] truncate ${isSelected ? 'text-white/75' : 'text-gray-400'}`}>{sound.description}</p>
+                      <p
+                        className="text-[10px] truncate"
+                        style={{ color: isSelected ? 'rgba(255,255,255,0.75)' : '#75685B' }}
+                      >
+                        {sound.description}
+                      </p>
                     </button>
                   );
                 })}
               </div>
               {isPlayingAudio && (
                 <div className="flex items-center gap-2 pt-1">
-                  <Volume2 className="w-3.5 h-3.5 text-gray-400" />
-                  <input type="range" min="0" max="100" value={volume} onChange={(e) => setVolume(Number(e.target.value))}
-                    className="flex-1 h-1.5 rounded-lg cursor-pointer accent-orange-400" />
-                  <span className="text-xs text-gray-400 w-7">{volume}%</span>
+                  <Volume2 className="w-3.5 h-3.5" style={{ color: '#75685B' }} />
+                  <input
+                    type="range" min="0" max="100" value={volume}
+                    onChange={(e) => setVolume(Number(e.target.value))}
+                    className="flex-1 h-1.5 rounded-lg cursor-pointer"
+                    style={{ accentColor: '#8B0A0A' }}
+                  />
+                  <span className="text-xs w-7" style={{ color: '#75685B' }}>{volume}%</span>
                 </div>
               )}
             </div>
 
             {/* Stats */}
-            <div className="headspace-card-full border border-gray-100 shadow-card-sm p-5 space-y-4">
-              <h3 className="font-black text-gray-900">📊 Statistik Fokus Hari Ini</h3>
+            <div
+              className="p-5 space-y-4 rounded-3xl"
+              style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+            >
+              <h3 className="font-black" style={{ color: '#2B2B2B' }}>📊 Statistik Fokus Hari Ini</h3>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { lbl: 'Total Waktu Fokus', val: `${totalFocusMinutes} mnt`, color: BG },
-                  { lbl: 'Sesi Selesai', val: `${completedSessions} sesi`, color: '#6FB899' },
+                  { lbl: 'Total Waktu Fokus', val: `${totalFocusMinutes} mnt`, color: '#8B0A0A' },
+                  { lbl: 'Sesi Selesai', val: `${completedSessions} sesi`, color: '#4A8DB7' },
                 ].map((s) => (
-                  <div key={s.lbl} className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
-                    <p className="text-[10px] font-black uppercase tracking-wider mb-1" style={{ color: s.color }}>{s.lbl}</p>
-                    <p className="text-xl font-black text-gray-900">{s.val}</p>
-                    <p className="text-[10px] text-gray-400">Hari ini</p>
+                  <div
+                    key={s.lbl}
+                    className="p-4 rounded-2xl"
+                    style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                  >
+                    <p
+                      className="text-[10px] font-black uppercase tracking-wider mb-1"
+                      style={{ color: s.color }}
+                    >
+                      {s.lbl}
+                    </p>
+                    <p className="font-display text-xl" style={{ color: '#2B2B2B' }}>{s.val}</p>
+                    <p className="text-[10px]" style={{ color: '#75685B' }}>Hari ini</p>
                   </div>
                 ))}
               </div>
               <div className="space-y-2">
-                <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">Aktivitas Terakhir</p>
+                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#75685B' }}>
+                  Aktivitas Terakhir
+                </p>
                 {timerData.recentSessions.slice(0, 3).map((sess) => (
-                  <div key={sess.id} className="p-2.5 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-between text-xs">
+                  <div
+                    key={sess.id}
+                    className="p-2.5 rounded-xl flex items-center justify-between text-xs"
+                    style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                  >
                     <div className="truncate mr-2">
-                      <p className="font-bold text-gray-800 truncate">{sess.task}</p>
-                      <p className="text-[10px] text-gray-400">{sess.course}</p>
+                      <p className="font-bold truncate" style={{ color: '#2B2B2B' }}>{sess.task}</p>
+                      <p className="text-[10px]" style={{ color: '#75685B' }}>{sess.course}</p>
                     </div>
-                    <span className="text-[10px] font-black px-2 py-0.5 rounded-lg text-white shrink-0" style={{ backgroundColor: BG }}>
+                    <span
+                      className="text-[10px] font-black px-2 py-0.5 rounded-lg shrink-0"
+                      style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                    >
                       25 mnt · {sess.time}
                     </span>
                   </div>

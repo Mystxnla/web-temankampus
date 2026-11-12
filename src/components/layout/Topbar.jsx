@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search, Bell, ShieldAlert, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-const Topbar = ({ onOpenHelp, screenColor = {} }) => {
+const Topbar = ({ onOpenHelp }) => {
   const { user } = useAuth();
 
   const getGreeting = () => {
@@ -15,90 +15,93 @@ const Topbar = ({ onOpenHelp, screenColor = {} }) => {
   };
 
   const currentDate = new Intl.DateTimeFormat('id-ID', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
+    weekday: 'long', day: 'numeric', month: 'long',
   }).format(new Date());
 
   return (
     <header
-      className="h-16 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 select-none topbar-frosted"
-      style={{ backgroundColor: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.15)' }}
+      className="h-16 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 select-none"
+      style={{
+        backgroundColor: '#FFFBEF',
+        borderBottom: '2.37px solid #75685B',
+        boxShadow: '0 4px 0 0 #F7F0DA',
+      }}
     >
-      {/* Greeting Info */}
+      {/* Greeting */}
       <div className="flex items-center gap-3">
-        {/* Mobile brand badge */}
+        {/* Mobile logo */}
         <div
-          className="w-8 h-8 rounded-xl text-white flex items-center justify-center font-display text-sm font-black lg:hidden shadow-sm shrink-0"
-          style={{ backgroundColor: 'rgba(255,255,255,0.25)' }}
+          className="w-8 h-8 rounded-xl flex items-center justify-center font-display text-sm lg:hidden shadow-sm shrink-0"
+          style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
         >
           TK
         </div>
         <div>
-          <h1 className="text-sm sm:text-base font-bold text-white leading-tight">
-            {getGreeting()}, <span className="font-black">{user?.name?.split(' ')[0] || 'Teman'}!</span> 👋
+          <h1 className="font-display text-sm sm:text-base text-[#8B0A0A] leading-tight tracking-wide">
+            {getGreeting()}, {user?.name?.split(' ')[0] || 'Teman'}! 👋
           </h1>
-          <p className="text-[10px] sm:text-[11px] text-white/70 font-medium hidden sm:block">
+          <p className="font-hand text-[11px] text-[#1F3A7A] hidden sm:block">
             {currentDate}
           </p>
         </div>
       </div>
 
-      {/* Top Right Actions */}
+      {/* Right Actions */}
       <div className="flex items-center gap-2">
-        {/* Quick Search */}
+        {/* Search */}
         <div className="relative hidden md:block">
           <input
-            className="w-52 pl-9 pr-4 py-2 bg-white/15 text-xs rounded-full border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/40 text-white placeholder-white/50 transition"
+            className="w-52 pl-9 pr-4 py-2 text-xs rounded-full border-2 border-[#75685B] focus:outline-none focus:border-[#8B0A0A] text-[#2B2B2B] placeholder-[#75685B] transition font-bold"
+            style={{ background: '#FFFBEF' }}
             placeholder="Cari tugas, topik..."
             type="text"
           />
-          <Search className="w-3.5 h-3.5 text-white/60 absolute left-3 top-2.5" />
+          <Search className="w-3.5 h-3.5 text-[#75685B] absolute left-3 top-2.5" />
         </div>
 
-        {/* Emergency Support */}
+        {/* Counseling */}
         <button
           onClick={onOpenHelp}
-          className="text-xs bg-white/20 hover:bg-white/30 text-white font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 transition"
+          className="text-xs font-black px-3 py-1.5 rounded-full flex items-center gap-1.5 transition border-2"
+          style={{ background: '#F6D0D6', borderColor: '#75685B', color: '#8B0A0A' }}
           title="Layanan bantuan & konseling"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#8B0A0A] animate-pulse" />
           <span className="hidden sm:inline text-[11px]">Konseling</span>
           <ShieldAlert className="w-3.5 h-3.5 sm:hidden" />
         </button>
 
-        {/* Pro Badge or Upgrade */}
+        {/* Pro / Upgrade */}
         {user?.isPremium ? (
-          <Link
-            to="/premium"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-yellow-300/90 text-yellow-900 text-xs font-bold"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Pro Aktif</span>
+          <Link to="/premium"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black border-2 transition"
+            style={{ background: '#4A8DB7', borderColor: '#342B27', color: '#FFFBEF' }}>
+            <Sparkles className="w-3.5 h-3.5" /><span>Pro Aktif</span>
           </Link>
         ) : (
-          <Link
-            to="/premium"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs font-bold transition"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Upgrade</span>
+          <Link to="/premium"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black border-2 transition hover:bg-[#F7F0DA]"
+            style={{ background: '#FFFBEF', borderColor: '#4A8DB7', color: '#4A8DB7' }}>
+            <Sparkles className="w-3.5 h-3.5" /><span>Upgrade</span>
           </Link>
         )}
 
-        {/* Notification Bell */}
-        <button className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center relative transition icon-btn">
+        {/* Bell */}
+        <button
+          className="w-8 h-8 rounded-full flex items-center justify-center relative transition icon-btn border-2"
+          style={{ background: '#FFFBEF', borderColor: '#75685B', color: '#2B2B2B' }}
+        >
           <Bell className="w-4 h-4" />
-          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-red-400" />
+          <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#8B0A0A]" />
         </button>
 
-        {/* User Avatar */}
-        <Link
-          to="/auth"
-          className="w-8 h-8 rounded-full bg-white/90 text-gray-800 flex items-center justify-center transition shadow-sm icon-btn"
+        {/* Avatar */}
+        <Link to="/auth"
+          className="w-8 h-8 rounded-full flex items-center justify-center transition shadow-sm icon-btn border-2"
+          style={{ background: '#8B0A0A', borderColor: '#342B27', color: '#F7F0DA' }}
           title="Beralih Akun"
         >
-          <span className="text-[10px] font-black">{user?.avatar || 'TK'}</span>
+          <span className="font-display text-[10px]">{user?.avatar || 'TK'}</span>
         </Link>
       </div>
     </header>

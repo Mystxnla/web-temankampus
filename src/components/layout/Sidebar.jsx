@@ -1,65 +1,55 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import {
-  Home,
-  CheckSquare,
-  Smile,
-  Clock,
-  MessageCircle,
-  Users,
-  Sparkles,
-  LogOut,
-} from 'lucide-react';
+import { Home, CheckSquare, Smile, Clock, MessageCircle, Users, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTasks } from '../../context/TaskContext';
 
-const Sidebar = ({ screenColor = {} }) => {
+const Sidebar = () => {
   const { user } = useAuth();
   const { urgentTasks } = useTasks();
-  const bgColor = screenColor.bg || '#5C92D1';
 
   const navItems = [
-    { to: '/dashboard', label: 'Beranda', icon: Home, badge: null },
-    {
-      to: '/tasks', label: 'Tugas Kuliah', icon: CheckSquare,
-      badge: urgentTasks.length > 0 ? urgentTasks.length : null,
-    },
-    { to: '/mood', label: 'Mood Tracker', icon: Smile, badge: null },
-    { to: '/focus', label: 'Ruang Fokus', icon: Clock, badge: 'LIVE' },
-    { to: '/curhat', label: 'Teman Curhat (Mimi)', icon: MessageCircle, badge: null },
-    { to: '/community', label: 'Komunitas Sebaya', icon: Users, badge: null },
-    {
-      to: '/premium', label: 'Langganan Pro', icon: Sparkles,
-      badge: user?.isPremium ? 'PRO' : 'UPGRADE',
-    },
+    { to: '/dashboard', label: 'Beranda',             icon: Home,          badge: null },
+    { to: '/tasks',     label: 'Tugas Kuliah',        icon: CheckSquare,
+      badge: urgentTasks.length > 0 ? urgentTasks.length : null },
+    { to: '/mood',      label: 'Mood Tracker',        icon: Smile,         badge: null },
+    { to: '/focus',     label: 'Ruang Fokus',         icon: Clock,         badge: 'LIVE' },
+    { to: '/curhat',    label: 'Teman Curhat (Mimi)', icon: MessageCircle, badge: null },
+    { to: '/community', label: 'Komunitas Sebaya',    icon: Users,         badge: null },
+    { to: '/premium',   label: 'Langganan Pro',       icon: Sparkles,
+      badge: user?.isPremium ? 'PRO' : 'UPGRADE' },
   ];
 
   return (
     <aside
-      className="w-68 min-h-screen flex flex-col justify-between p-6 sticky top-0 shrink-0 select-none hidden lg:flex"
-      style={{ backgroundColor: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(12px)', borderRight: '1px solid rgba(255,255,255,0.20)', width: '272px' }}
+      className="hidden lg:flex w-[272px] min-h-screen flex-col justify-between p-5 sticky top-0 shrink-0 select-none"
+      style={{
+        backgroundColor: '#FFFBEF',
+        borderRight: '2.37px solid #75685B',
+        boxShadow: '4px 0 0 0 #F7F0DA',
+      }}
     >
-      <div className="space-y-8">
-        {/* Brand Logo */}
-        <Link to="/dashboard" className="flex items-center gap-3 group">
+      <div className="space-y-6">
+        {/* Brand */}
+        <Link to="/dashboard" className="flex items-center gap-3 group mt-1">
           <div
-            className="w-11 h-11 rounded-2xl text-white flex items-center justify-center font-display text-lg font-black shadow-lg group-hover:scale-105 transition-transform"
-            style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}
+            className="w-11 h-11 rounded-2xl flex items-center justify-center font-display text-lg shadow-md shrink-0 group-hover:scale-105 transition-transform"
+            style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
           >
             TK
           </div>
           <div>
-            <span className="font-display text-xl text-white font-black tracking-tight block leading-none">
+            <span className="font-display text-xl text-[#8B0A0A] tracking-wide block leading-none">
               TemanKampus
             </span>
-            <span className="text-[10px] text-white/70 font-bold tracking-widest block uppercase mt-0.5">
+            <span className="font-hand text-[11px] text-[#1F3A7A] block mt-0.5">
               Ruang Tenang & Tumbuh
             </span>
           </div>
         </Link>
 
-        {/* Main Navigation */}
-        <nav aria-label="Main Navigation" className="space-y-1.5">
+        {/* Navigation */}
+        <nav aria-label="Main Navigation" className="space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -67,29 +57,30 @@ const Sidebar = ({ screenColor = {} }) => {
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-2.5 rounded-full text-sm transition-all group font-bold ${
+                  `flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm transition-all font-bold ${
                     isActive
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-white/85 hover:bg-white/20 hover:text-white'
+                      ? 'bg-[#8B0A0A] text-[#F7F0DA] shadow-md'
+                      : 'text-[#2B2B2B] hover:bg-[#F7F0DA] hover:text-[#8B0A0A]'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
                     <Icon
-                      className={`w-4.5 h-4.5 shrink-0 transition ${
-                        isActive ? 'text-gray-700' : 'text-white/75 group-hover:text-white'
-                      }`}
-                      style={{ width: '18px', height: '18px' }}
+                      className="shrink-0"
+                      style={{ width: '18px', height: '18px',
+                        color: isActive ? '#F7F0DA' : '#75685B' }}
                     />
-                    <span className="flex-1 text-sm">{item.label}</span>
+                    <span className="flex-1">{item.label}</span>
                     {item.badge && (
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
-                          isActive
-                            ? 'bg-gray-100 text-gray-700'
-                            : 'bg-white/25 text-white'
-                        }`}
+                        className="text-[10px] px-2 py-0.5 rounded-full font-black"
+                        style={isActive
+                          ? { background: 'rgba(247,240,218,0.3)', color: '#F7F0DA' }
+                          : typeof item.badge === 'number'
+                          ? { background: '#8B0A0A', color: '#F7F0DA' }
+                          : { background: '#4A8DB7', color: '#FFFBEF' }
+                        }
                       >
                         {item.badge}
                       </span>
@@ -102,35 +93,36 @@ const Sidebar = ({ screenColor = {} }) => {
         </nav>
       </div>
 
-      {/* Sidebar Bottom */}
-      <div className="space-y-3 pt-4">
+      {/* Bottom */}
+      <div className="space-y-3 pt-4 border-t-2 border-[#F7F0DA]">
         {/* Wellness quote */}
-        <div className="p-3.5 rounded-2xl" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
-          <p className="text-[11.5px] text-white/80 leading-relaxed italic">
+        <div className="p-3.5 rounded-2xl" style={{ background: '#F7F0DA', border: '1.5px solid #75685B' }}>
+          <p className="font-hand text-[12px] text-[#1F3A7A] leading-relaxed">
             "Istirahat bukan tanda menyerah, tapi cara tubuhmu bersiap lebih kuat." 🌸
           </p>
         </div>
 
-        {/* User Profile Badge */}
+        {/* User Profile */}
         <Link
           to="/premium"
-          className="flex items-center gap-3 p-2.5 rounded-2xl hover:bg-white/15 transition cursor-pointer group"
-          style={{ border: '1px solid rgba(255,255,255,0.2)' }}
+          className="flex items-center gap-3 p-2.5 rounded-2xl transition cursor-pointer hover:bg-[#F7F0DA]"
+          style={{ border: '1.5px solid #75685B' }}
         >
           <div
-            className="w-10 h-10 rounded-full text-gray-800 font-extrabold text-xs flex items-center justify-center shadow-sm shrink-0"
-            style={{ backgroundColor: 'rgba(255,255,255,0.9)' }}
+            className="w-10 h-10 rounded-full font-black text-xs flex items-center justify-center shadow-sm shrink-0"
+            style={{ background: '#8B0A0A', color: '#F7F0DA' }}
           >
             {user?.avatar || 'TK'}
           </div>
           <div className="overflow-hidden min-w-0 flex-1">
-            <p className="text-xs font-bold text-white truncate">{user?.name || 'Mahasiswa'}</p>
-            <p className="text-[11px] text-white/65 truncate">
+            <p className="text-xs font-bold text-[#2B2B2B] truncate">{user?.name || 'Mahasiswa'}</p>
+            <p className="font-hand text-[11px] text-[#1F3A7A] truncate">
               {user?.major} · Smt {user?.semester}
             </p>
           </div>
           {user?.isPremium && (
-            <span className="text-[9px] bg-yellow-300 text-yellow-900 font-extrabold px-2 py-0.5 rounded-full shrink-0">
+            <span className="text-[9px] font-black px-2 py-0.5 rounded-full shrink-0"
+              style={{ background: '#4A8DB7', color: '#FFFBEF' }}>
               PRO
             </span>
           )}
