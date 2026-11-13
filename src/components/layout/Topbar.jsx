@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Bell, ShieldAlert, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import KucingMascot from '../KucingMascot';
 
 const Topbar = ({ onOpenHelp }) => {
   const { user } = useAuth();
@@ -29,12 +30,9 @@ const Topbar = ({ onOpenHelp }) => {
     >
       {/* Greeting */}
       <div className="flex items-center gap-3">
-        {/* Mobile logo */}
-        <div
-          className="w-8 h-8 rounded-xl flex items-center justify-center font-display text-sm lg:hidden shadow-sm shrink-0"
-          style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-        >
-          TK
+        {/* Mobile logo — kucing kecil */}
+        <div className="shrink-0 lg:hidden">
+          <KucingMascot pose="happy" size={40} />
         </div>
         <div>
           <h1 className="font-display text-sm sm:text-base text-[#8B0A0A] leading-tight tracking-wide">

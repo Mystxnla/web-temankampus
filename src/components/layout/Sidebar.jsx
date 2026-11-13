@@ -3,6 +3,7 @@ import { NavLink, Link } from 'react-router-dom';
 import { Home, CheckSquare, Smile, Clock, MessageCircle, Users, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTasks } from '../../context/TaskContext';
+import KucingMascot from '../KucingMascot';
 
 const Sidebar = () => {
   const { user } = useAuth();
@@ -31,12 +32,10 @@ const Sidebar = () => {
     >
       <div className="space-y-6">
         {/* Brand */}
-        <Link to="/dashboard" className="flex items-center gap-3 group mt-1">
-          <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center font-display text-lg shadow-md shrink-0 group-hover:scale-105 transition-transform"
-            style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-          >
-            TK
+        <Link to="/dashboard" className="flex items-center gap-2 group mt-1">
+          {/* Maskot kecil di sebelah logo */}
+          <div className="shrink-0 group-hover:scale-110 transition-transform">
+            <KucingMascot pose="happy" size={52} />
           </div>
           <div>
             <span className="font-display text-xl text-[#8B0A0A] tracking-wide block leading-none">
