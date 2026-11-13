@@ -4,6 +4,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import plansData from '../mock-data/plans.json';
+import KucingMascot from '../components/KucingMascot';
 
 const PremiumPage = () => {
   const { user, upgradeToPremium, setUser } = useAuth();
@@ -33,15 +34,20 @@ const PremiumPage = () => {
         className="px-5 sm:px-8 pt-6 pb-10"
         style={{ backgroundColor: '#C8BA96' }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
-          Investasi Kesejahteraan Akademik
-        </p>
-        <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
-          Tingkatkan potensimu
-        </h1>
-        <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
-          dengan TemanKampus Pro. ✨
-        </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
+              Investasi Kesejahteraan Akademik
+            </p>
+            <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
+              Tingkatkan potensimu
+            </h1>
+            <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
+              dengan TemanKampus Pro. ✨
+            </p>
+          </div>
+          <KucingMascot pose="happy" size={130} />
+        </div>
         <p className="text-sm mt-3 max-w-md" style={{ color: '#5C4A3A' }}>
           Terjangkau dengan tarif mahasiswa. Akses Mimi AI tanpa batas, audio fokus eksklusif, dan analisis psikologis mendalam.
         </p>

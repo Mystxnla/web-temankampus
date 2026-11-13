@@ -5,6 +5,7 @@ import {
   Trash2, Play, CheckCircle2, X
 } from 'lucide-react';
 import { useTasks } from '../context/TaskContext';
+import KucingMascot from '../components/KucingMascot';
 
 const TasksPage = () => {
   const navigate = useNavigate();
@@ -63,15 +64,20 @@ const TasksPage = () => {
         className="px-5 sm:px-8 pt-6 pb-10"
         style={{ backgroundColor: '#C8BA96' }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
-          Manajemen Tugas
-        </p>
-        <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
-          Kelola tugas kuliahmu
-        </h1>
-        <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
-          tanpa panik dan tanpa ketinggalan.
-        </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
+              Manajemen Tugas
+            </p>
+            <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
+              Kelola tugas kuliahmu
+            </h1>
+            <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
+              tanpa panik dan tanpa ketinggalan.
+            </p>
+          </div>
+          <KucingMascot pose="stressed" size={130} />
+        </div>
         <div className="flex items-center gap-6 mt-4">
           {[
             { val: tasks.filter((t) => t.status !== 'Selesai').length, lbl: 'Tugas Aktif' },

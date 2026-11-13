@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { useTasks } from '../context/TaskContext';
 import timerData from '../mock-data/timer.json';
+import KucingMascot from '../components/KucingMascot';
 
 const ACCENT = '#8B0A0A';
 
@@ -86,15 +87,20 @@ const FocusTimerPage = () => {
         className="px-5 sm:px-8 pt-6 pb-10"
         style={{ backgroundColor: '#C8BA96' }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
-          Ruang Fokus Pomodoro
-        </p>
-        <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
-          Fokus lebih dalam,
-        </h1>
-        <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
-          rehat secukupnya.
-        </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
+              Ruang Fokus Pomodoro
+            </p>
+            <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
+              Fokus lebih dalam,
+            </h1>
+            <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
+              rehat secukupnya.
+            </p>
+          </div>
+          <KucingMascot pose="stressed" size={130} />
+        </div>
         {/* Session dots */}
         <div className="flex items-center gap-2 mt-4">
           <p className="text-xs font-bold" style={{ color: '#5C4A3A' }}>Sesi hari ini:</p>

@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTasks } from '../context/TaskContext';
 import { useMood } from '../context/MoodContext';
 import communityData from '../mock-data/community.json';
+import KucingMascot from '../components/KucingMascot';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -50,15 +51,20 @@ const DashboardPage = () => {
         className="px-5 sm:px-8 pt-6 pb-10"
         style={{ backgroundColor: '#C8BA96' }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
-          Dashboard Mahasiswa
-        </p>
-        <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
-          Halo, {user?.name?.split(' ')[0] || 'Teman'}! ☀️
-        </h1>
-        <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
-          Mulai harimu dengan niat baik.
-        </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
+              Dashboard Mahasiswa
+            </p>
+            <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
+              Halo, {user?.name?.split(' ')[0] || 'Teman'}! ☀️
+            </h1>
+            <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
+              Mulai harimu dengan niat baik.
+            </p>
+          </div>
+          <KucingMascot pose="happy" size={130} />
+        </div>
         {/* Stats row */}
         <div className="flex items-center gap-6 mt-4">
           {[

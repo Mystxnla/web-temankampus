@@ -5,6 +5,7 @@ import {
   ShieldCheck, Sparkles, ChevronRight, Play, Flame
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import KucingMascot from '../components/KucingMascot';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -191,6 +192,7 @@ const LandingPage = () => {
 
           {/* Right: App preview card */}
           <div className="flex-shrink-0 flex flex-col items-center gap-3">
+            <KucingMascot pose="happy" size={130} />
             <div
               className="rounded-3xl p-4 w-72 sm:w-80"
               style={{ background: '#DDD0A8', border: '2.37px solid #5C4A3A', boxShadow: '0 0 0 12px #C8BA96, 0 0 0 16px #342B27' }}

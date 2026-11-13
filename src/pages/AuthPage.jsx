@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import KucingMascot from '../components/KucingMascot';
 import {
   Sparkles, ArrowRight, Mail, Lock, CheckCircle2,
 } from 'lucide-react';
@@ -105,21 +106,26 @@ const AuthPage = () => {
       <main className="w-full max-w-5xl mx-auto px-5 py-8 flex-1 flex flex-col justify-center">
         {/* Header */}
         <div className="mb-6">
-          <span
-            className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold mb-3"
-            style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Akses Ruang Mahasiswa</span>
-          </span>
-          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl mb-2" style={{ color: '#8B0A0A' }}>
-            Satu Tempat untuk Bereskan Tugas,<br />
-            <span style={{ color: '#4A8DB7' }}>Pulihkan Semangat Setiap Hari.</span>
-          </h1>
-          <p className="font-hand text-sm max-w-lg" style={{ color: '#1F3A7A' }}>
-            Didesain ramah untuk mahasiswa — kelola tugas tanpa panik, cek emosi harian,
-            dan temukan teman senasib di ruang aman TemanKampus.
-          </p>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <span
+                className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold mb-3"
+                style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Akses Ruang Mahasiswa</span>
+              </span>
+              <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl mb-2" style={{ color: '#8B0A0A' }}>
+                Satu Tempat untuk Bereskan Tugas,<br />
+                <span style={{ color: '#4A8DB7' }}>Pulihkan Semangat Setiap Hari.</span>
+              </h1>
+              <p className="font-hand text-sm max-w-lg" style={{ color: '#1F3A7A' }}>
+                Didesain ramah untuk mahasiswa — kelola tugas tanpa panik, cek emosi harian,
+                dan temukan teman senasib di ruang aman TemanKampus.
+              </p>
+            </div>
+            <KucingMascot pose="happy" size={130} />
+          </div>
         </div>
 
         {/* Auth Card Container */}

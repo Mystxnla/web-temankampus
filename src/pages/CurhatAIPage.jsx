@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import curhatData from '../mock-data/curhat.json';
+import KucingMascot from '../components/KucingMascot';
 
 const CurhatAIPage = () => {
   const location = useLocation();
@@ -95,15 +96,20 @@ const CurhatAIPage = () => {
         className="px-5 sm:px-8 pt-6 pb-8"
         style={{ background: 'linear-gradient(135deg, #8B0A0A 0%, #4A2010 100%)' }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(247,240,218,0.7)' }}>
-          Ruang Curhat Aman
-        </p>
-        <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#C8BA96' }}>
-          Cerita yuk, Mimi
-        </h1>
-        <p className="font-hand text-base mt-1" style={{ color: 'rgba(247,240,218,0.85)' }}>
-          selalu ada untukmu. 🌸
-        </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(247,240,218,0.7)' }}>
+              Ruang Curhat Aman
+            </p>
+            <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#C8BA96' }}>
+              Cerita yuk, Mimi
+            </h1>
+            <p className="font-hand text-base mt-1" style={{ color: 'rgba(247,240,218,0.85)' }}>
+              selalu ada untukmu. 🌸
+            </p>
+          </div>
+          <KucingMascot pose="happy" size={130} />
+        </div>
         {/* Disclaimer */}
         <div className="mt-3 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shrink-0" />
