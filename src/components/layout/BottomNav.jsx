@@ -21,9 +21,9 @@ const BottomNav = () => {
       aria-label="Mobile Navigation"
       className="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-2 py-2 flex items-center justify-around"
       style={{
-        backgroundColor: '#FFFBEF',
-        borderTop: '2.37px solid #75685B',
-        boxShadow: '0 -4px 0 0 #F7F0DA',
+        backgroundColor: '#DDD0A8',
+        borderTop: '2.37px solid #5C4A3A',
+        boxShadow: '0 -4px 0 0 #C8BA96',
       }}
     >
       {mobileNavItems.map((item) => {
@@ -40,17 +40,17 @@ const BottomNav = () => {
                   {isActive && (
                     <span
                       className="absolute inset-0 rounded-xl -m-1 -mx-2.5"
-                      style={{ background: '#F7F0DA' }}
+                      style={{ background: '#C8BA96' }}
                     />
                   )}
                   <Icon
                     className="w-5 h-5 relative z-10 transition-colors"
-                    style={{ color: isActive ? '#8B0A0A' : '#75685B' }}
+                    style={{ color: isActive ? '#8B0A0A' : '#5C4A3A' }}
                   />
                   {item.badge && (
                     <span
                       className="absolute -top-1.5 -right-2.5 min-w-[18px] h-4 px-1 rounded-full text-[9px] font-black flex items-center justify-center shadow-sm z-20"
-                      style={{ background: '#8B0A0A', color: '#F7F0DA' }}
+                      style={{ background: '#8B0A0A', color: '#C8BA96' }}
                     >
                       {item.badge}
                     </span>
@@ -58,7 +58,7 @@ const BottomNav = () => {
                 </div>
                 <span
                   className="text-[10px] mt-1 tracking-tight relative z-10 font-bold"
-                  style={{ color: isActive ? '#8B0A0A' : '#75685B' }}
+                  style={{ color: isActive ? '#8B0A0A' : '#5C4A3A' }}
                 >
                   {item.label}
                 </span>
@@ -72,3 +72,4 @@ const BottomNav = () => {
 };
 
 export default BottomNav;
+

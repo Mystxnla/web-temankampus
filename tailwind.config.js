@@ -10,16 +10,16 @@ export default {
       colors: {
         // ── Figma Design Tokens ──────────────────────────
         // Backgrounds
-        "paper":        "#F3F3F1",   // halaman utama
-        "paper-warm":   "#FFFBEF",   // card surface
-        "paper-gold":   "#F7F0DA",   // heading box / tape bg
+        "paper":        "#C8BA96",   // halaman utama
+        "paper-warm":   "#DDD0A8",   // card surface
+        "paper-gold":   "#C8BA96",   // heading box / tape bg
         "paper-dark":   "#342B27",   // shadow layer luar card
 
         // Text
-        "ink":          "#2B2B2B",   // body text
+        "ink":          "#1A1208",   // body text
         "ink-navy":     "#1F3A7A",   // label / patrick hand text
         "ink-dark":     "#342B27",   // border gelap
-        "ink-brown":    "#75685B",   // border card
+        "ink-brown":    "#5C4A3A",   // border card
 
         // Accents
         "red-heading":  "#8B0A0A",   // heading merah (PROBLEM, CHANNELS, dll)

@@ -96,9 +96,9 @@ const CommunityPage = () => {
       {/* ── Header Block ── */}
       <div
         className="px-5 sm:px-8 pt-6 pb-10"
-        style={{ backgroundColor: '#F7F0DA' }}
+        style={{ backgroundColor: '#C8BA96' }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#75685B' }}>
+        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
           Komunitas Mahasiswa Sebaya
         </p>
         <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#4A8DB7' }}>
@@ -115,7 +115,7 @@ const CommunityPage = () => {
           ].map((s) => (
             <div key={s.lbl}>
               <div className="font-display text-2xl" style={{ color: '#4A8DB7' }}>{s.val}</div>
-              <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#75685B' }}>
+              <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
                 {s.lbl}
               </div>
             </div>
@@ -124,7 +124,7 @@ const CommunityPage = () => {
         <button
           onClick={() => setIsNewPostModalOpen(true)}
           className="hs-btn mt-5 text-xs font-black py-2.5 px-5"
-          style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+          style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
         >
           <Plus className="w-4 h-4" /> Tulis Cerita Baru
         </button>
@@ -135,7 +135,7 @@ const CommunityPage = () => {
         {/* Search + categories */}
         <div
           className="p-4 space-y-3 rounded-2xl"
-          style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+          style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
         >
           <div className="relative">
             <input
@@ -144,9 +144,9 @@ const CommunityPage = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari topik diskusi, tips skripsi..."
               className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl transition"
-              style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+              style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
             />
-            <Search className="w-4 h-4 absolute left-3 top-3" style={{ color: '#75685B' }} />
+            <Search className="w-4 h-4 absolute left-3 top-3" style={{ color: '#5C4A3A' }} />
           </div>
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {categories.map((cat) => (
@@ -156,8 +156,8 @@ const CommunityPage = () => {
                 className="px-4 py-2 rounded-full text-xs font-bold transition-all shrink-0 uppercase tracking-wider"
                 style={
                   selectedCategory === cat
-                    ? { backgroundColor: '#8B0A0A', color: '#F7F0DA' }
-                    : { background: '#F7F0DA', color: '#75685B', border: '1px solid #75685B' }
+                    ? { backgroundColor: '#8B0A0A', color: '#C8BA96' }
+                    : { background: '#C8BA96', color: '#5C4A3A', border: '1px solid #5C4A3A' }
                 }
               >
                 {cat}
@@ -173,29 +173,29 @@ const CommunityPage = () => {
               key={thread.id}
               onClick={() => setActiveThreadDetail(thread)}
               className="p-5 cursor-pointer space-y-3 transition rounded-3xl"
-              style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span
                     className="hs-chip text-[10px]"
-                    style={{ backgroundColor: '#4A8DB7', color: '#FFFBEF' }}
+                    style={{ backgroundColor: '#4A8DB7', color: '#DDD0A8' }}
                   >
                     {thread.category}
                   </span>
-                  <span className="text-xs" style={{ color: '#75685B' }}>· {thread.timeAgo}</span>
+                  <span className="text-xs" style={{ color: '#5C4A3A' }}>· {thread.timeAgo}</span>
                 </div>
                 <span className="text-xs font-bold" style={{ color: '#4A8DB7' }}>{thread.faculty}</span>
               </div>
               <h3 className="font-black text-sm sm:text-base leading-snug" style={{ color: '#2B2B2B' }}>
                 "{thread.title}"
               </h3>
-              <p className="text-xs line-clamp-2 leading-relaxed" style={{ color: '#75685B' }}>
+              <p className="text-xs line-clamp-2 leading-relaxed" style={{ color: '#5C4A3A' }}>
                 {thread.content}
               </p>
               <div
                 className="pt-3 flex items-center justify-between text-xs"
-                style={{ borderTop: '1px solid #F7F0DA', color: '#75685B' }}
+                style={{ borderTop: '1px solid #C8BA96', color: '#5C4A3A' }}
               >
                 <div className="flex items-center gap-3">
                   <button
@@ -223,35 +223,35 @@ const CommunityPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div
             className="rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
-            style={{ background: '#FFFBEF' }}
+            style={{ background: '#DDD0A8' }}
           >
             <div
               className="p-4 flex items-center justify-between"
-              style={{ background: '#F7F0DA', borderBottom: '2px solid #75685B' }}
+              style={{ background: '#C8BA96', borderBottom: '2px solid #5C4A3A' }}
             >
               <div className="flex items-center gap-2">
                 <span
                   className="hs-chip text-[10px]"
-                  style={{ backgroundColor: '#4A8DB7', color: '#FFFBEF' }}
+                  style={{ backgroundColor: '#4A8DB7', color: '#DDD0A8' }}
                 >
                   {activeThreadDetail.category}
                 </span>
-                <span className="text-xs" style={{ color: '#75685B' }}>{activeThreadDetail.timeAgo}</span>
+                <span className="text-xs" style={{ color: '#5C4A3A' }}>{activeThreadDetail.timeAgo}</span>
               </div>
               <button
                 onClick={() => setActiveThreadDetail(null)}
                 className="w-8 h-8 rounded-full flex items-center justify-center transition"
-                style={{ background: '#75685B30', color: '#2B2B2B' }}
+                style={{ background: '#5C4A3A30', color: '#2B2B2B' }}
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="p-5 overflow-y-auto space-y-5 flex-1">
-              <div className="space-y-2 pb-4" style={{ borderBottom: '1px solid #F7F0DA' }}>
+              <div className="space-y-2 pb-4" style={{ borderBottom: '1px solid #C8BA96' }}>
                 <h2 className="font-black text-lg leading-snug" style={{ color: '#8B0A0A' }}>
                   "{activeThreadDetail.title}"
                 </h2>
-                <p className="text-xs flex items-center gap-1" style={{ color: '#75685B' }}>
+                <p className="text-xs flex items-center gap-1" style={{ color: '#5C4A3A' }}>
                   <span className="font-bold" style={{ color: '#4A8DB7' }}>{activeThreadDetail.author}</span>
                   · {activeThreadDetail.faculty}
                 </p>
@@ -268,11 +268,11 @@ const CommunityPage = () => {
                 </button>
               </div>
               <div className="space-y-3">
-                <h4 className="text-xs font-black uppercase tracking-wider" style={{ color: '#75685B' }}>
+                <h4 className="text-xs font-black uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
                   Respon ({activeThreadDetail.replies?.length || 0})
                 </h4>
                 {(!activeThreadDetail.replies || activeThreadDetail.replies.length === 0) && (
-                  <p className="text-xs italic py-3" style={{ color: '#75685B' }}>
+                  <p className="text-xs italic py-3" style={{ color: '#5C4A3A' }}>
                     Belum ada respon. Jadilah yang pertama!
                   </p>
                 )}
@@ -280,11 +280,11 @@ const CommunityPage = () => {
                   <div
                     key={reply.id}
                     className="p-3.5 rounded-2xl space-y-1"
-                    style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                    style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
                   >
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold" style={{ color: '#2B2B2B' }}>{reply.author}</span>
-                      <span className="text-[10px]" style={{ color: '#75685B' }}>{reply.timeAgo}</span>
+                      <span className="text-[10px]" style={{ color: '#5C4A3A' }}>{reply.timeAgo}</span>
                     </div>
                     <p className="text-xs leading-relaxed" style={{ color: '#2B2B2B' }}>{reply.content}</p>
                   </div>
@@ -294,9 +294,9 @@ const CommunityPage = () => {
             <form
               onSubmit={handleAddReply}
               className="p-4 space-y-2.5"
-              style={{ background: '#FFFBEF', borderTop: '2px solid #75685B' }}
+              style={{ background: '#DDD0A8', borderTop: '2px solid #5C4A3A' }}
             >
-              <div className="flex items-center justify-between text-[11px]" style={{ color: '#75685B' }}>
+              <div className="flex items-center justify-between text-[11px]" style={{ color: '#5C4A3A' }}>
                 <label className="flex items-center gap-1.5 cursor-pointer">
                   <input
                     type="checkbox"
@@ -316,13 +316,13 @@ const CommunityPage = () => {
                   onChange={(e) => setReplyContent(e.target.value)}
                   placeholder="Tuliskan kata penyemangat..."
                   className="flex-1 px-4 py-2.5 text-xs rounded-xl transition"
-                  style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                 />
                 <button
                   type="submit"
                   disabled={!replyContent.trim()}
                   className="px-4 py-2.5 text-xs font-bold rounded-xl transition disabled:opacity-50 shrink-0"
-                  style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
                 >
                   Kirim
                 </button>
@@ -337,12 +337,12 @@ const CommunityPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div
             className="rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden"
-            style={{ background: '#FFFBEF' }}
+            style={{ background: '#DDD0A8' }}
           >
             {/* Modal header */}
             <div
               className="p-5 flex items-center justify-between"
-              style={{ background: '#F7F0DA', borderBottom: '2px solid #75685B' }}
+              style={{ background: '#C8BA96', borderBottom: '2px solid #5C4A3A' }}
             >
               <div>
                 <h3 className="font-display text-xl" style={{ color: '#8B0A0A' }}>
@@ -355,7 +355,7 @@ const CommunityPage = () => {
               <button
                 onClick={() => setIsNewPostModalOpen(false)}
                 className="w-8 h-8 rounded-full flex items-center justify-center transition"
-                style={{ background: '#75685B30', color: '#2B2B2B' }}
+                style={{ background: '#5C4A3A30', color: '#2B2B2B' }}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -364,7 +364,7 @@ const CommunityPage = () => {
               <div>
                 <label
                   className="block text-xs font-bold uppercase tracking-wider mb-1"
-                  style={{ color: '#75685B' }}
+                  style={{ color: '#5C4A3A' }}
                 >
                   Kategori
                 </label>
@@ -372,7 +372,7 @@ const CommunityPage = () => {
                   value={newPost.category}
                   onChange={(e) => setNewPost({ ...newPost, category: e.target.value })}
                   className="w-full px-4 py-2.5 text-xs rounded-xl"
-                  style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                 >
                   {categories.filter((c) => c !== 'Semua').map((cat) => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -382,7 +382,7 @@ const CommunityPage = () => {
               <div>
                 <label
                   className="block text-xs font-bold uppercase tracking-wider mb-1"
-                  style={{ color: '#75685B' }}
+                  style={{ color: '#5C4A3A' }}
                 >
                   Judul Cerita / Pertanyaan
                 </label>
@@ -393,13 +393,13 @@ const CommunityPage = () => {
                   onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
                   placeholder="Cara mengatasi overthinking sebelum seminar proposal..."
                   className="w-full px-4 py-2.5 text-xs rounded-xl transition"
-                  style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                 />
               </div>
               <div>
                 <label
                   className="block text-xs font-bold uppercase tracking-wider mb-1"
-                  style={{ color: '#75685B' }}
+                  style={{ color: '#5C4A3A' }}
                 >
                   Isi Cerita
                 </label>
@@ -410,16 +410,16 @@ const CommunityPage = () => {
                   onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
                   placeholder="Ceritakan detail situasimu..."
                   className="w-full px-4 py-2.5 text-xs rounded-xl resize-none transition"
-                  style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                 />
               </div>
               <div
                 className="p-3 rounded-xl flex items-center justify-between"
-                style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
               >
                 <div>
                   <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>Posting sebagai Anonim</p>
-                  <p className="text-[10px]" style={{ color: '#75685B' }}>Identitasmu tidak akan terlihat</p>
+                  <p className="text-[10px]" style={{ color: '#5C4A3A' }}>Identitasmu tidak akan terlihat</p>
                 </div>
                 <input
                   type="checkbox"
@@ -434,14 +434,14 @@ const CommunityPage = () => {
                   type="button"
                   onClick={() => setIsNewPostModalOpen(false)}
                   className="px-5 py-2.5 rounded-xl text-xs font-bold transition"
-                  style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   className="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition shadow-sm"
-                  style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
                 >
                   Publikasikan
                 </button>
@@ -455,3 +455,4 @@ const CommunityPage = () => {
 };
 
 export default CommunityPage;
+

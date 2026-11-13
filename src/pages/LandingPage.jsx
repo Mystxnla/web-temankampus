@@ -72,21 +72,21 @@ const LandingPage = () => {
   const handleDemoAccess = () => { login(); navigate('/dashboard'); };
 
   return (
-    <div className="min-h-screen font-sans" style={{ backgroundColor: '#F3F3F1' }}>
+    <div className="min-h-screen font-sans" style={{ backgroundColor: '#C8BA96' }}>
       {/* ── Sticky Header ── */}
       <header
         className="fixed top-0 left-0 right-0 z-50 topbar-frosted"
         style={{
-          backgroundColor: '#FFFBEF',
-          borderBottom: '2px solid #75685B',
-          boxShadow: '0 4px 0 0 #F7F0DA',
+          backgroundColor: '#DDD0A8',
+          borderBottom: '2px solid #5C4A3A',
+          boxShadow: '0 4px 0 0 #C8BA96',
         }}
       >
         <div className="h-16 max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
             <div
               className="w-9 h-9 rounded-xl font-display text-base flex items-center justify-center shadow-sm"
-              style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+              style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
             >
               TK
             </div>
@@ -101,7 +101,7 @@ const LandingPage = () => {
                 key={href}
                 href={href}
                 className="text-xs font-bold uppercase tracking-wider transition"
-                style={{ color: '#75685B' }}
+                style={{ color: '#5C4A3A' }}
               >
                 {['Fitur', 'Mood Preview', 'Cerita Teman'][i]}
               </a>
@@ -112,14 +112,14 @@ const LandingPage = () => {
             <Link
               to="/auth"
               className="text-xs font-bold px-3 py-1.5 transition"
-              style={{ color: '#75685B' }}
+              style={{ color: '#5C4A3A' }}
             >
               Masuk
             </Link>
             <button
               onClick={handleDemoAccess}
               className="hs-btn text-xs py-2 px-5 font-black"
-              style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+              style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
             >
               Daftar Gratis ✨
             </button>
@@ -135,7 +135,7 @@ const LandingPage = () => {
             {/* Category chip */}
             <span
               className="hs-chip text-xs uppercase tracking-widest"
-              style={{ background: '#F7F0DA', color: '#8B0A0A', border: '1px solid #75685B' }}
+              style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
             >
               🌸 Ruang Aman Mahasiswa Indonesia
             </span>
@@ -157,7 +157,7 @@ const LandingPage = () => {
                   <div className="font-display text-2xl leading-none" style={{ color: col }}>{val}</div>
                   <div
                     className="text-[10px] font-bold uppercase tracking-wider mt-0.5"
-                    style={{ color: '#75685B' }}
+                    style={{ color: '#5C4A3A' }}
                   >
                     {lbl}
                   </div>
@@ -170,20 +170,20 @@ const LandingPage = () => {
               <button
                 onClick={handleDemoAccess}
                 className="hs-btn font-black"
-                style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+                style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
               >
                 Mulai Sekarang (Gratis) <ArrowRight className="w-4 h-4" />
               </button>
               <button
                 onClick={handleDemoAccess}
                 className="hs-btn"
-                style={{ backgroundColor: '#FFFBEF', color: '#1F3A7A', border: '2px solid #75685B' }}
+                style={{ backgroundColor: '#DDD0A8', color: '#1F3A7A', border: '2px solid #5C4A3A' }}
               >
                 <Play className="w-4 h-4" /> Demo Langsung
               </button>
             </div>
 
-            <div className="flex items-center gap-1.5 text-[11px]" style={{ color: '#75685B' }}>
+            <div className="flex items-center gap-1.5 text-[11px]" style={{ color: '#5C4A3A' }}>
               <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
               Gratis · Email kampus .ac.id dapat 3 bulan bonus Premium
             </div>
@@ -193,7 +193,7 @@ const LandingPage = () => {
           <div className="flex-shrink-0 flex flex-col items-center gap-3">
             <div
               className="rounded-3xl p-4 w-72 sm:w-80"
-              style={{ background: '#FFFBEF', border: '2.37px solid #75685B', boxShadow: '0 0 0 12px #F7F0DA, 0 0 0 16px #342B27' }}
+              style={{ background: '#DDD0A8', border: '2.37px solid #5C4A3A', boxShadow: '0 0 0 12px #C8BA96, 0 0 0 16px #342B27' }}
             >
               <div className="flex items-center gap-2 mb-3">
                 <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#8B0A0A' }} />
@@ -205,7 +205,7 @@ const LandingPage = () => {
                 </span>
                 <span
                   className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full"
-                  style={{ background: '#4A8DB7', color: '#FFFBEF' }}
+                  style={{ background: '#4A8DB7', color: '#DDD0A8' }}
                 >
                   Smt 6
                 </span>
@@ -213,7 +213,7 @@ const LandingPage = () => {
               <div className="space-y-2.5">
                 <div
                   className="p-2.5 rounded-xl flex items-center justify-between"
-                  style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
                 >
                   <div>
                     <p className="text-[10px] font-black uppercase" style={{ color: '#8B0A0A' }}>
@@ -223,7 +223,7 @@ const LandingPage = () => {
                   </div>
                   <span
                     className="text-[11px] font-bold px-2 py-1 rounded-lg"
-                    style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                    style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
                   >
                     23:59
                   </span>
@@ -235,23 +235,23 @@ const LandingPage = () => {
                   <p className="text-[10px] font-bold uppercase mb-0.5" style={{ color: 'rgba(247,240,218,0.7)' }}>
                     Mimi AI
                   </p>
-                  <p className="text-xs leading-snug" style={{ color: '#F7F0DA' }}>
+                  <p className="text-xs leading-snug" style={{ color: '#C8BA96' }}>
                     "Kamu sudah sampai sejauh ini, Nadira! Satu langkah lagi." 🌸
                   </p>
                 </div>
                 <div
                   className="flex items-center gap-2 p-2.5 rounded-xl"
-                  style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
                 >
                   <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm"
-                    style={{ background: '#8B0A0A', color: '#F7F0DA' }}
+                    style={{ background: '#8B0A0A', color: '#C8BA96' }}
                   >
                     25
                   </div>
                   <div>
                     <p className="text-[11px] font-bold" style={{ color: '#2B2B2B' }}>Pomodoro Aktif</p>
-                    <p className="text-[10px]" style={{ color: '#75685B' }}>Hujan Kampus · Sesi ke-3</p>
+                    <p className="text-[10px]" style={{ color: '#5C4A3A' }}>Hujan Kampus · Sesi ke-3</p>
                   </div>
                   <Flame className="w-4 h-4 ml-auto" style={{ color: '#8B0A0A' }} />
                 </div>
@@ -265,13 +265,13 @@ const LandingPage = () => {
       <div
         className="mt-12 py-16 px-5 sm:px-8"
         id="fitur"
-        style={{ backgroundColor: '#FFFBEF', borderTop: '2.37px solid #75685B' }}
+        style={{ backgroundColor: '#DDD0A8', borderTop: '2.37px solid #5C4A3A' }}
       >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10">
             <span
               className="hs-chip text-xs"
-              style={{ background: '#F7F0DA', color: '#8B0A0A', border: '1px solid #75685B' }}
+              style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
             >
               Solusi Terintegrasi
             </span>
@@ -293,7 +293,7 @@ const LandingPage = () => {
                 <div
                   key={i}
                   className="p-5 rounded-3xl cursor-pointer transition group"
-                  style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+                  style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
                   onClick={() => handleDemoAccess()}
                 >
                   <div
@@ -310,7 +310,7 @@ const LandingPage = () => {
                   </div>
                   <span
                     className="hs-chip text-[10px] mb-2 inline-block"
-                    style={{ backgroundColor: f.numColor, color: '#F7F0DA' }}
+                    style={{ backgroundColor: f.numColor, color: '#C8BA96' }}
                   >
                     {f.badge}
                   </span>
@@ -332,11 +332,11 @@ const LandingPage = () => {
         <div id="mood-preview" className="max-w-3xl mx-auto mt-16">
           <div
             className="p-6 sm:p-10 text-center space-y-6 rounded-3xl"
-            style={{ background: '#F7F0DA', border: '2.37px solid #75685B', boxShadow: '0 0 0 12px #F7F0DA, 0 0 0 16px #342B27' }}
+            style={{ background: '#C8BA96', border: '2.37px solid #5C4A3A', boxShadow: '0 0 0 12px #C8BA96, 0 0 0 16px #342B27' }}
           >
             <span
               className="hs-chip text-xs"
-              style={{ background: '#8B0A0A', color: '#F7F0DA' }}
+              style={{ background: '#8B0A0A', color: '#C8BA96' }}
             >
               ✨ Coba Interaktif
             </span>
@@ -356,8 +356,8 @@ const LandingPage = () => {
                   className="hs-btn py-2 px-4 text-xs"
                   style={
                     selectedPreviewMood === m.id
-                      ? { backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }
-                      : { backgroundColor: '#FFFBEF', color: '#2B2B2B', border: '2px solid #75685B' }
+                      ? { backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }
+                      : { backgroundColor: '#DDD0A8', color: '#2B2B2B', border: '2px solid #5C4A3A' }
                   }
                 >
                   <span className="text-base">{m.emoji}</span> {m.label}
@@ -366,7 +366,7 @@ const LandingPage = () => {
             </div>
             <div
               className="p-4 rounded-2xl text-left"
-              style={{ background: '#FFFBEF', border: '1px solid #75685B' }}
+              style={{ background: '#DDD0A8', border: '1px solid #5C4A3A' }}
             >
               {selectedPreviewMood === 'baik' && (
                 <p className="font-hand text-sm leading-relaxed" style={{ color: '#1F3A7A' }}>
@@ -411,12 +411,12 @@ const LandingPage = () => {
               <div
                 key={i}
                 className="p-5 flex flex-col justify-between rounded-3xl"
-                style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+                style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
               >
                 <div>
                   <span
                     className="hs-chip text-[10px] mb-3 inline-block"
-                    style={{ background: '#F7F0DA', color: '#8B0A0A', border: '1px solid #75685B' }}
+                    style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
                   >
                     {t.tag}
                   </span>
@@ -429,17 +429,17 @@ const LandingPage = () => {
                 </div>
                 <div
                   className="flex items-center gap-2.5 pt-3"
-                  style={{ borderTop: '1px solid #F7F0DA' }}
+                  style={{ borderTop: '1px solid #C8BA96' }}
                 >
                   <div
                     className="w-9 h-9 rounded-full font-black text-xs flex items-center justify-center"
-                    style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                    style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
                   >
                     {t.avatar}
                   </div>
                   <div>
                     <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>{t.name}</p>
-                    <p className="text-[10px]" style={{ color: '#75685B' }}>{t.campus}</p>
+                    <p className="text-[10px]" style={{ color: '#5C4A3A' }}>{t.campus}</p>
                   </div>
                 </div>
               </div>
@@ -457,11 +457,11 @@ const LandingPage = () => {
             <div className="relative z-10 space-y-5">
               <div
                 className="w-16 h-16 rounded-full font-display text-2xl flex items-center justify-center mx-auto"
-                style={{ backgroundColor: 'rgba(247,240,218,0.2)', color: '#F7F0DA' }}
+                style={{ backgroundColor: 'rgba(247,240,218,0.2)', color: '#C8BA96' }}
               >
                 TK
               </div>
-              <h2 className="font-display text-3xl sm:text-4xl" style={{ color: '#F7F0DA' }}>
+              <h2 className="font-display text-3xl sm:text-4xl" style={{ color: '#C8BA96' }}>
                 Mulai semester ini<br />dengan lebih tenang.
               </h2>
               <p className="text-sm" style={{ color: 'rgba(247,240,218,0.85)' }}>
@@ -471,14 +471,14 @@ const LandingPage = () => {
                 <button
                   onClick={handleDemoAccess}
                   className="hs-btn font-black"
-                  style={{ backgroundColor: '#F7F0DA', color: '#8B0A0A', border: '2px solid #342B27' }}
+                  style={{ backgroundColor: '#C8BA96', color: '#8B0A0A', border: '2px solid #342B27' }}
                 >
                   Buka Dashboard (Gratis) <ArrowRight className="w-4 h-4" />
                 </button>
                 <Link
                   to="/premium"
                   className="hs-btn"
-                  style={{ backgroundColor: 'rgba(247,240,218,0.15)', color: '#F7F0DA', border: '2px solid rgba(247,240,218,0.3)' }}
+                  style={{ backgroundColor: 'rgba(247,240,218,0.15)', color: '#C8BA96', border: '2px solid rgba(247,240,218,0.3)' }}
                 >
                   Pelajari Pro Plan
                 </Link>
@@ -490,12 +490,12 @@ const LandingPage = () => {
         {/* ── Footer ── */}
         <footer
           className="max-w-7xl mx-auto mt-16 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs"
-          style={{ borderTop: '2px solid #75685B', color: '#75685B' }}
+          style={{ borderTop: '2px solid #5C4A3A', color: '#5C4A3A' }}
         >
           <div className="flex items-center gap-2.5">
             <div
               className="w-8 h-8 rounded-xl font-display text-sm flex items-center justify-center"
-              style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+              style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
             >
               TK
             </div>
@@ -510,7 +510,7 @@ const LandingPage = () => {
                 key={path}
                 to={path}
                 className="font-medium transition hover:underline"
-                style={{ color: '#75685B' }}
+                style={{ color: '#5C4A3A' }}
               >
                 {['Dashboard', 'Task Manager', 'Mood Tracker', 'Curhat AI', 'Komunitas', 'Premium'][i]}
               </Link>
@@ -524,3 +524,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+

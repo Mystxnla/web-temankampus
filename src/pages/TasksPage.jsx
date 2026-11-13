@@ -51,9 +51,9 @@ const TasksPage = () => {
 
   // Priority badge styles
   const priorityStyle = {
-    Tinggi: { bg: '#8B0A0A', text: '#F7F0DA' },
-    Sedang: { bg: '#4A8DB7', text: '#FFFBEF' },
-    Rendah: { bg: '#F7F0DA', text: '#8B0A0A', border: '1px solid #75685B' },
+    Tinggi: { bg: '#8B0A0A', text: '#C8BA96' },
+    Sedang: { bg: '#4A8DB7', text: '#DDD0A8' },
+    Rendah: { bg: '#C8BA96', text: '#8B0A0A', border: '1px solid #5C4A3A' },
   };
 
   return (
@@ -61,9 +61,9 @@ const TasksPage = () => {
       {/* ── Header Block ── */}
       <div
         className="px-5 sm:px-8 pt-6 pb-10"
-        style={{ backgroundColor: '#F7F0DA' }}
+        style={{ backgroundColor: '#C8BA96' }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#75685B' }}>
+        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
           Manajemen Tugas
         </p>
         <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
@@ -80,7 +80,7 @@ const TasksPage = () => {
           ].map((s) => (
             <div key={s.lbl}>
               <div className="font-display text-2xl" style={{ color: '#8B0A0A' }}>{s.val}</div>
-              <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#75685B' }}>
+              <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
                 {s.lbl}
               </div>
             </div>
@@ -95,7 +95,7 @@ const TasksPage = () => {
           <div className="flex items-center gap-2">
             <div
               className="flex rounded-2xl p-1"
-              style={{ background: '#F7F0DA', border: '1.5px solid #75685B' }}
+              style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A' }}
             >
               {[
                 { mode: 'list', Icon: List, label: 'List' },
@@ -107,8 +107,8 @@ const TasksPage = () => {
                   className="px-4 py-2 rounded-xl text-xs font-black transition uppercase tracking-wider"
                   style={
                     viewMode === mode
-                      ? { backgroundColor: '#8B0A0A', color: '#F7F0DA' }
-                      : { color: '#75685B' }
+                      ? { backgroundColor: '#8B0A0A', color: '#C8BA96' }
+                      : { color: '#5C4A3A' }
                   }
                 >
                   <Icon className="w-3.5 h-3.5 inline mr-1.5" />{label}
@@ -119,7 +119,7 @@ const TasksPage = () => {
           <button
             onClick={() => setIsModalOpen(true)}
             className="hs-btn text-xs py-2.5 px-5 font-black"
-            style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+            style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
           >
             <Plus className="w-4 h-4" /> Tambah Tugas
           </button>
@@ -128,7 +128,7 @@ const TasksPage = () => {
         {/* Filter bar */}
         <div
           className="p-4 flex flex-col lg:flex-row items-stretch lg:items-center gap-3 rounded-2xl"
-          style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+          style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
         >
           <div className="relative flex-1 max-w-md">
             <input
@@ -138,12 +138,12 @@ const TasksPage = () => {
               placeholder="Cari tugas atau mata kuliah..."
               className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl focus:outline-none transition font-bold"
               style={{
-                background: '#F7F0DA',
+                background: '#C8BA96',
                 color: '#2B2B2B',
-                border: '1.5px solid #75685B',
+                border: '1.5px solid #5C4A3A',
               }}
             />
-            <Search className="w-4 h-4 absolute left-3 top-3" style={{ color: '#75685B' }} />
+            <Search className="w-4 h-4 absolute left-3 top-3" style={{ color: '#5C4A3A' }} />
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {[
@@ -157,12 +157,12 @@ const TasksPage = () => {
               },
             ].map((f) => (
               <div key={f.label} className="flex items-center gap-1.5">
-                <span className="text-[11px] font-bold" style={{ color: '#75685B' }}>{f.label}</span>
+                <span className="text-[11px] font-bold" style={{ color: '#5C4A3A' }}>{f.label}</span>
                 <select
                   value={f.value}
                   onChange={(e) => f.setter(e.target.value)}
                   className="text-xs font-bold px-3 py-2 rounded-xl"
-                  style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                 >
                   {f.options.map(([val, lbl]) => (
                     <option key={val} value={val}>{lbl}</option>
@@ -179,11 +179,11 @@ const TasksPage = () => {
             {filteredTasks.length === 0 ? (
               <div
                 className="p-12 text-center space-y-2 rounded-3xl"
-                style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+                style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
               >
                 <CheckCircle2 className="w-10 h-10 mx-auto" style={{ color: '#4A8DB7' }} />
                 <p className="font-black" style={{ color: '#2B2B2B' }}>Tidak ada tugas yang cocok!</p>
-                <p className="text-xs" style={{ color: '#75685B' }}>Coba ubah filter atau tambah tugas baru.</p>
+                <p className="text-xs" style={{ color: '#5C4A3A' }}>Coba ubah filter atau tambah tugas baru.</p>
               </div>
             ) : (
               filteredTasks.map((task) => {
@@ -194,8 +194,8 @@ const TasksPage = () => {
                     key={task.id}
                     className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl transition"
                     style={{
-                      background: '#FFFBEF',
-                      border: `2px solid ${isDone ? '#F7F0DA' : '#75685B'}`,
+                      background: '#DDD0A8',
+                      border: `2px solid ${isDone ? '#C8BA96' : '#5C4A3A'}`,
                       opacity: isDone ? 0.65 : 1,
                     }}
                   >
@@ -211,7 +211,7 @@ const TasksPage = () => {
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span
                             className="text-[10px] font-black px-2.5 py-0.5 rounded-full"
-                            style={{ background: '#F7F0DA', color: '#8B0A0A', border: '1px solid #75685B' }}
+                            style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
                           >
                             {task.course}
                           </span>
@@ -221,18 +221,18 @@ const TasksPage = () => {
                           >
                             {task.priority}
                           </span>
-                          <span className="text-[10px]" style={{ color: '#75685B' }}>
+                          <span className="text-[10px]" style={{ color: '#5C4A3A' }}>
                             ⏱️ {task.estimatedMinutes} mnt
                           </span>
                         </div>
                         <h3
                           className={`text-sm font-bold leading-snug ${isDone ? 'line-through' : ''}`}
-                          style={{ color: isDone ? '#75685B' : '#2B2B2B' }}
+                          style={{ color: isDone ? '#5C4A3A' : '#2B2B2B' }}
                         >
                           {task.title}
                         </h3>
                         {task.description && (
-                          <p className="text-xs line-clamp-1" style={{ color: '#75685B' }}>
+                          <p className="text-xs line-clamp-1" style={{ color: '#5C4A3A' }}>
                             {task.description}
                           </p>
                         )}
@@ -241,7 +241,7 @@ const TasksPage = () => {
                     <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
                       <span
                         className="text-xs font-bold px-3 py-1.5 rounded-full"
-                        style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                        style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
                       >
                         {task.dueLabel || 'Deadline'}
                       </span>
@@ -249,7 +249,7 @@ const TasksPage = () => {
                         <button
                           onClick={() => handleStartFocus(task.id)}
                           className="w-8 h-8 rounded-xl flex items-center justify-center transition"
-                          style={{ backgroundColor: '#4A8DB7', color: '#FFFBEF' }}
+                          style={{ backgroundColor: '#4A8DB7', color: '#DDD0A8' }}
                         >
                           <Play className="w-3.5 h-3.5 fill-current" />
                         </button>
@@ -257,7 +257,7 @@ const TasksPage = () => {
                       <button
                         onClick={() => deleteTask(task.id)}
                         className="w-8 h-8 rounded-xl flex items-center justify-center transition hover:opacity-80"
-                        style={{ background: '#F7F0DA', color: '#8B0A0A' }}
+                        style={{ background: '#C8BA96', color: '#8B0A0A' }}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -272,31 +272,31 @@ const TasksPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
             <div
               className="lg:col-span-8 p-5 space-y-4 rounded-3xl"
-              style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
             >
               <div
                 className="flex items-center justify-between pb-3"
-                style={{ borderBottom: '1px solid #F7F0DA' }}
+                style={{ borderBottom: '1px solid #C8BA96' }}
               >
                 <h2 className="font-black text-lg" style={{ color: '#2B2B2B' }}>September 2026</h2>
                 <span
                   className="hs-chip text-[10px]"
-                  style={{ background: '#F7F0DA', color: '#8B0A0A', border: '1px solid #75685B' }}
+                  style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
                 >
                   Semester Ganjil TA 2026/2027
                 </span>
               </div>
               <div
                 className="grid grid-cols-7 text-center font-bold text-xs pb-1"
-                style={{ color: '#75685B' }}
+                style={{ color: '#5C4A3A' }}
               >
                 {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((d) => (
                   <span key={d}>{d}</span>
                 ))}
               </div>
               <div className="grid grid-cols-7 gap-1.5">
-                <div className="h-14 rounded-xl" style={{ background: '#F7F0DA' }} />
-                <div className="h-14 rounded-xl" style={{ background: '#F7F0DA' }} />
+                <div className="h-14 rounded-xl" style={{ background: '#C8BA96' }} />
+                <div className="h-14 rounded-xl" style={{ background: '#C8BA96' }} />
                 {Array.from({ length: 30 }, (_, i) => i + 1).map((day) => {
                   const isSelected = selectedCalDay === day;
                   const isToday = day === 18;
@@ -307,12 +307,12 @@ const TasksPage = () => {
                       onClick={() => setSelectedCalDay(day)}
                       className="h-14 rounded-xl p-1.5 flex flex-col justify-between text-left transition"
                       style={{
-                        background: isSelected ? '#F7F0DA' : isToday ? '#4A8DB720' : '#F7F0DA40',
+                        background: isSelected ? '#C8BA96' : isToday ? '#4A8DB720' : '#C8BA9640',
                         border: isSelected
                           ? '2px solid #8B0A0A'
                           : isToday
                           ? '2px solid #4A8DB7'
-                          : '1px solid #75685B30',
+                          : '1px solid #5C4A3A30',
                       }}
                     >
                       <div className="flex items-center justify-between">
@@ -320,7 +320,7 @@ const TasksPage = () => {
                           className={`text-xs font-bold ${isToday ? 'w-5 h-5 rounded-full flex items-center justify-center text-[10px]' : ''}`}
                           style={
                             isToday
-                              ? { backgroundColor: '#4A8DB7', color: '#FFFBEF' }
+                              ? { backgroundColor: '#4A8DB7', color: '#DDD0A8' }
                               : { color: '#2B2B2B' }
                           }
                         >
@@ -342,7 +342,7 @@ const TasksPage = () => {
             </div>
             <div
               className="lg:col-span-4 p-5 rounded-3xl"
-              style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
             >
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -356,7 +356,7 @@ const TasksPage = () => {
                 {selectedCalDay === 18 && (
                   <span
                     className="hs-chip text-[10px] font-black"
-                    style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                    style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
                   >
                     HARI INI
                   </span>
@@ -371,34 +371,34 @@ const TasksPage = () => {
                     <div
                       key={i}
                       className="p-3 rounded-xl"
-                      style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                      style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
                     >
                       <p className="text-[10px] font-bold" style={{ color: '#8B0A0A' }}>{item.badge}</p>
                       <p className="text-xs font-bold mt-0.5" style={{ color: '#2B2B2B' }}>{item.title}</p>
-                      <p className="text-[10px]" style={{ color: '#75685B' }}>{item.sub}</p>
+                      <p className="text-[10px]" style={{ color: '#5C4A3A' }}>{item.sub}</p>
                     </div>
                   ))}
                 </div>
               ) : selectedCalDay === 19 ? (
                 <div
                   className="p-3 rounded-xl"
-                  style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
                 >
                   <p className="text-[10px] font-bold" style={{ color: '#8B0A0A' }}>📋 Deadline 10:00</p>
                   <p className="text-xs font-bold mt-0.5" style={{ color: '#2B2B2B' }}>
                     Finalisasi Low-Fi Wireframes Mobile
                   </p>
-                  <p className="text-[10px]" style={{ color: '#75685B' }}>UI/UX Design Studio · 60 mnt</p>
+                  <p className="text-[10px]" style={{ color: '#5C4A3A' }}>UI/UX Design Studio · 60 mnt</p>
                 </div>
               ) : (
-                <div className="py-8 text-center text-xs" style={{ color: '#75685B' }}>
+                <div className="py-8 text-center text-xs" style={{ color: '#5C4A3A' }}>
                   Tidak ada deadline hari ini 🌸
                 </div>
               )}
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="w-full mt-4 py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition"
-                style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
               >
                 + Tambah Tugas
               </button>
@@ -412,12 +412,12 @@ const TasksPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div
             className="rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden"
-            style={{ background: '#FFFBEF' }}
+            style={{ background: '#DDD0A8' }}
           >
             {/* Modal header */}
             <div
               className="p-5 flex items-center justify-between"
-              style={{ backgroundColor: '#F7F0DA', borderBottom: '2px solid #75685B' }}
+              style={{ backgroundColor: '#C8BA96', borderBottom: '2px solid #5C4A3A' }}
             >
               <div>
                 <h3 className="font-display text-xl" style={{ color: '#8B0A0A' }}>
@@ -430,7 +430,7 @@ const TasksPage = () => {
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="w-8 h-8 rounded-full flex items-center justify-center transition"
-                style={{ background: '#75685B30', color: '#2B2B2B' }}
+                style={{ background: '#5C4A3A30', color: '#2B2B2B' }}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -439,7 +439,7 @@ const TasksPage = () => {
               <div>
                 <label
                   className="block text-xs font-bold uppercase tracking-wider mb-1"
-                  style={{ color: '#75685B' }}
+                  style={{ color: '#5C4A3A' }}
                 >
                   Judul Tugas
                 </label>
@@ -450,14 +450,14 @@ const TasksPage = () => {
                   onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
                   placeholder="Contoh: Laporan Akhir Praktikum Jaringan"
                   className="w-full px-4 py-2.5 text-xs rounded-xl transition"
-                  style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label
                     className="block text-xs font-bold uppercase tracking-wider mb-1"
-                    style={{ color: '#75685B' }}
+                    style={{ color: '#5C4A3A' }}
                   >
                     Mata Kuliah
                   </label>
@@ -467,13 +467,13 @@ const TasksPage = () => {
                     value={newTask.course}
                     onChange={(e) => setNewTask({ ...newTask, course: e.target.value })}
                     className="w-full px-4 py-2.5 text-xs rounded-xl transition"
-                    style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                    style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                   />
                 </div>
                 <div>
                   <label
                     className="block text-xs font-bold uppercase tracking-wider mb-1"
-                    style={{ color: '#75685B' }}
+                    style={{ color: '#5C4A3A' }}
                   >
                     Prioritas
                   </label>
@@ -481,7 +481,7 @@ const TasksPage = () => {
                     value={newTask.priority}
                     onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
                     className="w-full px-4 py-2.5 text-xs rounded-xl"
-                    style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                    style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                   >
                     <option value="Tinggi">🔥 Tinggi</option>
                     <option value="Sedang">Sedang</option>
@@ -493,7 +493,7 @@ const TasksPage = () => {
                 <div>
                   <label
                     className="block text-xs font-bold uppercase tracking-wider mb-1"
-                    style={{ color: '#75685B' }}
+                    style={{ color: '#5C4A3A' }}
                   >
                     Tenggat
                   </label>
@@ -502,13 +502,13 @@ const TasksPage = () => {
                     value={newTask.dueDate}
                     onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
                     className="w-full px-4 py-2 text-xs rounded-xl"
-                    style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                    style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                   />
                 </div>
                 <div>
                   <label
                     className="block text-xs font-bold uppercase tracking-wider mb-1"
-                    style={{ color: '#75685B' }}
+                    style={{ color: '#5C4A3A' }}
                   >
                     Estimasi (Mnt)
                   </label>
@@ -519,7 +519,7 @@ const TasksPage = () => {
                     value={newTask.estimatedMinutes}
                     onChange={(e) => setNewTask({ ...newTask, estimatedMinutes: e.target.value })}
                     className="w-full px-4 py-2 text-xs rounded-xl"
-                    style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                    style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                   />
                 </div>
               </div>
@@ -529,21 +529,21 @@ const TasksPage = () => {
                 onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
                 placeholder="Catatan tambahan..."
                 className="w-full px-4 py-2.5 text-xs rounded-xl resize-none"
-                style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
               />
               <div className="flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
                   className="px-5 py-2.5 rounded-xl text-xs font-bold transition"
-                  style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   className="hs-btn text-xs py-2.5 px-6 font-black"
-                  style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
                 >
                   Simpan Tugas
                 </button>
@@ -557,3 +557,4 @@ const TasksPage = () => {
 };
 
 export default TasksPage;
+

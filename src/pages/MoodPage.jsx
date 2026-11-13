@@ -43,9 +43,9 @@ const MoodPage = () => {
       {/* ── Header Block ── */}
       <div
         className="px-5 sm:px-8 pt-6 pb-10"
-        style={{ backgroundColor: '#F7F0DA' }}
+        style={{ backgroundColor: '#C8BA96' }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#75685B' }}>
+        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
           Mood & Kesehatan Mental
         </p>
         <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#4A8DB7' }}>
@@ -71,7 +71,7 @@ const MoodPage = () => {
         {isConsecutiveNegative && (
           <div
             className="p-4 rounded-2xl flex items-start gap-3"
-            style={{ background: '#8B0A0A', color: '#F7F0DA' }}
+            style={{ background: '#8B0A0A', color: '#C8BA96' }}
           >
             <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
             <div className="flex-1">
@@ -83,7 +83,7 @@ const MoodPage = () => {
             <button
               onClick={openHelpModal}
               className="shrink-0 px-3 py-2 rounded-full text-xs font-black"
-              style={{ background: '#F7F0DA', color: '#8B0A0A' }}
+              style={{ background: '#C8BA96', color: '#8B0A0A' }}
             >
               Cari Bantuan
             </button>
@@ -96,13 +96,13 @@ const MoodPage = () => {
             <form
               onSubmit={handleSubmit}
               className="p-6 space-y-5 rounded-3xl"
-              style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
             >
               <h2 className="font-black text-xl" style={{ color: '#2B2B2B' }}>Check-In Hari Ini 🌱</h2>
 
               {/* Mood options */}
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#75685B' }}>
+                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#5C4A3A' }}>
                   Kondisi emosionalmu:
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -116,8 +116,8 @@ const MoodPage = () => {
                         className="hs-btn py-2 px-4 text-xs transition-all"
                         style={
                           isSelected
-                            ? { backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }
-                            : { backgroundColor: '#F7F0DA', color: '#2B2B2B', border: '1.5px solid #75685B' }
+                            ? { backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }
+                            : { backgroundColor: '#C8BA96', color: '#2B2B2B', border: '1.5px solid #5C4A3A' }
                         }
                       >
                         <span className="text-base">{opt.emoji}</span> {opt.label}
@@ -130,7 +130,7 @@ const MoodPage = () => {
               {/* Energy level */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#75685B' }}>
+                  <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
                     Tingkat energi hari ini:
                   </p>
                   <span className="text-sm font-black" style={{ color: '#4A8DB7' }}>
@@ -145,9 +145,9 @@ const MoodPage = () => {
                       onClick={() => setEnergyLevel(lv)}
                       className="flex-1 h-8 rounded-xl border-2 transition-all font-black text-xs"
                       style={{
-                        borderColor: lv <= energyLevel ? '#4A8DB7' : '#75685B30',
+                        borderColor: lv <= energyLevel ? '#4A8DB7' : '#5C4A3A30',
                         backgroundColor: lv <= energyLevel ? '#4A8DB7' : 'transparent',
-                        color: lv <= energyLevel ? '#FFFBEF' : '#75685B',
+                        color: lv <= energyLevel ? '#DDD0A8' : '#5C4A3A',
                       }}
                     >
                       {lv}
@@ -158,7 +158,7 @@ const MoodPage = () => {
 
               {/* Tags */}
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#75685B' }}>
+                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#5C4A3A' }}>
                   Apa yang memengaruhi harimu?
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -170,8 +170,8 @@ const MoodPage = () => {
                       className="hs-chip text-[11px] transition-all"
                       style={
                         selectedTags.includes(tag)
-                          ? { backgroundColor: '#4A8DB7', color: '#FFFBEF', border: 'none' }
-                          : { background: '#F7F0DA', color: '#75685B', border: '1px solid #75685B' }
+                          ? { backgroundColor: '#4A8DB7', color: '#DDD0A8', border: 'none' }
+                          : { background: '#C8BA96', color: '#5C4A3A', border: '1px solid #5C4A3A' }
                       }
                     >
                       {tag}
@@ -182,7 +182,7 @@ const MoodPage = () => {
 
               {/* Journal */}
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#75685B' }}>
+                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#5C4A3A' }}>
                   Jurnal singkat (opsional):
                 </p>
                 <textarea
@@ -192,8 +192,8 @@ const MoodPage = () => {
                   placeholder="Ceritakan apa yang kamu rasakan hari ini, tanpa filter..."
                   className="w-full p-3 rounded-2xl text-xs resize-none transition"
                   style={{
-                    background: '#F7F0DA',
-                    border: '1.5px solid #75685B',
+                    background: '#C8BA96',
+                    border: '1.5px solid #5C4A3A',
                     color: '#2B2B2B',
                   }}
                 />
@@ -202,7 +202,7 @@ const MoodPage = () => {
               <button
                 type="submit"
                 className="hs-btn w-full justify-center font-black"
-                style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+                style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
               >
                 {saveSuccess ? '✅ Check-in Tersimpan!' : 'Simpan Check-in Hari Ini'}
               </button>
@@ -215,7 +215,7 @@ const MoodPage = () => {
             {recommendations.length > 0 && (
               <div
                 className="p-5 rounded-3xl"
-                style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+                style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
               >
                 <h3 className="font-black mb-3" style={{ color: '#2B2B2B' }}>🌿 Rekomendasi Untukmu</h3>
                 <div className="space-y-2">
@@ -223,12 +223,12 @@ const MoodPage = () => {
                     <div
                       key={i}
                       className="p-3 rounded-xl flex items-start gap-2.5"
-                      style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                      style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
                     >
                       <span className="text-lg shrink-0">{rec.icon}</span>
                       <div>
                         <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>{rec.title}</p>
-                        <p className="text-[11px]" style={{ color: '#75685B' }}>{rec.description}</p>
+                        <p className="text-[11px]" style={{ color: '#5C4A3A' }}>{rec.description}</p>
                       </div>
                     </div>
                   ))}
@@ -239,11 +239,11 @@ const MoodPage = () => {
             {/* Mood history */}
             <div
               className="p-5 rounded-3xl"
-              style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
             >
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-black" style={{ color: '#2B2B2B' }}>📈 Riwayat Mood</h3>
-                <span className="text-[10px] font-bold" style={{ color: '#75685B' }}>7 hari terakhir</span>
+                <span className="text-[10px] font-bold" style={{ color: '#5C4A3A' }}>7 hari terakhir</span>
               </div>
               <div className="flex items-end gap-2 h-20">
                 {history.slice(-7).map((m, i) => {
@@ -259,7 +259,7 @@ const MoodPage = () => {
                           opacity: 0.75 + i * 0.035,
                         }}
                       />
-                      <span className="text-[9px]" style={{ color: '#75685B' }}>
+                      <span className="text-[9px]" style={{ color: '#5C4A3A' }}>
                         {m.date?.slice(5)}
                       </span>
                     </div>
@@ -281,7 +281,7 @@ const MoodPage = () => {
               <button
                 onClick={openHelpModal}
                 className="px-4 py-2 rounded-full text-xs font-black"
-                style={{ background: '#F7F0DA', color: '#1F3A7A' }}
+                style={{ background: '#C8BA96', color: '#1F3A7A' }}
               >
                 Hubungi Sekarang →
               </button>
@@ -294,3 +294,4 @@ const MoodPage = () => {
 };
 
 export default MoodPage;
+

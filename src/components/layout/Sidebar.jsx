@@ -24,9 +24,9 @@ const Sidebar = () => {
     <aside
       className="hidden lg:flex w-[272px] min-h-screen flex-col justify-between p-5 sticky top-0 shrink-0 select-none"
       style={{
-        backgroundColor: '#FFFBEF',
-        borderRight: '2.37px solid #75685B',
-        boxShadow: '4px 0 0 0 #F7F0DA',
+        backgroundColor: '#DDD0A8',
+        borderRight: '2.37px solid #5C4A3A',
+        boxShadow: '4px 0 0 0 #C8BA96',
       }}
     >
       <div className="space-y-6">
@@ -34,7 +34,7 @@ const Sidebar = () => {
         <Link to="/dashboard" className="flex items-center gap-3 group mt-1">
           <div
             className="w-11 h-11 rounded-2xl flex items-center justify-center font-display text-lg shadow-md shrink-0 group-hover:scale-105 transition-transform"
-            style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+            style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
           >
             TK
           </div>
@@ -59,8 +59,8 @@ const Sidebar = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm transition-all font-bold ${
                     isActive
-                      ? 'bg-[#8B0A0A] text-[#F7F0DA] shadow-md'
-                      : 'text-[#2B2B2B] hover:bg-[#F7F0DA] hover:text-[#8B0A0A]'
+                      ? 'bg-[#8B0A0A] text-[#C8BA96] shadow-md'
+                      : 'text-[#2B2B2B] hover:bg-[#C8BA96] hover:text-[#8B0A0A]'
                   }`
                 }
               >
@@ -69,17 +69,17 @@ const Sidebar = () => {
                     <Icon
                       className="shrink-0"
                       style={{ width: '18px', height: '18px',
-                        color: isActive ? '#F7F0DA' : '#75685B' }}
+                        color: isActive ? '#C8BA96' : '#5C4A3A' }}
                     />
                     <span className="flex-1">{item.label}</span>
                     {item.badge && (
                       <span
                         className="text-[10px] px-2 py-0.5 rounded-full font-black"
                         style={isActive
-                          ? { background: 'rgba(247,240,218,0.3)', color: '#F7F0DA' }
+                          ? { background: 'rgba(247,240,218,0.3)', color: '#C8BA96' }
                           : typeof item.badge === 'number'
-                          ? { background: '#8B0A0A', color: '#F7F0DA' }
-                          : { background: '#4A8DB7', color: '#FFFBEF' }
+                          ? { background: '#8B0A0A', color: '#C8BA96' }
+                          : { background: '#4A8DB7', color: '#DDD0A8' }
                         }
                       >
                         {item.badge}
@@ -94,9 +94,9 @@ const Sidebar = () => {
       </div>
 
       {/* Bottom */}
-      <div className="space-y-3 pt-4 border-t-2 border-[#F7F0DA]">
+      <div className="space-y-3 pt-4 border-t-2 border-[#C8BA96]">
         {/* Wellness quote */}
-        <div className="p-3.5 rounded-2xl" style={{ background: '#F7F0DA', border: '1.5px solid #75685B' }}>
+        <div className="p-3.5 rounded-2xl" style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A' }}>
           <p className="font-hand text-[12px] text-[#1F3A7A] leading-relaxed">
             "Istirahat bukan tanda menyerah, tapi cara tubuhmu bersiap lebih kuat." 🌸
           </p>
@@ -105,12 +105,12 @@ const Sidebar = () => {
         {/* User Profile */}
         <Link
           to="/premium"
-          className="flex items-center gap-3 p-2.5 rounded-2xl transition cursor-pointer hover:bg-[#F7F0DA]"
-          style={{ border: '1.5px solid #75685B' }}
+          className="flex items-center gap-3 p-2.5 rounded-2xl transition cursor-pointer hover:bg-[#C8BA96]"
+          style={{ border: '1.5px solid #5C4A3A' }}
         >
           <div
             className="w-10 h-10 rounded-full font-black text-xs flex items-center justify-center shadow-sm shrink-0"
-            style={{ background: '#8B0A0A', color: '#F7F0DA' }}
+            style={{ background: '#8B0A0A', color: '#C8BA96' }}
           >
             {user?.avatar || 'TK'}
           </div>
@@ -122,7 +122,7 @@ const Sidebar = () => {
           </div>
           {user?.isPremium && (
             <span className="text-[9px] font-black px-2 py-0.5 rounded-full shrink-0"
-              style={{ background: '#4A8DB7', color: '#FFFBEF' }}>
+              style={{ background: '#4A8DB7', color: '#DDD0A8' }}>
               PRO
             </span>
           )}
@@ -133,3 +133,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

@@ -5,12 +5,12 @@ import Topbar from './Topbar';
 import BottomNav from './BottomNav';
 import ProfessionalHelpModal from './ProfessionalHelpModal';
 
-// Semua screen pakai paper warm (#F3F3F1) — konsisten dengan Figma design
+// Semua screen pakai paper warm (#C8BA96) — konsisten dengan Figma design
 const AppLayout = () => {
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: '#F3F3F1' }}>
+    <div className="min-h-screen flex" style={{ backgroundColor: '#C8BA96' }}>
       {/* Desktop Sidebar */}
       <Sidebar />
 
@@ -33,3 +33,4 @@ const AppLayout = () => {
 };
 
 export default AppLayout;
+

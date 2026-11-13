@@ -84,9 +84,9 @@ const FocusTimerPage = () => {
       {/* ── Header Block ── */}
       <div
         className="px-5 sm:px-8 pt-6 pb-10"
-        style={{ backgroundColor: '#F7F0DA' }}
+        style={{ backgroundColor: '#C8BA96' }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#75685B' }}>
+        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
           Ruang Fokus Pomodoro
         </p>
         <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
@@ -97,7 +97,7 @@ const FocusTimerPage = () => {
         </p>
         {/* Session dots */}
         <div className="flex items-center gap-2 mt-4">
-          <p className="text-xs font-bold" style={{ color: '#75685B' }}>Sesi hari ini:</p>
+          <p className="text-xs font-bold" style={{ color: '#5C4A3A' }}>Sesi hari ini:</p>
           <div className="flex items-center gap-1.5">
             {sessionDots.map((status, i) => (
               <div
@@ -108,14 +108,14 @@ const FocusTimerPage = () => {
                     status === 'done'
                       ? '#8B0A0A'
                       : status === 'active'
-                      ? '#F7F0DA'
+                      ? '#C8BA96'
                       : 'rgba(117,104,91,0.25)',
                   color:
                     status === 'done'
-                      ? '#F7F0DA'
+                      ? '#C8BA96'
                       : status === 'active'
                       ? '#8B0A0A'
-                      : '#75685B',
+                      : '#5C4A3A',
                   border: status === 'active' ? '2px solid #8B0A0A' : 'none',
                 }}
               >
@@ -123,7 +123,7 @@ const FocusTimerPage = () => {
               </div>
             ))}
           </div>
-          <span className="text-[10px] ml-1" style={{ color: '#75685B' }}>
+          <span className="text-[10px] ml-1" style={{ color: '#5C4A3A' }}>
             {completedSessions}/{totalSessionDots} sesi
           </span>
         </div>
@@ -136,7 +136,7 @@ const FocusTimerPage = () => {
         {showRestAlert && (
           <div
             className="p-4 rounded-2xl flex items-start sm:items-center gap-3 justify-between"
-            style={{ background: 'linear-gradient(135deg, #8B0A0A, #4A2010)', color: '#F7F0DA' }}
+            style={{ background: 'linear-gradient(135deg, #8B0A0A, #4A2010)', color: '#C8BA96' }}
           >
             <div className="flex items-center gap-3">
               <span className="text-2xl">☕</span>
@@ -155,14 +155,14 @@ const FocusTimerPage = () => {
                   handlePresetChange('long_break');
                 }}
                 className="px-3 py-1.5 text-xs font-black rounded-full"
-                style={{ background: '#F7F0DA', color: '#8B0A0A' }}
+                style={{ background: '#C8BA96', color: '#8B0A0A' }}
               >
                 Istirahat 15 mnt
               </button>
               <button
                 onClick={() => setShowRestAlert(false)}
                 className="px-3 py-1.5 text-xs font-bold rounded-full"
-                style={{ background: 'rgba(247,240,218,0.2)', color: '#F7F0DA' }}
+                style={{ background: 'rgba(247,240,218,0.2)', color: '#C8BA96' }}
               >
                 Nanti
               </button>
@@ -174,12 +174,12 @@ const FocusTimerPage = () => {
           {/* Timer widget */}
           <div
             className="lg:col-span-7 p-6 sm:p-8 flex flex-col items-center text-center rounded-3xl"
-            style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
           >
             {/* Preset tabs */}
             <div
               className="flex rounded-2xl p-1 mb-8 w-full max-w-sm"
-              style={{ background: '#F7F0DA', border: '1.5px solid #75685B' }}
+              style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A' }}
             >
               {presets.map((p) => (
                 <button
@@ -188,8 +188,8 @@ const FocusTimerPage = () => {
                   className="flex-1 py-2 rounded-xl text-xs font-black transition-all uppercase tracking-wider"
                   style={
                     activePreset === p.id
-                      ? { backgroundColor: '#8B0A0A', color: '#F7F0DA' }
-                      : { color: '#75685B' }
+                      ? { backgroundColor: '#8B0A0A', color: '#C8BA96' }
+                      : { color: '#5C4A3A' }
                   }
                 >
                   {p.label}
@@ -200,7 +200,7 @@ const FocusTimerPage = () => {
             {/* SVG Circular progress */}
             <div className="relative w-64 h-64 flex items-center justify-center my-2">
               <svg className="w-full h-full" viewBox="0 0 200 200" style={{ transform: 'rotate(-90deg)' }}>
-                <circle cx="100" cy="100" r={radius} fill="none" stroke="#F7F0DA" strokeWidth="12" />
+                <circle cx="100" cy="100" r={radius} fill="none" stroke="#C8BA96" strokeWidth="12" />
                 <circle
                   cx="100" cy="100" r={radius} fill="none"
                   stroke="#8B0A0A" strokeWidth="12"
@@ -219,7 +219,7 @@ const FocusTimerPage = () => {
                 </span>
                 <span
                   className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mt-2"
-                  style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
                 >
                   {activePreset === 'focus' ? '🎯 Fokus Sesi' : '☕ Rehat Sehat'}
                 </span>
@@ -231,14 +231,14 @@ const FocusTimerPage = () => {
               <button
                 onClick={handleReset}
                 className="w-12 h-12 rounded-2xl flex items-center justify-center transition icon-btn"
-                style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#75685B' }}
+                style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#5C4A3A' }}
               >
                 <RotateCcw className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setIsRunning(!isRunning)}
                 className="px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-wider shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5"
-                style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+                style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
               >
                 {isRunning
                   ? <><Pause className="w-5 h-5" /><span>Jeda</span></>
@@ -248,7 +248,7 @@ const FocusTimerPage = () => {
               <button
                 onClick={handleSkip}
                 className="w-12 h-12 rounded-2xl flex items-center justify-center transition icon-btn"
-                style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#75685B' }}
+                style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#5C4A3A' }}
               >
                 <SkipForward className="w-5 h-5" />
               </button>
@@ -257,11 +257,11 @@ const FocusTimerPage = () => {
             {/* Task selector */}
             <div
               className="mt-8 pt-5 w-full max-w-md text-left"
-              style={{ borderTop: '1px solid #F7F0DA' }}
+              style={{ borderTop: '1px solid #C8BA96' }}
             >
               <p
                 className="text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1"
-                style={{ color: '#75685B' }}
+                style={{ color: '#5C4A3A' }}
               >
                 <CheckSquare className="w-3.5 h-3.5" style={{ color: '#8B0A0A' }} />
                 Tugas yang sedang dikerjakan:
@@ -271,8 +271,8 @@ const FocusTimerPage = () => {
                 onChange={(e) => setActiveFocusTaskId(e.target.value)}
                 className="w-full text-xs font-bold p-3 rounded-2xl"
                 style={{
-                  background: '#F7F0DA',
-                  border: '1.5px solid #75685B',
+                  background: '#C8BA96',
+                  border: '1.5px solid #5C4A3A',
                   color: '#2B2B2B',
                 }}
               >
@@ -288,7 +288,7 @@ const FocusTimerPage = () => {
             {/* Audio Ambience */}
             <div
               className="p-5 space-y-4 rounded-3xl"
-              style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
             >
               <div className="flex items-center justify-between">
                 <h3 className="font-black" style={{ color: '#2B2B2B' }}>🎵 Study Ambience</h3>
@@ -297,8 +297,8 @@ const FocusTimerPage = () => {
                   className="w-8 h-8 rounded-xl flex items-center justify-center transition"
                   style={
                     isPlayingAudio
-                      ? { backgroundColor: '#8B0A0A', color: '#F7F0DA' }
-                      : { background: '#F7F0DA', border: '1.5px solid #75685B', color: '#75685B' }
+                      ? { backgroundColor: '#8B0A0A', color: '#C8BA96' }
+                      : { background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#5C4A3A' }
                   }
                 >
                   {isPlayingAudio ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
@@ -314,15 +314,15 @@ const FocusTimerPage = () => {
                       className="p-3 rounded-2xl text-left transition flex flex-col gap-1"
                       style={
                         isSelected
-                          ? { backgroundColor: '#4A8DB7', border: '2px solid #342B27', color: '#FFFBEF' }
-                          : { background: '#F7F0DA', border: '1px solid #75685B', color: '#2B2B2B' }
+                          ? { backgroundColor: '#4A8DB7', border: '2px solid #342B27', color: '#DDD0A8' }
+                          : { background: '#C8BA96', border: '1px solid #5C4A3A', color: '#2B2B2B' }
                       }
                     >
                       <span className="text-lg">{sound.icon}</span>
                       <p className="text-xs font-bold">{sound.name}</p>
                       <p
                         className="text-[10px] truncate"
-                        style={{ color: isSelected ? 'rgba(255,255,255,0.75)' : '#75685B' }}
+                        style={{ color: isSelected ? 'rgba(255,255,255,0.75)' : '#5C4A3A' }}
                       >
                         {sound.description}
                       </p>
@@ -332,14 +332,14 @@ const FocusTimerPage = () => {
               </div>
               {isPlayingAudio && (
                 <div className="flex items-center gap-2 pt-1">
-                  <Volume2 className="w-3.5 h-3.5" style={{ color: '#75685B' }} />
+                  <Volume2 className="w-3.5 h-3.5" style={{ color: '#5C4A3A' }} />
                   <input
                     type="range" min="0" max="100" value={volume}
                     onChange={(e) => setVolume(Number(e.target.value))}
                     className="flex-1 h-1.5 rounded-lg cursor-pointer"
                     style={{ accentColor: '#8B0A0A' }}
                   />
-                  <span className="text-xs w-7" style={{ color: '#75685B' }}>{volume}%</span>
+                  <span className="text-xs w-7" style={{ color: '#5C4A3A' }}>{volume}%</span>
                 </div>
               )}
             </div>
@@ -347,7 +347,7 @@ const FocusTimerPage = () => {
             {/* Stats */}
             <div
               className="p-5 space-y-4 rounded-3xl"
-              style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
             >
               <h3 className="font-black" style={{ color: '#2B2B2B' }}>📊 Statistik Fokus Hari Ini</h3>
               <div className="grid grid-cols-2 gap-3">
@@ -358,7 +358,7 @@ const FocusTimerPage = () => {
                   <div
                     key={s.lbl}
                     className="p-4 rounded-2xl"
-                    style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                    style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
                   >
                     <p
                       className="text-[10px] font-black uppercase tracking-wider mb-1"
@@ -367,27 +367,27 @@ const FocusTimerPage = () => {
                       {s.lbl}
                     </p>
                     <p className="font-display text-xl" style={{ color: '#2B2B2B' }}>{s.val}</p>
-                    <p className="text-[10px]" style={{ color: '#75685B' }}>Hari ini</p>
+                    <p className="text-[10px]" style={{ color: '#5C4A3A' }}>Hari ini</p>
                   </div>
                 ))}
               </div>
               <div className="space-y-2">
-                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#75685B' }}>
+                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
                   Aktivitas Terakhir
                 </p>
                 {timerData.recentSessions.slice(0, 3).map((sess) => (
                   <div
                     key={sess.id}
                     className="p-2.5 rounded-xl flex items-center justify-between text-xs"
-                    style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                    style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
                   >
                     <div className="truncate mr-2">
                       <p className="font-bold truncate" style={{ color: '#2B2B2B' }}>{sess.task}</p>
-                      <p className="text-[10px]" style={{ color: '#75685B' }}>{sess.course}</p>
+                      <p className="text-[10px]" style={{ color: '#5C4A3A' }}>{sess.course}</p>
                     </div>
                     <span
                       className="text-[10px] font-black px-2 py-0.5 rounded-lg shrink-0"
-                      style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                      style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
                     >
                       25 mnt · {sess.time}
                     </span>
@@ -403,3 +403,4 @@ const FocusTimerPage = () => {
 };
 
 export default FocusTimerPage;
+

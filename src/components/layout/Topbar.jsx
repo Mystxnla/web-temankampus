@@ -22,9 +22,9 @@ const Topbar = ({ onOpenHelp }) => {
     <header
       className="h-16 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 select-none"
       style={{
-        backgroundColor: '#FFFBEF',
-        borderBottom: '2.37px solid #75685B',
-        boxShadow: '0 4px 0 0 #F7F0DA',
+        backgroundColor: '#DDD0A8',
+        borderBottom: '2.37px solid #5C4A3A',
+        boxShadow: '0 4px 0 0 #C8BA96',
       }}
     >
       {/* Greeting */}
@@ -32,7 +32,7 @@ const Topbar = ({ onOpenHelp }) => {
         {/* Mobile logo */}
         <div
           className="w-8 h-8 rounded-xl flex items-center justify-center font-display text-sm lg:hidden shadow-sm shrink-0"
-          style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+          style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
         >
           TK
         </div>
@@ -51,19 +51,19 @@ const Topbar = ({ onOpenHelp }) => {
         {/* Search */}
         <div className="relative hidden md:block">
           <input
-            className="w-52 pl-9 pr-4 py-2 text-xs rounded-full border-2 border-[#75685B] focus:outline-none focus:border-[#8B0A0A] text-[#2B2B2B] placeholder-[#75685B] transition font-bold"
-            style={{ background: '#FFFBEF' }}
+            className="w-52 pl-9 pr-4 py-2 text-xs rounded-full border-2 border-[#5C4A3A] focus:outline-none focus:border-[#8B0A0A] text-[#2B2B2B] placeholder-[#5C4A3A] transition font-bold"
+            style={{ background: '#DDD0A8' }}
             placeholder="Cari tugas, topik..."
             type="text"
           />
-          <Search className="w-3.5 h-3.5 text-[#75685B] absolute left-3 top-2.5" />
+          <Search className="w-3.5 h-3.5 text-[#5C4A3A] absolute left-3 top-2.5" />
         </div>
 
         {/* Counseling */}
         <button
           onClick={onOpenHelp}
           className="text-xs font-black px-3 py-1.5 rounded-full flex items-center gap-1.5 transition border-2"
-          style={{ background: '#F6D0D6', borderColor: '#75685B', color: '#8B0A0A' }}
+          style={{ background: '#F6D0D6', borderColor: '#5C4A3A', color: '#8B0A0A' }}
           title="Layanan bantuan & konseling"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#8B0A0A] animate-pulse" />
@@ -75,13 +75,13 @@ const Topbar = ({ onOpenHelp }) => {
         {user?.isPremium ? (
           <Link to="/premium"
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black border-2 transition"
-            style={{ background: '#4A8DB7', borderColor: '#342B27', color: '#FFFBEF' }}>
+            style={{ background: '#4A8DB7', borderColor: '#342B27', color: '#DDD0A8' }}>
             <Sparkles className="w-3.5 h-3.5" /><span>Pro Aktif</span>
           </Link>
         ) : (
           <Link to="/premium"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black border-2 transition hover:bg-[#F7F0DA]"
-            style={{ background: '#FFFBEF', borderColor: '#4A8DB7', color: '#4A8DB7' }}>
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black border-2 transition hover:bg-[#C8BA96]"
+            style={{ background: '#DDD0A8', borderColor: '#4A8DB7', color: '#4A8DB7' }}>
             <Sparkles className="w-3.5 h-3.5" /><span>Upgrade</span>
           </Link>
         )}
@@ -89,7 +89,7 @@ const Topbar = ({ onOpenHelp }) => {
         {/* Bell */}
         <button
           className="w-8 h-8 rounded-full flex items-center justify-center relative transition icon-btn border-2"
-          style={{ background: '#FFFBEF', borderColor: '#75685B', color: '#2B2B2B' }}
+          style={{ background: '#DDD0A8', borderColor: '#5C4A3A', color: '#2B2B2B' }}
         >
           <Bell className="w-4 h-4" />
           <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#8B0A0A]" />
@@ -98,7 +98,7 @@ const Topbar = ({ onOpenHelp }) => {
         {/* Avatar */}
         <Link to="/auth"
           className="w-8 h-8 rounded-full flex items-center justify-center transition shadow-sm icon-btn border-2"
-          style={{ background: '#8B0A0A', borderColor: '#342B27', color: '#F7F0DA' }}
+          style={{ background: '#8B0A0A', borderColor: '#342B27', color: '#C8BA96' }}
           title="Beralih Akun"
         >
           <span className="font-display text-[10px]">{user?.avatar || 'TK'}</span>
@@ -109,3 +109,4 @@ const Topbar = ({ onOpenHelp }) => {
 };
 
 export default Topbar;
+

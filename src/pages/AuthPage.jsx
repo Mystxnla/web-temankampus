@@ -55,30 +55,30 @@ const AuthPage = () => {
 
   // Shared input style
   const inputStyle = {
-    background: '#FFFBEF',
-    border: '1.5px solid #75685B',
+    background: '#DDD0A8',
+    border: '1.5px solid #5C4A3A',
     color: '#2B2B2B',
   };
 
   return (
     <div
       className="min-h-screen font-sans flex flex-col justify-between"
-      style={{ backgroundColor: '#F3F3F1' }}
+      style={{ backgroundColor: '#C8BA96' }}
     >
       {/* ── Top Bar ── */}
       <header
         className="w-full sticky top-0 z-30"
         style={{
-          backgroundColor: '#FFFBEF',
-          borderBottom: '2.37px solid #75685B',
-          boxShadow: '0 4px 0 0 #F7F0DA',
+          backgroundColor: '#DDD0A8',
+          borderBottom: '2.37px solid #5C4A3A',
+          boxShadow: '0 4px 0 0 #C8BA96',
         }}
       >
         <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
             <div
               className="w-9 h-9 rounded-2xl font-display text-base flex items-center justify-center shadow-sm"
-              style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+              style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
             >
               TK
             </div>
@@ -86,7 +86,7 @@ const AuthPage = () => {
               <span className="font-display text-lg tracking-tight block leading-none" style={{ color: '#8B0A0A' }}>
                 TemanKampus
               </span>
-              <span className="font-hand text-[10px] tracking-wider uppercase block" style={{ color: '#75685B' }}>
+              <span className="font-hand text-[10px] tracking-wider uppercase block" style={{ color: '#5C4A3A' }}>
                 Ruang Tenang & Tumbuh
               </span>
             </div>
@@ -94,7 +94,7 @@ const AuthPage = () => {
           <Link
             to="/"
             className="text-xs font-bold px-3.5 py-1.5 rounded-full transition"
-            style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#75685B' }}
+            style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#5C4A3A' }}
           >
             ← Kembali ke Beranda
           </Link>
@@ -107,7 +107,7 @@ const AuthPage = () => {
         <div className="mb-6">
           <span
             className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold mb-3"
-            style={{ background: '#F7F0DA', color: '#8B0A0A', border: '1px solid #75685B' }}
+            style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Akses Ruang Mahasiswa</span>
@@ -125,12 +125,12 @@ const AuthPage = () => {
         {/* Auth Card Container */}
         <div
           className="rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-12"
-          style={{ background: '#FFFBEF', border: '2.37px solid #75685B', boxShadow: '0 0 0 12px #F7F0DA, 0 0 0 16px #342B27' }}
+          style={{ background: '#DDD0A8', border: '2.37px solid #5C4A3A', boxShadow: '0 0 0 12px #C8BA96, 0 0 0 16px #342B27' }}
         >
           {/* Left Info & Quick Demo Sidebar */}
           <div
             className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between"
-            style={{ background: '#F7F0DA', borderRight: '2px solid #75685B' }}
+            style={{ background: '#C8BA96', borderRight: '2px solid #5C4A3A' }}
           >
             <div className="space-y-4">
               <div className="flex items-center gap-2">
@@ -159,10 +159,10 @@ const AuthPage = () => {
             </div>
 
             {/* Quick Demo Shortcut */}
-            <div className="mt-6 pt-6" style={{ borderTop: '1.5px solid #75685B30' }}>
+            <div className="mt-6 pt-6" style={{ borderTop: '1.5px solid #5C4A3A30' }}>
               <div
                 className="p-4 rounded-3xl space-y-2.5"
-                style={{ background: '#FFFBEF', border: '1.5px solid #75685B' }}
+                style={{ background: '#DDD0A8', border: '1.5px solid #5C4A3A' }}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: '#8B0A0A' }}>
@@ -170,7 +170,7 @@ const AuthPage = () => {
                   </span>
                   <span
                     className="text-[9px] px-2 py-0.5 rounded-full font-black"
-                    style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                    style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
                   >
                     1-KLIK
                   </span>
@@ -182,7 +182,7 @@ const AuthPage = () => {
                   type="button"
                   onClick={handleQuickDemoLogin}
                   className="w-full py-2.5 px-3 rounded-2xl text-xs font-black transition flex items-center justify-center gap-2"
-                  style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
                 >
                   <span>Masuk sebagai Nadira (UI)</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -192,11 +192,11 @@ const AuthPage = () => {
           </div>
 
           {/* Right: Auth Forms */}
-          <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center" style={{ background: '#FFFBEF' }}>
+          <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center" style={{ background: '#DDD0A8' }}>
             {/* Tab Switcher */}
             <div
               className="flex rounded-full p-1 border mb-6"
-              style={{ background: '#F7F0DA', borderColor: '#75685B' }}
+              style={{ background: '#C8BA96', borderColor: '#5C4A3A' }}
             >
               {[
                 { key: 'login', label: 'Masuk Akun' },
@@ -208,8 +208,8 @@ const AuthPage = () => {
                   className="flex-1 py-2.5 rounded-full text-xs font-black transition-all uppercase tracking-wider"
                   style={
                     activeTab === tab.key
-                      ? { backgroundColor: '#8B0A0A', color: '#F7F0DA' }
-                      : { color: '#75685B' }
+                      ? { backgroundColor: '#8B0A0A', color: '#C8BA96' }
+                      : { color: '#5C4A3A' }
                   }
                 >
                   {tab.label}
@@ -238,7 +238,7 @@ const AuthPage = () => {
                       style={inputStyle}
                       placeholder="nama@ui.ac.id"
                     />
-                    <Mail className="w-4 h-4 absolute right-3.5 top-3.5" style={{ color: '#75685B' }} />
+                    <Mail className="w-4 h-4 absolute right-3.5 top-3.5" style={{ color: '#5C4A3A' }} />
                   </div>
                 </div>
 
@@ -267,14 +267,14 @@ const AuthPage = () => {
                       style={inputStyle}
                       placeholder="••••••••"
                     />
-                    <Lock className="w-4 h-4 absolute right-3.5 top-3.5" style={{ color: '#75685B' }} />
+                    <Lock className="w-4 h-4 absolute right-3.5 top-3.5" style={{ color: '#5C4A3A' }} />
                   </div>
                 </div>
 
                 {notification && (
                   <div
                     className="p-3 rounded-2xl flex items-center gap-2 text-xs"
-                    style={{ background: '#F7F0DA', border: '1.5px solid #75685B', color: '#2B2B2B' }}
+                    style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
                   >
                     <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#4A8DB7' }} />
                     <span>{notification}</span>
@@ -284,7 +284,7 @@ const AuthPage = () => {
                 <button
                   type="submit"
                   className="w-full py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider transition flex items-center justify-center gap-2 mt-2"
-                  style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
                 >
                   <span>Masuk ke Dashboard</span>
                   <ArrowRight className="w-4 h-4" />
@@ -296,7 +296,7 @@ const AuthPage = () => {
                 {/* Campus Perk Banner */}
                 <div
                   className="p-3 rounded-2xl flex items-center gap-2 text-xs font-bold"
-                  style={{ background: '#F7F0DA', border: '1px solid #75685B', color: '#8B0A0A' }}
+                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A', color: '#8B0A0A' }}
                 >
                   <Sparkles className="w-4 h-4 shrink-0" />
                   <span>Gunakan email kampus (.ac.id) untuk langsung coba Pro gratis 3 bulan!</span>
@@ -403,7 +403,7 @@ const AuthPage = () => {
                 <button
                   type="submit"
                   className="w-full py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider transition flex items-center justify-center gap-2 mt-1"
-                  style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }}
+                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
                 >
                   <span>Daftar & Masuk ke Dashboard</span>
                   <ArrowRight className="w-4 h-4" />
@@ -411,7 +411,7 @@ const AuthPage = () => {
               </form>
             )}
 
-            <p className="text-[11px] text-center mt-5" style={{ color: '#75685B' }}>
+            <p className="text-[11px] text-center mt-5" style={{ color: '#5C4A3A' }}>
               Dengan masuk, kamu menyetujui Ketentuan Privasi & Komitmen Ruang Aman TemanKampus.
             </p>
           </div>
@@ -421,7 +421,7 @@ const AuthPage = () => {
       {/* ── Footer Note ── */}
       <footer
         className="w-full max-w-5xl mx-auto px-5 py-4 text-center text-xs font-semibold"
-        style={{ color: '#75685B', borderTop: '2px solid #75685B' }}
+        style={{ color: '#5C4A3A', borderTop: '2px solid #5C4A3A' }}
       >
         TemanKampus • Ruang Tenang & Tumbuh Mahasiswa Indonesia
       </footer>
@@ -430,3 +430,4 @@ const AuthPage = () => {
 };
 
 export default AuthPage;
+

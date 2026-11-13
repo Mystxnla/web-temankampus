@@ -12,8 +12,8 @@
   html { scroll-behavior: smooth; color-scheme: light; }
 
   body {
-    background-color: #F3F3F1;
-    color: #2B2B2B;
+    background-color: #C8BA96;
+    color: #1A1208;
     font-family: 'Nunito', 'Plus Jakarta Sans', sans-serif;
     font-weight: 800;
     -webkit-font-smoothing: antialiased;
@@ -35,18 +35,18 @@
 
 /* ── Figma Card (double outline + drop shadow) ─ */
 .figma-card {
-  background: #FFFBEF;
+  background: #DDD0A8;
   border: 2.37px solid #75685B;
   border-radius: 1.75rem;
   box-shadow:
-    0 0 0 12px #F7F0DA,
+    0 0 0 12px #C8BA96,
     0 0 0 16px #342B27,
     0 6px 0 16px rgba(0,0,0,0.12);
 }
 
 /* ── Figma Heading Box (tilted title container) */
 .figma-heading-box {
-  background: #F7F0DA;
+  background: #C8BA96;
   border-radius: 1.5rem;
   box-shadow:
     0 0 0 3px #342B27,
@@ -55,19 +55,19 @@
 
 /* ── Soft white card (no double outline) ─────── */
 .headspace-card {
-  background: #FFFFFF;
+  background: #DDD0A8;
   border-radius: 2rem 2rem 0 0;
-  box-shadow: 0 -4px 40px rgba(52,43,39,0.08);
+  box-shadow: 0 -4px 40px rgba(52,43,39,0.12);
   position: relative;
   z-index: 2;
 }
 
 .headspace-card-full {
-  background: #FFFBEF;
+  background: #DDD0A8;
   border: 2.37px solid #75685B;
   border-radius: 1.75rem;
   box-shadow:
-    0 0 0 12px #F7F0DA,
+    0 0 0 12px #C8BA96,
     0 0 0 16px #342B27,
     0 6px 0 16px rgba(0,0,0,0.12);
 }
@@ -201,3 +201,4 @@
   transform: translateY(-3px);
   box-shadow: 0 0 0 12px #F7F0DA, 0 0 0 16px #342B27, 0 6px 0 16px rgba(0,0,0,0.12);
 }
+

@@ -98,7 +98,7 @@ const CurhatAIPage = () => {
         <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(247,240,218,0.7)' }}>
           Ruang Curhat Aman
         </p>
-        <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#F7F0DA' }}>
+        <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#C8BA96' }}>
           Cerita yuk, Mimi
         </h1>
         <p className="font-hand text-base mt-1" style={{ color: 'rgba(247,240,218,0.85)' }}>
@@ -113,7 +113,7 @@ const CurhatAIPage = () => {
           <button
             onClick={openHelpModal}
             className="text-[10px] font-black underline shrink-0"
-            style={{ color: '#F7F0DA' }}
+            style={{ color: '#C8BA96' }}
           >
             Bantuan Profesional
           </button>
@@ -125,7 +125,7 @@ const CurhatAIPage = () => {
         <div className="max-w-4xl mx-auto">
           <div
             className="rounded-3xl overflow-hidden flex flex-col"
-            style={{ height: '65vh', border: '2px solid #75685B' }}
+            style={{ height: '65vh', border: '2px solid #5C4A3A' }}
           >
             {/* Chat header */}
             <div
@@ -135,18 +135,18 @@ const CurhatAIPage = () => {
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-2xl flex items-center justify-center text-lg"
-                  style={{ background: 'rgba(247,240,218,0.2)', color: '#F7F0DA' }}
+                  style={{ background: 'rgba(247,240,218,0.2)', color: '#C8BA96' }}
                 >
                   🌸
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="font-black text-sm" style={{ color: '#F7F0DA' }}>
+                    <h2 className="font-black text-sm" style={{ color: '#C8BA96' }}>
                       Teman Curhat Mimi
                     </h2>
                     <span
                       className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                      style={{ background: 'rgba(247,240,218,0.2)', color: '#F7F0DA' }}
+                      style={{ background: 'rgba(247,240,218,0.2)', color: '#C8BA96' }}
                     >
                       AI Companion
                     </span>
@@ -164,13 +164,13 @@ const CurhatAIPage = () => {
                 {!user?.isPremium && (
                   <div
                     className="hidden sm:flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl"
-                    style={{ background: 'rgba(247,240,218,0.15)', color: '#F7F0DA' }}
+                    style={{ background: 'rgba(247,240,218,0.15)', color: '#C8BA96' }}
                   >
                     <span>Kuota: {dailyQuotaUsed}/10</span>
                     <Link
                       to="/premium"
                       className="font-black underline"
-                      style={{ color: '#F7F0DA' }}
+                      style={{ color: '#C8BA96' }}
                     >
                       Pro ∞
                     </Link>
@@ -179,7 +179,7 @@ const CurhatAIPage = () => {
                 <button
                   onClick={handleClearChat}
                   className="w-8 h-8 rounded-xl flex items-center justify-center transition"
-                  style={{ background: 'rgba(247,240,218,0.2)', color: '#F7F0DA' }}
+                  style={{ background: 'rgba(247,240,218,0.2)', color: '#C8BA96' }}
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -189,7 +189,7 @@ const CurhatAIPage = () => {
             {/* Messages */}
             <div
               className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4"
-              style={{ background: '#F7F0DA' }}
+              style={{ background: '#C8BA96' }}
             >
               {showCrisisCard && (
                 <div
@@ -210,14 +210,14 @@ const CurhatAIPage = () => {
                     <a
                       href="tel:119"
                       className="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5"
-                      style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                      style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
                     >
                       <Phone className="w-3.5 h-3.5" />Sejiwa: 119 ext 8
                     </a>
                     <button
                       onClick={openHelpModal}
                       className="px-3 py-1.5 rounded-xl text-xs font-bold"
-                      style={{ background: '#FFFBEF', border: '1.5px solid #8B0A0A', color: '#8B0A0A' }}
+                      style={{ background: '#DDD0A8', border: '1.5px solid #8B0A0A', color: '#8B0A0A' }}
                     >
                       Hotline Lengkap →
                     </button>
@@ -236,8 +236,8 @@ const CurhatAIPage = () => {
                       className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
                       style={
                         isUser
-                          ? { backgroundColor: '#8B0A0A', color: '#F7F0DA' }
-                          : { backgroundColor: '#FFFBEF', color: '#8B0A0A', border: '1px solid #75685B' }
+                          ? { backgroundColor: '#8B0A0A', color: '#C8BA96' }
+                          : { backgroundColor: '#DDD0A8', color: '#8B0A0A', border: '1px solid #5C4A3A' }
                       }
                     >
                       {isUser ? user?.avatar || 'TK' : '🌸'}
@@ -246,16 +246,16 @@ const CurhatAIPage = () => {
                       className={`p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed whitespace-pre-line shadow-sm ${isUser ? 'rounded-tr-sm' : ''}`}
                       style={
                         isUser
-                          ? { backgroundColor: '#8B0A0A', color: '#F7F0DA' }
+                          ? { backgroundColor: '#8B0A0A', color: '#C8BA96' }
                           : msg.isCrisis
                           ? { background: '#F6D0D6', color: '#8B0A0A', border: '1.5px solid #8B0A0A' }
-                          : { background: '#FFFBEF', color: '#2B2B2B', border: '1.5px solid #75685B' }
+                          : { background: '#DDD0A8', color: '#2B2B2B', border: '1.5px solid #5C4A3A' }
                       }
                     >
                       <p>{msg.text}</p>
                       <span
                         className={`block text-[10px] mt-1 ${isUser ? 'text-right' : ''}`}
-                        style={{ color: isUser ? 'rgba(247,240,218,0.6)' : '#75685B' }}
+                        style={{ color: isUser ? 'rgba(247,240,218,0.6)' : '#5C4A3A' }}
                       >
                         {msg.timestamp}
                       </span>
@@ -268,13 +268,13 @@ const CurhatAIPage = () => {
                 <div className="flex gap-2.5 mr-auto max-w-xs items-center">
                   <div
                     className="w-7 h-7 rounded-full flex items-center justify-center text-xs"
-                    style={{ background: '#FFFBEF', border: '1px solid #75685B' }}
+                    style={{ background: '#DDD0A8', border: '1px solid #5C4A3A' }}
                   >
                     🌸
                   </div>
                   <div
                     className="p-3 rounded-2xl text-xs flex items-center gap-2"
-                    style={{ background: '#FFFBEF', border: '1.5px solid #75685B', color: '#75685B' }}
+                    style={{ background: '#DDD0A8', border: '1.5px solid #5C4A3A', color: '#5C4A3A' }}
                   >
                     <span
                       className="w-1.5 h-1.5 rounded-full animate-ping"
@@ -290,9 +290,9 @@ const CurhatAIPage = () => {
             {/* Starter chips */}
             <div
               className="px-4 py-2 flex items-center gap-2 overflow-x-auto"
-              style={{ background: '#FFFBEF', borderTop: '1.5px solid #75685B' }}
+              style={{ background: '#DDD0A8', borderTop: '1.5px solid #5C4A3A' }}
             >
-              <span className="text-[10px] font-bold uppercase shrink-0" style={{ color: '#75685B' }}>
+              <span className="text-[10px] font-bold uppercase shrink-0" style={{ color: '#5C4A3A' }}>
                 Topik:
               </span>
               {curhatData.starterPrompts.map((prompt, idx) => (
@@ -301,8 +301,8 @@ const CurhatAIPage = () => {
                   onClick={() => handleSendMessage(prompt)}
                   className="text-[11px] font-medium px-3 py-1 rounded-full transition shrink-0"
                   style={{
-                    background: '#F7F0DA',
-                    border: '1px solid #75685B',
+                    background: '#C8BA96',
+                    border: '1px solid #5C4A3A',
                     color: '#2B2B2B',
                   }}
                 >
@@ -315,7 +315,7 @@ const CurhatAIPage = () => {
             <form
               onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}
               className="p-3 sm:p-4 flex items-center gap-2 sm:gap-3"
-              style={{ background: '#FFFBEF', borderTop: '1.5px solid #75685B' }}
+              style={{ background: '#DDD0A8', borderTop: '1.5px solid #5C4A3A' }}
             >
               <input
                 type="text"
@@ -324,8 +324,8 @@ const CurhatAIPage = () => {
                 placeholder="Tuliskan unek-unekmu ke Mimi..."
                 className="flex-1 text-xs sm:text-sm px-4 py-3 rounded-2xl transition"
                 style={{
-                  background: '#F7F0DA',
-                  border: '1.5px solid #75685B',
+                  background: '#C8BA96',
+                  border: '1.5px solid #5C4A3A',
                   color: '#2B2B2B',
                 }}
               />
@@ -333,7 +333,7 @@ const CurhatAIPage = () => {
                 type="submit"
                 disabled={!inputMessage.trim()}
                 className="p-3.5 rounded-2xl transition disabled:opacity-50 shrink-0 shadow-sm"
-                style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -346,3 +346,4 @@ const CurhatAIPage = () => {
 };
 
 export default CurhatAIPage;
+

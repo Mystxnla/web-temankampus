@@ -48,9 +48,9 @@ const DashboardPage = () => {
       {/* ── Header Block ── */}
       <div
         className="px-5 sm:px-8 pt-6 pb-10"
-        style={{ backgroundColor: '#F7F0DA' }}
+        style={{ backgroundColor: '#C8BA96' }}
       >
-        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#75685B' }}>
+        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
           Dashboard Mahasiswa
         </p>
         <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
@@ -70,7 +70,7 @@ const DashboardPage = () => {
               <div className="font-display text-2xl" style={{ color: '#8B0A0A' }}>
                 {s.icon} {s.val}
               </div>
-              <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#75685B' }}>
+              <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
                 {s.lbl}
               </div>
             </div>
@@ -84,7 +84,7 @@ const DashboardPage = () => {
         {/* Mood Check-in */}
         <section
           className="p-5 rounded-3xl"
-          style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+          style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-lg" style={{ color: '#2B2B2B' }}>
@@ -108,8 +108,8 @@ const DashboardPage = () => {
                   className="hs-btn py-2 px-4 text-xs"
                   style={
                     isSelected
-                      ? { backgroundColor: '#8B0A0A', color: '#F7F0DA', border: '2px solid #342B27' }
-                      : { backgroundColor: '#FFFBEF', color: '#2B2B2B', border: '2px solid #75685B' }
+                      ? { backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }
+                      : { backgroundColor: '#DDD0A8', color: '#2B2B2B', border: '2px solid #5C4A3A' }
                   }
                 >
                   <span>{opt.emoji}</span> {opt.label}
@@ -124,13 +124,13 @@ const DashboardPage = () => {
           {/* Card 1: Urgent Tasks */}
           <article
             className="p-5 flex flex-col rounded-3xl"
-            style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold" style={{ color: '#2B2B2B' }}>📋 Tugas Mendesak</h3>
               <span
                 className="hs-chip text-[10px]"
-                style={{ background: '#F7F0DA', color: '#8B0A0A', border: '1px solid #75685B' }}
+                style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
               >
                 Due Segera
               </span>
@@ -140,7 +140,7 @@ const DashboardPage = () => {
                 <li
                   key={task.id}
                   className="p-3 rounded-xl"
-                  style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
                 >
                   <div className="flex items-start gap-2.5">
                     <input
@@ -153,11 +153,11 @@ const DashboardPage = () => {
                     <div className="flex-1 min-w-0">
                       <p
                         className={`text-xs font-bold leading-snug ${task.status === 'Selesai' ? 'line-through' : ''}`}
-                        style={{ color: task.status === 'Selesai' ? '#75685B' : '#2B2B2B' }}
+                        style={{ color: task.status === 'Selesai' ? '#5C4A3A' : '#2B2B2B' }}
                       >
                         {task.course}
                       </p>
-                      <p className="text-[11px] truncate" style={{ color: '#75685B' }}>{task.title}</p>
+                      <p className="text-[11px] truncate" style={{ color: '#5C4A3A' }}>{task.title}</p>
                       <span className="text-[10px] font-bold" style={{ color: '#8B0A0A' }}>
                         {task.dueLabel || 'Hari ini'}
                       </span>
@@ -178,13 +178,13 @@ const DashboardPage = () => {
           {/* Card 2: Schedule */}
           <article
             className="p-5 flex flex-col rounded-3xl"
-            style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold" style={{ color: '#2B2B2B' }}>📅 Agenda Hari Ini</h3>
               <span
                 className="hs-chip text-[10px]"
-                style={{ background: '#4A8DB7', color: '#FFFBEF' }}
+                style={{ background: '#4A8DB7', color: '#DDD0A8' }}
               >
                 Hari Ini
               </span>
@@ -193,18 +193,18 @@ const DashboardPage = () => {
               {[
                 { time: '10:00', label: 'Interaksi Manusia & Komputer', sub: 'R.Lab 304 · Dr. Ir. Herman', alert: '🔔 Mulai dalam 45 mnt', color: '#8B0A0A' },
                 { time: '14:00', label: 'Diskusi Kelompok Sempro', sub: 'Discord · Bersama Arya & Fika', color: '#4A8DB7' },
-                { time: '19:30', label: 'Study Jam TemanKampus', sub: 'Voice Room · Pomodoro Bareng', color: '#75685B' },
+                { time: '19:30', label: 'Study Jam TemanKampus', sub: 'Voice Room · Pomodoro Bareng', color: '#5C4A3A' },
               ].map((s, i) => (
                 <div key={i} className="flex gap-3 items-start">
                   <div
                     className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black shrink-0"
-                    style={{ backgroundColor: s.color, color: '#F7F0DA' }}
+                    style={{ backgroundColor: s.color, color: '#C8BA96' }}
                   >
                     {s.time.split(':')[0]}
                   </div>
                   <div className="flex-1 pt-0.5">
                     <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>{s.label}</p>
-                    <p className="text-[11px]" style={{ color: '#75685B' }}>{s.sub}</p>
+                    <p className="text-[11px]" style={{ color: '#5C4A3A' }}>{s.sub}</p>
                     {s.alert && (
                       <p className="text-[10px] font-bold mt-0.5" style={{ color: '#8B0A0A' }}>{s.alert}</p>
                     )}
@@ -224,13 +224,13 @@ const DashboardPage = () => {
           {/* Card 3: Wellness */}
           <article
             className="p-5 flex flex-col rounded-3xl"
-            style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold" style={{ color: '#2B2B2B' }}>🌿 Rehat & Nutrisi</h3>
               <span
                 className="hs-chip text-[10px]"
-                style={{ background: '#F7F0DA', color: '#75685B', border: '1px solid #75685B' }}
+                style={{ background: '#C8BA96', color: '#5C4A3A', border: '1px solid #5C4A3A' }}
               >
                 Self-Care
               </span>
@@ -239,22 +239,22 @@ const DashboardPage = () => {
               {/* Water */}
               <div
                 className="p-3 rounded-xl"
-                style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div>
                     <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>💧 Hidrasi</p>
-                    <p className="text-[10px]" style={{ color: '#75685B' }}>{waterMl}/{waterTarget} ml</p>
+                    <p className="text-[10px]" style={{ color: '#5C4A3A' }}>{waterMl}/{waterTarget} ml</p>
                   </div>
                   <button
                     onClick={handleAddWater}
                     className="px-3 py-1 font-bold text-[10px] rounded-full"
-                    style={{ backgroundColor: '#4A8DB7', color: '#FFFBEF' }}
+                    style={{ backgroundColor: '#4A8DB7', color: '#DDD0A8' }}
                   >
                     +250ml
                   </button>
                 </div>
-                <div className="w-full rounded-full h-1.5" style={{ background: '#75685B30' }}>
+                <div className="w-full rounded-full h-1.5" style={{ background: '#5C4A3A30' }}>
                   <div
                     className="h-1.5 rounded-full transition-all"
                     style={{ width: `${Math.min((waterMl / waterTarget) * 100, 100)}%`, backgroundColor: '#4A8DB7' }}
@@ -264,16 +264,16 @@ const DashboardPage = () => {
               {/* Breathing */}
               <div
                 className="p-3 rounded-xl flex items-center justify-between"
-                style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
               >
                 <div>
                   <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>🌬️ Napas 4-7-8</p>
-                  <p className="text-[10px]" style={{ color: '#75685B' }}>Relaksasi 3 menit</p>
+                  <p className="text-[10px]" style={{ color: '#5C4A3A' }}>Relaksasi 3 menit</p>
                 </div>
                 <button
                   onClick={triggerBreathingExercise}
                   className="px-3 py-1.5 font-bold text-[10px] rounded-full"
-                  style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
                 >
                   Mulai
                 </button>
@@ -281,18 +281,18 @@ const DashboardPage = () => {
               {/* Lo-fi */}
               <div
                 className="p-3 rounded-xl flex items-center justify-between"
-                style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
               >
                 <div>
                   <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>🎧 Lo-Fi Hujan Kampus</p>
-                  <p className="text-[10px]" style={{ color: '#75685B' }}>
+                  <p className="text-[10px]" style={{ color: '#5C4A3A' }}>
                     {isPlayingLofi ? 'Memutar... 🎵' : 'Musik penenang belajar'}
                   </p>
                 </div>
                 <button
                   onClick={() => setIsPlayingLofi(!isPlayingLofi)}
                   className="w-8 h-8 rounded-full flex items-center justify-center transition"
-                  style={{ backgroundColor: isPlayingLofi ? '#8B0A0A' : '#75685B', color: '#F7F0DA' }}
+                  style={{ backgroundColor: isPlayingLofi ? '#8B0A0A' : '#5C4A3A', color: '#C8BA96' }}
                 >
                   <span className="text-xs">{isPlayingLofi ? '⏸' : '▶'}</span>
                 </button>
@@ -312,11 +312,11 @@ const DashboardPage = () => {
               <div className="flex items-center justify-between mb-3">
                 <span
                   className="hs-chip text-[10px] uppercase"
-                  style={{ background: 'rgba(247,240,218,0.2)', color: '#F7F0DA' }}
+                  style={{ background: 'rgba(247,240,218,0.2)', color: '#C8BA96' }}
                 >
                   AI Companion
                 </span>
-                <span className="flex items-center gap-1.5 text-xs" style={{ color: '#F7F0DA99' }}>
+                <span className="flex items-center gap-1.5 text-xs" style={{ color: '#C8BA9699' }}>
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                   Mimi Online
                 </span>
@@ -354,14 +354,14 @@ const DashboardPage = () => {
                 className="flex-1 text-xs rounded-xl px-4 py-2.5 border focus:outline-none transition"
                 style={{
                   background: 'rgba(247,240,218,0.15)',
-                  color: '#F7F0DA',
+                  color: '#C8BA96',
                   borderColor: 'rgba(247,240,218,0.2)',
                 }}
               />
               <button
                 type="submit"
                 className="p-2.5 rounded-xl transition shrink-0"
-                style={{ background: 'rgba(247,240,218,0.25)', color: '#F7F0DA' }}
+                style={{ background: 'rgba(247,240,218,0.25)', color: '#C8BA96' }}
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -371,7 +371,7 @@ const DashboardPage = () => {
           {/* Community Threads */}
           <div
             className="lg:col-span-7 p-6 flex flex-col rounded-3xl"
-            style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
           >
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -396,21 +396,21 @@ const DashboardPage = () => {
                   key={thread.id}
                   to="/community"
                   className="block p-3.5 rounded-2xl transition"
-                  style={{ background: '#F7F0DA', border: '1px solid #75685B' }}
+                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span
                       className="hs-chip text-[10px]"
-                      style={{ background: '#4A8DB7', color: '#FFFBEF' }}
+                      style={{ background: '#4A8DB7', color: '#DDD0A8' }}
                     >
                       {thread.category}
                     </span>
-                    <span className="text-[10px]" style={{ color: '#75685B' }}>{thread.timeAgo}</span>
+                    <span className="text-[10px]" style={{ color: '#5C4A3A' }}>{thread.timeAgo}</span>
                   </div>
                   <h4 className="text-xs font-bold leading-snug line-clamp-2" style={{ color: '#2B2B2B' }}>
                     "{thread.title}"
                   </h4>
-                  <div className="flex items-center gap-4 mt-2 text-[10px]" style={{ color: '#75685B' }}>
+                  <div className="flex items-center gap-4 mt-2 text-[10px]" style={{ color: '#5C4A3A' }}>
                     <span className="flex items-center gap-1">
                       <MessageSquare className="w-3 h-3" />{thread.repliesCount} respon
                     </span>
@@ -424,13 +424,13 @@ const DashboardPage = () => {
             </div>
             <div
               className="mt-4 pt-3 flex items-center justify-between text-xs"
-              style={{ borderTop: '1px solid #F7F0DA' }}
+              style={{ borderTop: '1px solid #C8BA96' }}
             >
-              <span style={{ color: '#75685B' }}>Ingin berbagi ceritamu?</span>
+              <span style={{ color: '#5C4A3A' }}>Ingin berbagi ceritamu?</span>
               <Link
                 to="/community"
                 className="px-4 py-2 rounded-full font-black text-[10px] transition"
-                style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+                style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
               >
                 + Tulis Anonim
               </Link>
@@ -444,20 +444,20 @@ const DashboardPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div
             className="rounded-3xl p-8 max-w-sm w-full text-center space-y-4 shadow-2xl"
-            style={{ background: '#FFFBEF', border: '2px solid #75685B' }}
+            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
           >
             <span className="text-4xl animate-bounce inline-block">🌸</span>
             <h3 className="font-black text-xl" style={{ color: '#2B2B2B' }}>Latihan Napas 4-7-8</h3>
             <div
               className="p-4 rounded-2xl text-sm font-bold"
-              style={{ background: '#F7F0DA', color: '#8B0A0A' }}
+              style={{ background: '#C8BA96', color: '#8B0A0A' }}
             >
               {breathPhase}
             </div>
             <button
               onClick={() => setShowBreathing(false)}
               className="w-full py-3 rounded-full text-xs font-black uppercase tracking-wider"
-              style={{ backgroundColor: '#8B0A0A', color: '#F7F0DA' }}
+              style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
             >
               Selesai Latihan
             </button>
@@ -469,3 +469,4 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
+
