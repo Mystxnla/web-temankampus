@@ -5,14 +5,19 @@ const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem('temankampus_tasks');
-    return saved ? JSON.parse(saved) : initialTasks;
+    const saved = localStorage.getItem('temankampus_tasks_v2');
+    if (saved) return JSON.parse(saved);
+    const oldSaved = localStorage.getItem('temankampus_tasks');
+    if (oldSaved && !oldSaved.includes('2024') && !oldSaved.includes('2026-09')) {
+      return JSON.parse(oldSaved);
+    }
+    return initialTasks;
   });
 
   const [activeFocusTaskId, setActiveFocusTaskId] = useState('tsk_01');
 
   useEffect(() => {
-    localStorage.setItem('temankampus_tasks', JSON.stringify(tasks));
+    localStorage.setItem('temankampus_tasks_v2', JSON.stringify(tasks));
   }, [tasks]);
 
   const addTask = (newTask) => {

@@ -18,8 +18,8 @@
       "avatarColor": "#712AE2",
       "isAnonymous": true,
       "timeAgo": "15 menit lalu",
-      "hugs": 58,
-      "repliesCount": 24,
+      "hugs": 4,
+      "repliesCount": 2,
       "replies": [
         {
           "id": "rep_01",
@@ -27,8 +27,8 @@
           "faculty": "Teknik Elektro ITB",
           "isAnonymous": false,
           "timeAgo": "10 menit lalu",
-          "content": "Relatable banget kak! Dulu aku juga gitu. Tips dari mentorku: Bawa catatan kecil poin-poin utama di index card. Pas dospem nanya, jangan langsung panik jawab. Boleh minta jeda 3 detik sambil tarik napas, lalu bilang 'Terima kasih atas pertanyaannya Pak/Bu, berdasarkan literatur X yang saya baca...'. Itu bikin kita keliatan thoughtful bukan bingung.",
-          "hugs": 19
+          "content": "Relatable banget! Tips dari mentorku: Bawa catatan kecil poin-poin utama di index card. Pas dospem nanya, jangan langsung panik jawab. Boleh minta jeda 3 detik sambil tarik napas, lalu bilang 'Terima kasih atas pertanyaannya Pak/Bu, berdasarkan literatur X yang saya baca...'. Itu bikin kita keliatan thoughtful bukan bingung.",
+          "hugs": 2
         },
         {
           "id": "rep_02",
@@ -36,8 +36,8 @@
           "faculty": "Fasilkom UI",
           "isAnonymous": true,
           "timeAgo": "6 menit lalu",
-          "content": "Peluk jauh kak! Semangat ya. Ingat, dospem menguji karena ingin karya kita solid, bukan benci sama kitanya. Kamu pasti bisa!",
-          "hugs": 12
+          "content": "Peluk jauh! Semangat ya. Ingat, dospem menguji karena ingin karya kita solid, bukan benci sama kitanya. Kamu pasti bisa!",
+          "hugs": 1
         }
       ]
     },
@@ -51,8 +51,8 @@
       "avatarColor": "#FF2E93",
       "isAnonymous": false,
       "timeAgo": "1 jam lalu",
-      "hugs": 92,
-      "repliesCount": 41,
+      "hugs": 3,
+      "repliesCount": 1,
       "replies": [
         {
           "id": "rep_03",
@@ -61,7 +61,7 @@
           "isAnonymous": false,
           "timeAgo": "45 menit lalu",
           "content": "Tegas buat setting jam kerja organisasi! Aku selalu pasang status WA: 'Off duty setelah 21.00 WIB'. Kalau urgent mereka bakal telepon langsung. Kalau cuma chat berarti bisa dibalas besok pagi. Lindungi jam tidurmu dulu.",
-          "hugs": 28
+          "hugs": 2
         }
       ]
     },
@@ -75,8 +75,8 @@
       "avatarColor": "#06B6D4",
       "isAnonymous": false,
       "timeAgo": "3 jam lalu",
-      "hugs": 140,
-      "repliesCount": 18,
+      "hugs": 5,
+      "repliesCount": 1,
       "replies": [
         {
           "id": "rep_04",
@@ -85,7 +85,7 @@
           "isAnonymous": false,
           "timeAgo": "2 jam lalu",
           "content": "Keren banget template-nya kak Nadira! Makasih banyak, langsung aku terapin buat catat jadwal sidang semu.",
-          "hugs": 14
+          "hugs": 2
         }
       ]
     },
@@ -99,8 +99,8 @@
       "avatarColor": "#F59E0B",
       "isAnonymous": true,
       "timeAgo": "5 jam lalu",
-      "hugs": 115,
-      "repliesCount": 33,
+      "hugs": 4,
+      "repliesCount": 1,
       "replies": [
         {
           "id": "rep_05",
@@ -109,7 +109,7 @@
           "isAnonymous": false,
           "timeAgo": "4 jam lalu",
           "content": "Wajar banget rasa begini pas tahun pertama. Yuk gabung study jam TemanKampus tiap Selasa & Kamis malam di Discord! Kita belajar bareng sambil ngobrol santai.",
-          "hugs": 22
+          "hugs": 2
         }
       ]
     }

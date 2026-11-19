@@ -7,24 +7,23 @@ const BottomNav = () => {
   const { urgentTasks } = useTasks();
 
   const mobileNavItems = [
-    { to: '/dashboard', label: 'Beranda',   icon: Home },
-    { to: '/tasks',     label: 'Tugas',     icon: CheckSquare,
-      badge: urgentTasks.length > 0 ? urgentTasks.length : null },
-    { to: '/mood',      label: 'Mood',      icon: Smile },
-    { to: '/focus',     label: 'Fokus',     icon: Clock },
-    { to: '/curhat',    label: 'Mimi',      icon: MessageCircle },
-    { to: '/community', label: 'Komunitas', icon: Users },
+    { to: '/dashboard', label: 'Beranda', icon: Home },
+    { to: '/mood', label: 'Mood', icon: Smile },
+    { to: '/curhat', label: 'Mimi', icon: MessageCircle },
+    {
+      to: '/tasks',
+      label: 'Tugas',
+      icon: CheckSquare,
+      badge: urgentTasks.length > 0 ? urgentTasks.length : null,
+    },
+    { to: '/focus', label: 'Fokus', icon: Clock },
+    { to: '/community', label: 'Forum', icon: Users },
   ];
 
   return (
     <nav
-      aria-label="Mobile Navigation"
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 px-2 py-2 flex items-center justify-around"
-      style={{
-        backgroundColor: '#DDD0A8',
-        borderTop: '2.37px solid #5C4A3A',
-        boxShadow: '0 -4px 0 0 #C8BA96',
-      }}
+      aria-label="Navigasi mobile"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 h-16 px-2 bg-paper-card/95 backdrop-blur-sm border-t border-line flex items-center justify-around"
     >
       {mobileNavItems.map((item) => {
         const Icon = item.icon;
@@ -32,38 +31,21 @@ const BottomNav = () => {
           <NavLink
             key={item.to}
             to={item.to}
-            className="flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all relative"
+            className={({ isActive }) =>
+              `flex flex-col items-center justify-center gap-1 min-w-[48px] py-1.5 px-2 rounded-lg transition-colors duration-150 ${
+                isActive ? 'text-accent bg-accent-soft' : 'text-ink-muted hover:text-ink'
+              }`
+            }
           >
-            {({ isActive }) => (
-              <>
-                <div className="relative flex items-center justify-center">
-                  {isActive && (
-                    <span
-                      className="absolute inset-0 rounded-xl -m-1 -mx-2.5"
-                      style={{ background: '#C8BA96' }}
-                    />
-                  )}
-                  <Icon
-                    className="w-5 h-5 relative z-10 transition-colors"
-                    style={{ color: isActive ? '#8B0A0A' : '#5C4A3A' }}
-                  />
-                  {item.badge && (
-                    <span
-                      className="absolute -top-1.5 -right-2.5 min-w-[18px] h-4 px-1 rounded-full text-[9px] font-black flex items-center justify-center shadow-sm z-20"
-                      style={{ background: '#8B0A0A', color: '#C8BA96' }}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
-                <span
-                  className="text-[10px] mt-1 tracking-tight relative z-10 font-bold"
-                  style={{ color: isActive ? '#8B0A0A' : '#5C4A3A' }}
-                >
-                  {item.label}
+            <div className="relative">
+              <Icon className="w-[18px] h-[18px]" strokeWidth={1.5} />
+              {item.badge && (
+                <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 rounded-md bg-accent text-paper-card font-mono text-[10px] font-medium tabular flex items-center justify-center">
+                  {item.badge}
                 </span>
-              </>
-            )}
+              )}
+            </div>
+            <span className="text-[11px] font-medium leading-none">{item.label}</span>
           </NavLink>
         );
       })}
@@ -72,4 +54,3 @@ const BottomNav = () => {
 };
 
 export default BottomNav;
-

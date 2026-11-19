@@ -5,14 +5,19 @@ const MoodContext = createContext();
 
 export const MoodProvider = ({ children }) => {
   const [history, setHistory] = useState(() => {
-    const saved = localStorage.getItem('temankampus_mood_history');
-    return saved ? JSON.parse(saved) : initialMoodData.history;
+    const saved = localStorage.getItem('temankampus_mood_history_v2');
+    if (saved) return JSON.parse(saved);
+    const oldSaved = localStorage.getItem('temankampus_mood_history');
+    if (oldSaved && !oldSaved.includes('2024') && !oldSaved.includes('2026-09')) {
+      return JSON.parse(oldSaved);
+    }
+    return initialMoodData.history;
   });
 
   const [alertDismissed, setAlertDismissed] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('temankampus_mood_history', JSON.stringify(history));
+    localStorage.setItem('temankampus_mood_history_v2', JSON.stringify(history));
   }, [history]);
 
   const options = initialMoodData.options;

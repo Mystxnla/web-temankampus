@@ -4,71 +4,71 @@
     "title": "Revisi Bab 2: Tinjauan Pustaka",
     "description": "Fokus pada perbandingan algoritma machine learning terkini dan sitasi jurnal IEEE 5 tahun terakhir.",
     "course": "Metodologi Penelitian",
-    "dueDate": "2026-09-18T23:59:00",
+    "dueDate": "2026-11-13T23:59:00",
     "dueLabel": "Hari ini, 23:59",
     "priority": "Tinggi",
     "status": "Belum Selesai",
     "estimatedMinutes": 45,
-    "createdAt": "2026-09-16T09:00:00"
+    "createdAt": "2026-11-10T09:00:00"
   },
   {
     "id": "tsk_02",
     "title": "Finalisasi Low-Fi Wireframes Mobile",
     "description": "Selesaikan 8 screen utama di Figma untuk presentasi sprint review kelompok.",
     "course": "UI/UX Design Studio",
-    "dueDate": "2026-09-19T10:00:00",
+    "dueDate": "2026-11-14T10:00:00",
     "dueLabel": "Besok, 10:00",
     "priority": "Tinggi",
     "status": "Belum Selesai",
     "estimatedMinutes": 60,
-    "createdAt": "2026-09-15T14:30:00"
+    "createdAt": "2026-11-11T14:30:00"
   },
   {
     "id": "tsk_03",
     "title": "Latihan Query SQL Normalisasi 3NF",
     "description": "Kerjakan modul latihan 4 schema e-commerce dan submit PDF ke Google Classroom.",
     "course": "Sistem Basis Data",
-    "dueDate": "2026-09-20T17:00:00",
-    "dueLabel": "Jumat, 17:00",
+    "dueDate": "2026-11-15T17:00:00",
+    "dueLabel": "Minggu, 17:00",
     "priority": "Sedang",
     "status": "Belum Selesai",
     "estimatedMinutes": 30,
-    "createdAt": "2026-09-17T11:00:00"
+    "createdAt": "2026-11-12T11:00:00"
   },
   {
     "id": "tsk_04",
     "title": "Review Paper Arsitektur Microservices",
     "description": "Ringkas minimal 3 kelebihan dan kelemahan implementasi event-driven architecture.",
     "course": "Arsitektur Perangkat Lunak",
-    "dueDate": "2026-09-22T23:59:00",
-    "dueLabel": "Minggu, 23:59",
+    "dueDate": "2026-11-18T23:59:00",
+    "dueLabel": "18 Nov, 23:59",
     "priority": "Sedang",
     "status": "Sedang Berjalan",
     "estimatedMinutes": 50,
-    "createdAt": "2026-09-14T08:00:00"
+    "createdAt": "2026-11-09T08:00:00"
   },
   {
     "id": "tsk_05",
     "title": "Penyusunan Proposal Magang Industri",
     "description": "Kirim CV dan portfolio terbaru ke divisi HR Tokopedia & GoTo Financial.",
     "course": "Pengembangan Karir",
-    "dueDate": "2026-09-25T15:00:00",
-    "dueLabel": "25 Sep, 15:00",
+    "dueDate": "2026-11-20T15:00:00",
+    "dueLabel": "20 Nov, 15:00",
     "priority": "Rendah",
     "status": "Belum Selesai",
     "estimatedMinutes": 90,
-    "createdAt": "2026-09-13T10:00:00"
+    "createdAt": "2026-11-08T10:00:00"
   },
   {
     "id": "tsk_06",
     "title": "Kuis 1: Analisis Kompleksitas Algoritma",
     "description": "Latihan Big O notation dan evaluasi time complexity binary search tree.",
     "course": "Desain & Analisis Algoritma",
-    "dueDate": "2026-09-17T12:00:00",
+    "dueDate": "2026-11-12T12:00:00",
     "dueLabel": "Kemarin",
     "priority": "Tinggi",
     "status": "Selesai",
     "estimatedMinutes": 40,
-    "createdAt": "2026-09-12T13:00:00"
+    "createdAt": "2026-11-07T13:00:00"
   }
 ]

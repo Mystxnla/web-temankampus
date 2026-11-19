@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { ArrowRight, Mail, Lock, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import KucingMascot from '../components/KucingMascot';
-import {
-  Sparkles, ArrowRight, Mail, Lock, CheckCircle2,
-} from 'lucide-react';
 
 const AuthPage = () => {
   const navigate = useNavigate();
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const [activeTab, setActiveTab] = useState('login');
 
   const [formData, setFormData] = useState({
@@ -18,205 +16,126 @@ const AuthPage = () => {
     university: 'Universitas Indonesia',
     faculty: 'Fakultas Ilmu Komputer',
     major: 'Teknik Informatika',
-    interest: 'produktivitas',
   });
 
-  const [notification, setNotification] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
   };
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
+    const newErrors = {};
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email wajib diisi';
+    } else if (!validateEmail(formData.email.trim())) {
+      newErrors.email = 'Format email tidak valid';
+    }
+    if (!formData.password || formData.password.length < 6) {
+      newErrors.password = 'Kata sandi minimal 6 karakter';
+    }
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
     login();
     navigate('/dashboard');
   };
 
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
+    const newErrors = {};
+    if (!formData.name.trim() || formData.name.trim().length < 2) {
+      newErrors.name = 'Nama lengkap minimal 2 karakter';
+    }
+    if (!formData.email.trim() || !validateEmail(formData.email.trim())) {
+      newErrors.email = 'Masukkan email kampus yang valid';
+    }
+    if (!formData.password || formData.password.length < 6) {
+      newErrors.password = 'Kata sandi minimal 6 karakter';
+    }
+    if (!formData.major.trim()) {
+      newErrors.major = 'Program studi wajib diisi';
+    }
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
     login({
-      name: formData.name,
-      email: formData.email,
+      name: formData.name.trim(),
+      email: formData.email.trim(),
       university: formData.university,
       faculty: formData.faculty,
-      major: formData.major,
+      major: formData.major.trim(),
       avatar: formData.name
+        .trim()
         .split(' ')
         .map((n) => n[0])
+        .slice(0, 2)
         .join('')
-        .substring(0, 2)
         .toUpperCase(),
     });
     navigate('/dashboard');
   };
 
-  const handleQuickDemoLogin = () => { login(); navigate('/dashboard'); };
-
-  // Shared input style
-  const inputStyle = {
-    background: '#DDD0A8',
-    border: '1.5px solid #5C4A3A',
-    color: '#2B2B2B',
-  };
-
   return (
-    <div
-      className="min-h-screen font-sans flex flex-col justify-between"
-      style={{ backgroundColor: '#C8BA96' }}
-    >
-      {/* ── Top Bar ── */}
-      <header
-        className="w-full sticky top-0 z-30"
-        style={{
-          backgroundColor: '#DDD0A8',
-          borderBottom: '2.37px solid #5C4A3A',
-          boxShadow: '0 4px 0 0 #C8BA96',
-        }}
-      >
-        <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div
-              className="w-9 h-9 rounded-2xl font-display text-base flex items-center justify-center shadow-sm"
-              style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-            >
-              TK
-            </div>
-            <div>
-              <span className="font-display text-lg tracking-tight block leading-none" style={{ color: '#8B0A0A' }}>
-                TemanKampus
-              </span>
-              <span className="font-hand text-[10px] tracking-wider uppercase block" style={{ color: '#5C4A3A' }}>
-                Ruang Tenang & Tumbuh
-              </span>
-            </div>
-          </Link>
-          <Link
-            to="/"
-            className="text-xs font-bold px-3.5 py-1.5 rounded-full transition"
-            style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#5C4A3A' }}
-          >
-            ← Kembali ke Beranda
-          </Link>
-        </div>
+    <div className="min-h-screen bg-paper text-ink flex flex-col">
+      {/* Minimal top bar */}
+      <header className="h-16 px-5 sm:px-8 max-w-[1120px] w-full mx-auto flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2.5">
+          <KucingMascot pose="mark" size={28} />
+          <span className="text-[15px] font-semibold text-ink tracking-[-0.01em]">
+            TemanKampus
+          </span>
+        </Link>
+        <Link
+          to="/"
+          className="text-xs text-ink-secondary hover:text-ink inline-flex items-center gap-1.5 transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" strokeWidth={1.5} />
+          <span>Kembali ke beranda</span>
+        </Link>
       </header>
 
-      {/* ── Main Section ── */}
-      <main className="w-full max-w-5xl mx-auto px-5 py-8 flex-1 flex flex-col justify-center">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <span
-                className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold mb-3"
-                style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Akses Ruang Mahasiswa</span>
-              </span>
-              <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl mb-2" style={{ color: '#8B0A0A' }}>
-                Satu Tempat untuk Bereskan Tugas,<br />
-                <span style={{ color: '#4A8DB7' }}>Pulihkan Semangat Setiap Hari.</span>
-              </h1>
-              <p className="font-hand text-sm max-w-lg" style={{ color: '#1F3A7A' }}>
-                Didesain ramah untuk mahasiswa — kelola tugas tanpa panik, cek emosi harian,
-                dan temukan teman senasib di ruang aman TemanKampus.
-              </p>
-            </div>
-            <KucingMascot pose="happy" size={130} />
-          </div>
+      {/* Main split */}
+      <main className="flex-1 max-w-[1000px] w-full mx-auto px-5 sm:px-8 py-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        {/* Left info */}
+        <div className="lg:col-span-5 space-y-5 hidden lg:block">
+          <KucingMascot pose="happy" size={112} />
+          <h1 className="font-serif text-3xl font-normal tracking-[-0.015em] text-ink leading-tight">
+            Ruang belajar dan jeda untuk mahasiswa Indonesia
+          </h1>
+          <p className="text-sm text-ink-secondary leading-relaxed">
+            Kelola tenggat tugas kuliah, catat mood harian, jaga sesi fokus Pomodoro, dan bercerita bersama Mimi dalam satu tempat.
+          </p>
         </div>
 
-        {/* Auth Card Container */}
-        <div
-          className="rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-12"
-          style={{ background: '#DDD0A8', border: '2.37px solid #5C4A3A', boxShadow: '0 0 0 12px #C8BA96, 0 0 0 16px #342B27' }}
-        >
-          {/* Left Info & Quick Demo Sidebar */}
-          <div
-            className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between"
-            style={{ background: '#C8BA96', borderRight: '2px solid #5C4A3A' }}
-          >
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">✨</span>
-                <h2 className="font-display text-lg" style={{ color: '#8B0A0A' }}>Kenapa Bergabung?</h2>
-              </div>
-              <ul className="space-y-3 text-xs" style={{ color: '#2B2B2B' }}>
-                {[
-                  { icon: '📋', title: 'Task Manager Khusus Kuliah', desc: 'deadline terorganisir per matkul tanpa rasa overwhelmed.', accent: '#8B0A0A' },
-                  { icon: '😊', title: 'Mood Check-in & Rehat', desc: 'pantau stabilitas emosimu sebelum burnout melanda.', accent: '#4A8DB7' },
-                  { icon: '🌸', title: 'Teman Curhat Mimi (AI)', desc: 'teman ngobrol suportif 24/7 saat butuh didengarkan.', accent: '#8B0A0A' },
-                ].map((item) => (
-                  <li key={item.title} className="flex items-start gap-2.5">
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
-                      style={{ background: item.accent + '20', color: item.accent }}
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                    </div>
-                    <span>
-                      <strong>{item.title}</strong> — {item.desc}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Quick Demo Shortcut */}
-            <div className="mt-6 pt-6" style={{ borderTop: '1.5px solid #5C4A3A30' }}>
-              <div
-                className="p-4 rounded-3xl space-y-2.5"
-                style={{ background: '#DDD0A8', border: '1.5px solid #5C4A3A' }}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: '#8B0A0A' }}>
-                    ⚡ Akses Demo Instan
-                  </span>
-                  <span
-                    className="text-[9px] px-2 py-0.5 rounded-full font-black"
-                    style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-                  >
-                    1-KLIK
-                  </span>
-                </div>
-                <p className="font-hand text-xs leading-relaxed" style={{ color: '#1F3A7A' }}>
-                  Ingin langsung eksplorasi tanpa isi formulir? Masuk langsung dengan profil demo mahasiswa.
-                </p>
-                <button
-                  type="button"
-                  onClick={handleQuickDemoLogin}
-                  className="w-full py-2.5 px-3 rounded-2xl text-xs font-black transition flex items-center justify-center gap-2"
-                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
-                >
-                  <span>Masuk sebagai Nadira (UI)</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Auth Forms */}
-          <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center" style={{ background: '#DDD0A8' }}>
-            {/* Tab Switcher */}
-            <div
-              className="flex rounded-full p-1 border mb-6"
-              style={{ background: '#C8BA96', borderColor: '#5C4A3A' }}
-            >
+        {/* Right form card */}
+        <div className="lg:col-span-7">
+          <div className="surface-card p-6 sm:p-8 max-w-md mx-auto">
+            {/* Segmented Tab */}
+            <div className="grid grid-cols-2 p-1 rounded-lg bg-paper-raised border border-line mb-6">
               {[
-                { key: 'login', label: 'Masuk Akun' },
-                { key: 'register', label: 'Daftar Akun Baru' },
+                { id: 'login', label: 'Masuk' },
+                { id: 'register', label: 'Daftar akun' },
               ].map((tab) => (
                 <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className="flex-1 py-2.5 rounded-full text-xs font-black transition-all uppercase tracking-wider"
-                  style={
-                    activeTab === tab.key
-                      ? { backgroundColor: '#8B0A0A', color: '#C8BA96' }
-                      : { color: '#5C4A3A' }
-                  }
+                  key={tab.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    setErrors({});
+                  }}
+                  className={`h-8 rounded-md text-xs font-medium transition-colors duration-150 ${
+                    activeTab === tab.id
+                      ? 'bg-paper-card text-ink shadow-subtle'
+                      : 'text-ink-secondary hover:text-ink'
+                  }`}
                 >
                   {tab.label}
                 </button>
@@ -224,216 +143,164 @@ const AuthPage = () => {
             </div>
 
             {activeTab === 'login' ? (
-              /* LOGIN FORM */
               <form onSubmit={handleLoginSubmit} className="space-y-4">
                 <div>
-                  <label
-                    className="block text-xs font-bold mb-1.5"
-                    style={{ color: '#2B2B2B' }}
-                  >
-                    Email Mahasiswa atau Email Pribadi
+                  <h2 className="text-lg font-semibold text-ink">Masuk ke akunmu</h2>
+                  <p className="text-xs text-ink-muted mt-0.5">
+                    Gunakan akun demo yang sudah terisi atau email kampusmu
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Email kampus
                   </label>
                   <div className="relative">
+                    <Mail
+                      className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                      strokeWidth={1.5}
+                    />
                     <input
                       type="email"
                       name="email"
-                      required
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 text-xs rounded-2xl transition focus:outline-none"
-                      style={inputStyle}
-                      placeholder="nama@ui.ac.id"
+                      className="input-field pl-9"
                     />
-                    <Mail className="w-4 h-4 absolute right-3.5 top-3.5" style={{ color: '#5C4A3A' }} />
                   </div>
+                  {errors.email && (
+                    <p className="text-xs text-semantic-danger mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-xs font-bold" style={{ color: '#2B2B2B' }}>
-                      Kata Sandi
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => setNotification('Link reset password demo telah disimulasikan ke email.')}
-                      className="text-[11px] font-bold hover:underline"
-                      style={{ color: '#8B0A0A' }}
-                    >
-                      Lupa Sandi?
-                    </button>
-                  </div>
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Kata sandi
+                  </label>
                   <div className="relative">
+                    <Lock
+                      className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                      strokeWidth={1.5}
+                    />
                     <input
                       type="password"
                       name="password"
-                      required
                       value={formData.password}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 text-xs rounded-2xl transition focus:outline-none"
-                      style={inputStyle}
-                      placeholder="••••••••"
+                      className="input-field pl-9"
                     />
-                    <Lock className="w-4 h-4 absolute right-3.5 top-3.5" style={{ color: '#5C4A3A' }} />
                   </div>
+                  {errors.password && (
+                    <p className="text-xs text-semantic-danger mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
 
-                {notification && (
-                  <div
-                    className="p-3 rounded-2xl flex items-center gap-2 text-xs"
-                    style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
-                  >
-                    <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#4A8DB7' }} />
-                    <span>{notification}</span>
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  className="w-full py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider transition flex items-center justify-center gap-2 mt-2"
-                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
-                >
-                  <span>Masuk ke Dashboard</span>
-                  <ArrowRight className="w-4 h-4" />
+                <button type="submit" className="btn-primary w-full h-10 mt-2">
+                  <span>Masuk ke dashboard</span>
+                  <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
                 </button>
               </form>
             ) : (
-              /* REGISTER FORM */
-              <form onSubmit={handleRegisterSubmit} className="space-y-3">
-                {/* Campus Perk Banner */}
-                <div
-                  className="p-3 rounded-2xl flex items-center gap-2 text-xs font-bold"
-                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A', color: '#8B0A0A' }}
-                >
-                  <Sparkles className="w-4 h-4 shrink-0" />
-                  <span>Gunakan email kampus (.ac.id) untuk langsung coba Pro gratis 3 bulan!</span>
+              <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold text-ink">Buat akun mahasiswa</h2>
+                  <p className="text-xs text-ink-muted mt-0.5">
+                    Data disimpan lokal untuk keperluan prototipe MVP
+                  </p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1" style={{ color: '#2B2B2B' }}>
-                    Nama Lengkap
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Nama lengkap
                   </label>
                   <input
                     type="text"
                     name="name"
-                    required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-2.5 text-xs rounded-2xl transition focus:outline-none"
-                    style={inputStyle}
+                    className="input-field"
                   />
+                  {errors.name && (
+                    <p className="text-xs text-semantic-danger mt-1">{errors.name}</p>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-xs font-bold mb-1" style={{ color: '#2B2B2B' }}>
-                      Email Kampus / Pribadi
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 text-xs rounded-2xl transition focus:outline-none"
-                      style={inputStyle}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold mb-1" style={{ color: '#2B2B2B' }}>
-                      Kata Sandi
-                    </label>
-                    <input
-                      type="password"
-                      name="password"
-                      required
-                      value={formData.password}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 text-xs rounded-2xl transition focus:outline-none"
-                      style={inputStyle}
-                    />
-                  </div>
+                <div>
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Email kampus
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                  {errors.email && (
+                    <p className="text-xs text-semantic-danger mt-1">{errors.email}</p>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold mb-1" style={{ color: '#2B2B2B' }}>
-                      Asal Kampus
+                    <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                      Universitas
                     </label>
-                    <select
+                    <input
+                      type="text"
                       name="university"
                       value={formData.university}
                       onChange={handleChange}
-                      className="w-full px-3 py-2.5 text-xs rounded-2xl transition focus:outline-none"
-                      style={inputStyle}
-                    >
-                      <option value="Universitas Indonesia">Universitas Indonesia (UI)</option>
-                      <option value="Universitas Negeri Semarang">Universitas Negeri Semarang (UNNES)</option>
-                      <option value="Institut Teknologi Bandung">Institut Teknologi Bandung (ITB)</option>
-                      <option value="Universitas Gadjah Mada">Universitas Gadjah Mada (UGM)</option>
-                      <option value="Universitas Diponegoro">Universitas Diponegoro (UNDIP)</option>
-                      <option value="Universitas Lainnya">Kampus Lainnya</option>
-                    </select>
+                      className="input-field"
+                    />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold mb-1" style={{ color: '#2B2B2B' }}>
-                      Program Studi / Jurusan
+                    <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                      Program studi
                     </label>
                     <input
                       type="text"
                       name="major"
                       value={formData.major}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 text-xs rounded-2xl transition focus:outline-none"
-                      style={inputStyle}
+                      className="input-field"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold mb-1" style={{ color: '#2B2B2B' }}>
-                    Kebutuhan Utama Saat Ini
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Kata sandi
                   </label>
-                  <select
-                    name="interest"
-                    value={formData.interest}
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-3 py-2.5 text-xs rounded-2xl transition focus:outline-none"
-                    style={inputStyle}
-                  >
-                    <option value="produktivitas">Bereskan Tugas Kuliah & Deadline Tepat Waktu</option>
-                    <option value="wellness">Manajemen Stres, Emosi & Pencegahan Burnout</option>
-                    <option value="komunitas">Teman Belajar Bersama & Komunitas Suportif</option>
-                  </select>
+                    className="input-field"
+                  />
+                  {errors.password && (
+                    <p className="text-xs text-semantic-danger mt-1">{errors.password}</p>
+                  )}
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider transition flex items-center justify-center gap-2 mt-1"
-                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
-                >
-                  <span>Daftar & Masuk ke Dashboard</span>
-                  <ArrowRight className="w-4 h-4" />
+                <button type="submit" className="btn-primary w-full h-10 mt-2">
+                  <span>Daftar & masuk</span>
+                  <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
                 </button>
               </form>
             )}
-
-            <p className="text-[11px] text-center mt-5" style={{ color: '#5C4A3A' }}>
-              Dengan masuk, kamu menyetujui Ketentuan Privasi & Komitmen Ruang Aman TemanKampus.
-            </p>
           </div>
         </div>
       </main>
-
-      {/* ── Footer Note ── */}
-      <footer
-        className="w-full max-w-5xl mx-auto px-5 py-4 text-center text-xs font-semibold"
-        style={{ color: '#5C4A3A', borderTop: '2px solid #5C4A3A' }}
-      >
-        TemanKampus • Ruang Tenang & Tumbuh Mahasiswa Indonesia
-      </footer>
     </div>
   );
 };
 
 export default AuthPage;
-

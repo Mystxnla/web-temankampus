@@ -10,7 +10,7 @@
     {
       "id": "msg_01",
       "sender": "mimi",
-      "text": "Halo Nadira! 🌸 Aku Mimi, teman curhatmu di TemanKampus. Hari ini kuliahmu bagaimana? Kalau ada yang terasa berat atau bikin overthinking, ceritakan pelan-pelan ke aku ya. Aku di sini untuk mendengarkan tanpa menghakimi.",
+      "text": "Halo! 🌸 Aku Mimi, teman curhatmu di TemanKampus. Hari ini perkuliahanmu bagaimana? Kalau ada beban pikiran, cemas soal tugas, atau sekadar ingin didengarkan tanpa dihakimi, ceritakan pelan-pelan ya.",
       "timestamp": "08:30 WIB"
     },
     {
@@ -22,32 +22,44 @@
     {
       "id": "msg_03",
       "sender": "mimi",
-      "text": "Wajar sekali merasa begitu, Nadira. Menghadapi deadline tugas akhir memang sering bikin cemas. Ingat ya, 'selesai' itu jauh lebih baik daripada 'sempurna tapi tak pernah diserahkan'. \n\nCoba pecah tugasmu jadi langkah-langkah kecil 25 menit. Kamu sudah berjuang sejauh ini sampai semester 6, dan usaha kamu sangat berharga. Mau kita mulai dari bagian yang paling mudah dulu? ✨",
+      "text": "Wajar sekali merasa cemas saat menghadapi tenggat waktu revisi, apalagi untuk tugas akhir. Ingat bahwa sebuah tugas yang terselesaikan dengan baik jauh lebih bernilai daripada menunggu 'kesempurnaan' yang justru memicu stres berlebih.\n\nCoba bagi pekerjaanmu menjadi 1 atau 2 bagian kecil untuk diselesaikan dalam sesi fokus 25 menit. Kamu sudah berjuang berproses sejauh ini, dan usahamu sangat berharga. Mau kita mulai dari bagian tinjauan pustaka yang paling kamu kuasai dulu? ✨",
       "timestamp": "08:33 WIB"
     }
   ],
   "responseRules": [
     {
-      "keywords": ["bunuh diri", "suicide", "menyakiti diri", "self-harm", "mati saja", "ga sanggup hidup", "akhiri hidup"],
+      "keywords": ["bunuh diri", "suicide", "menyakiti diri", "self-harm", "mati saja", "ga sanggup hidup", "akhiri hidup", "pengen mati"],
       "isCrisis": true,
-      "response": "Nadira, aku sangat peduli dengan keselamatanmu. Yang kamu rasakan saat ini sangat berat, tapi kamu tidak sendirian. Tolong segera hubungi orang terdekat atau layanan profesional yang siap mendampingimu 24 jam gratis tanpa dipungut biaya:\n\n📞 Hotline Sejiwa Kemenkes: 119 ext 8 (Bebas Pulsa)\n💬 Yayasan Pulih: +62 811-8436-633\n\nKamu berharga, dan ada bantuan untuk melewati masa sulit ini. Silakan klik tombol 'Hubungi Bantuan Profesional' di atas sekarang juga ya."
+      "response": "Aku sangat peduli dengan keselamatanmu. Beban yang kamu rasakan saat ini sangat berat, tetapi kamu tidak sendirian dan tidak harus menanggungnya seorang diri. Mohon segera hubungi layanan profesional bebas biaya berikut yang siap mendengarkan dan mendampingimu 24 jam:\n\n📞 Hotline Sejiwa Kemenkes: 119 ext 8 (Bebas Pulsa)\n💬 Yayasan Pulih: +62 811-8436-633 (Konseling WhatsApp)\n\nKamu berharga, dan ada bantuan yang siap menemanimu melewati masa sulit ini. Silakan klik tombol 'Bantuan Profesional' di atas sekarang juga ya."
     },
     {
-      "keywords": ["istirahat", "bersalah", "rehat", "capek", "lelah"],
-      "response": "Rasa bersalah saat istirahat itu hal yang sangat sering dialami mahasiswa berdedikasi seperti kamu. Tapi ingat: Istirahat bukan hadiah setelah kerja keras, melainkan KEBUTUHAN biologis agar otakmu bisa terus berfungsi optimal. Bayangkan baterai HP yang dipaksa dipakai saat 2%, pasti performanya menurun kan? Izinkan dirimu bernapas sejenak tanpa syarat ya! 🌿"
+      "keywords": ["istirahat", "bersalah", "rehat", "capek", "lelah", "burnout"],
+      "response": "Rasa bersalah saat mengambil waktu jeda adalah hal yang sering dialami mahasiswa. Namun perlu diingat: istirahat bukanlah hadiah yang baru boleh diambil setelah kelelahan ekstrem, melainkan kebutuhan dasar agar konsentrasi dan fisikmu bisa pulih.\n\nSama seperti baterai ponsel yang perlu diisi ulang sebelum habis total, tubuh dan pikiranmu juga membutuhkan jeda. Izinkan dirimu beristirahat tanpa syarat hari ini—minimal 15 menit tanpa membuka materi kuliah."
     },
     {
-      "keywords": ["dosen", "bimbingan", "dospem", "revisi", "sempro", "skripsi"],
-      "response": "Bimbingan memang sering memicu deg-degan. Masukan dari dosen pembimbing adalah kritik terhadap karya akademiknya, BUKAN penilaian atas harga dirimu sebagai manusia. Coba rangkum masukan beliau ke dalam to-do list terpisah, beri tanda centang satu demi satu. Kalau butuh jeda, ambil napas 4-7-8 dulu ya. Aku percaya kamu mampu melaluinya! 💪"
+      "keywords": ["dosen", "bimbingan", "dospem", "revisi", "sempro", "skripsi", "sidang"],
+      "response": "Proses bimbingan memang sering menimbulkan rasa cemas dan ketegangan. Perlu diingat bahwa masukan dan catatan kritis dari dosen pembimbing ditujukan pada substansi naskah akademiknya, bukan cerminan kemampuan pribadimu secara utuh.\n\nTips praktis: Pilah catatan revisi menjadi poin-poin kecil, lalu tandai satu per satu yang paling mudah dikerjakan terlebih dahulu. Jika rasa panik muncul, luangkan 3 menit untuk latihan napas perlahan sebelum kembali bekerja."
     },
     {
-      "keywords": ["imposter", "bandingin", "kalah", "iri", "teman"],
-      "response": "Kita sering membandingkan 'proses di balik layar' kita dengan 'highlight panggung' orang lain di medsos atau kelas. Setiap mahasiswa punya timeline dan keunikannya sendiri. Yang penting adalah progres kamu hari ini dibanding kamu yang kemarin. Kamu berharga dengan caramu sendiri! ✨"
+      "keywords": ["imposter", "bandingin", "kalah", "iri", "teman", "insecure"],
+      "response": "Kita sangat mudah terjebak membandingkan kesulitan internal kita dengan pencapaian yang orang lain tampilkan di media sosial atau ruang kelas. Padahal setiap mahasiswa memiliki latar belakang, kecepatan adaptasi, dan tantangannya masing-masing.\n\nFokuslah pada satu langkah kemajuan kecil yang kamu buat hari ini dibandingkan dirimu kemarin. Perjalanan akademikmu tetap bermakna meski kecepatannya berbeda."
     },
     {
-      "keywords": ["tugas", "numpuk", "deadline", "overwhelmed", "stres", "bingung"],
-      "response": "Saat tugas terasa seperti gunung es yang mau runtuh, kunci pertamanya adalah: Jangan lihat seluruh gunungnya sekaligus. Pilih 1 tugas terkecil yang bisa selesai dalam 15-20 menit. Momentum kecil itu akan mengembalikan rasa kendalimu. Mau Mimi temani pakai Focus Timer? ⏱️"
+      "keywords": ["tugas", "numpuk", "deadline", "overwhelmed", "stres", "bingung", "banyak banget"],
+      "response": "Ketika daftar tugas terasa menumpuk seperti gunung, wajar jika kamu merasa bingung harus mulai dari mana. Kuncinya adalah tidak memikirkan seluruh tumpukan itu sekaligus.\n\nPilih satu tugas paling sederhana atau paling mendesak, lalu pasang timer fokus selama 15-25 menit. Seringkali, memulai langkah pertama adalah bagian tersulit, dan momentum kecil akan membantu mengembalikan kendalimu."
+    },
+    {
+      "keywords": ["uang", "ukt", "biaya", "finansial", "keuang~kos", "kiriman"],
+      "response": "Kekhawatiran seputar biaya kuliah dan kebutuhan hidup sehari-hari memang memberikan beban mental yang nyata bagi mahasiswa. Jangan ragu untuk mencari informasi keringanan UKT atau beasiswa internal melalui bagian kemahasiswaan kampusmu.\n\nBanyak fakultas memiliki skema bantuan advokasi mahasiswa. Jika pikiranmu terasa buntu, diskusikan situasi ini dengan orang terdekat atau rekan organisasi yang bisa membantu mencari alternatif solusi."
+    },
+    {
+      "keywords": ["tidur", "insomnia", "begadang", "gadang", "mata", "ngantuk"],
+      "response": "Kurang tidur secara langsung memengaruhi suasana hati, kestabilan emosi, dan daya tangkap saat kuliah. Jika kamu kesulitan tidur karena overthinking, coba jauhkan ponsel 30 menit sebelum berbaring dan catat hal-hal yang mencemaskanmu di selembar kertas agar tidak terus berputar di kepala.\n\nMalam ini, prioritaskan tidur lebih awal ya. Tubuhmu butuh waktu untuk regenerasi."
+    },
+    {
+      "keywords": ["malas", "demotivasi", "hilang arah", "mager", "buntu"],
+      "response": "Perasaan malas atau kehilangan dorongan belajar sering kali bukan tanda kemalasan, melainkan sinyal bahwa tubuh dan pikiranmu sedang mengalami kelelahan mental atau kebingungan arah.\n\nCobalah terapkan 'aturan 5 menit': cukup buka dokumen tugas dan ketik satu paragraf atau baca dua halaman. Jika setelah 5 menit kamu masih merasa sangat berat, boleh berhenti dan coba lagi setelah berjalan santai sebentar."
     }
   ],
-  "defaultResponse": "Terima kasih sudah mau berbagi ceritamu, Nadira. Aku paham ini tidak mudah bagimu. Mengakui perasaanmu adalah langkah awal yang sangat berani. Tarik napas pelan-pelan ya, kamu tidak harus menyelesaikan semua beban ini dalam satu waktu. Ada hal spesifik lain yang ingin kamu tumpahkan ke Mimi?"
+  "defaultResponse": "Terima kasih sudah mau menceritakan apa yang sedang kamu rasakan. Menamai dan mengakui emosi adalah langkah awal yang sehat dalam merawat kesehatan mental.\n\nKamu tidak harus menyelesaikan semua persoalan sekaligus saat ini. Jika ingin mendalami, apa hal yang paling membebani pikiranmu dari situasi tersebut?"
 }

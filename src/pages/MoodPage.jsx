@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
-import { useOutletContext, Link } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import {
-  HeartHandshake, CheckCircle2, AlertTriangle
+  HeartHandshake,
+  CheckCircle2,
+  AlertTriangle,
+  Check,
+  Wind,
+  Activity,
+  Headphones,
 } from 'lucide-react';
 import { useMood } from '../context/MoodContext';
-import KucingMascot from '../components/KucingMascot';
+import { getMoodMeta } from '../utils/moodIcons';
+
+const REC_ICONS = [Wind, Activity, Headphones];
 
 const MoodPage = () => {
   const { openHelpModal } = useOutletContext();
   const {
-    history, options, recommendations, todayMood,
-    hasCheckedInToday, isConsecutiveNegative, logMood, dismissAlert,
+    history,
+    options,
+    recommendations,
+    todayMood,
+    hasCheckedInToday,
+    isConsecutiveNegative,
+    logMood,
   } = useMood();
 
   const [selectedMoodId, setSelectedMoodId] = useState(todayMood?.moodId || 'baik');
@@ -20,8 +33,14 @@ const MoodPage = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   const availableTags = [
-    'Tugas Menumpuk', 'Bimbingan Dospem', 'Kurang Tidur', 'Ujian / Kuis',
-    'Diskusi Kelompok', 'Organisasi Kampus', 'Olahraga Pagi', 'Waktu Istirahat',
+    'Tugas Menumpuk',
+    'Bimbingan Dospem',
+    'Kurang Tidur',
+    'Ujian / Kuis',
+    'Diskusi Kelompok',
+    'Organisasi Kampus',
+    'Olahraga Pagi',
+    'Waktu Istirahat',
   ];
 
   const toggleTag = (tag) =>
@@ -36,263 +55,293 @@ const MoodPage = () => {
     setTimeout(() => setSaveSuccess(false), 3000);
   };
 
-  // Use red/blue alternating for mood history bars
-  const moodBarColors = ['#8B0A0A', '#4A8DB7', '#8B0A0A', '#4A8DB7', '#8B0A0A', '#4A8DB7', '#8B0A0A'];
+  const recent7 = history.slice(-7);
 
   return (
-    <div>
-      {/* ── Header Block ── */}
-      <div
-        className="px-5 sm:px-8 pt-6 pb-10"
-        style={{ backgroundColor: '#C8BA96' }}
-      >
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
-              Mood & Kesehatan Mental
-            </p>
-            <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#4A8DB7' }}>
-              Validasi perasaanmu
-            </h1>
-            <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
-              tanpa menghakimi diri sendiri.
-            </p>
-          </div>
-          <KucingMascot pose="happy" size={130} />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-[28px] font-semibold tracking-[-0.02em] text-ink leading-tight">
+            Mood tracker
+          </h1>
+          <p className="text-sm text-ink-secondary mt-1">
+            Catat kondisi emosi dan tingkat energi harian untuk mengenali pola beban kuliah
+          </p>
         </div>
+
         {hasCheckedInToday && (
-          <div
-            className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold"
-            style={{ background: '#4A8DB720', color: '#4A8DB7', border: '1px solid #4A8DB7' }}
-          >
-            <CheckCircle2 className="w-3.5 h-3.5" /> Check-in hari ini sudah selesai ✨
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-semantic-positive-soft text-semantic-positive text-xs font-medium self-start sm:self-auto">
+            <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+            <span>Check-in hari ini tersimpan</span>
           </div>
         )}
       </div>
 
-      {/* ── Card Body ── */}
-      <div className="px-5 sm:px-8 py-8 space-y-6">
-
-        {/* Crisis alert */}
-        {isConsecutiveNegative && (
-          <div
-            className="p-4 rounded-2xl flex items-start gap-3"
-            style={{ background: '#8B0A0A', color: '#C8BA96' }}
-          >
-            <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <p className="font-black text-sm">Hai, kami memperhatikanmu 💙</p>
-              <p className="text-xs leading-relaxed mt-1" style={{ color: 'rgba(247,240,218,0.85)' }}>
-                Sudah beberapa hari kamu merasakan kondisi yang berat. Tidak ada salahnya berbicara dengan konselor profesional.
+      {/* Crisis Alert */}
+      {isConsecutiveNegative && (
+        <div className="p-4 rounded-xl bg-accent-soft border border-accent/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <AlertTriangle
+              className="w-4 h-4 text-accent shrink-0 mt-0.5"
+              strokeWidth={1.5}
+            />
+            <div>
+              <p className="text-sm font-medium text-ink">
+                Kondisi emosional beberapa hari terakhir terlihat berat
+              </p>
+              <p className="text-xs text-ink-secondary mt-0.5 leading-relaxed">
+                Tidak ada salahnya berbicara dengan konselor kampus atau layanan pendampingan profesional.
               </p>
             </div>
-            <button
-              onClick={openHelpModal}
-              className="shrink-0 px-3 py-2 rounded-full text-xs font-black"
-              style={{ background: '#C8BA96', color: '#8B0A0A' }}
-            >
-              Cari Bantuan
-            </button>
           </div>
-        )}
+          <button
+            onClick={openHelpModal}
+            className="btn-primary h-8 px-3 text-xs shrink-0"
+          >
+            Lihat kontak konseling
+          </button>
+        </div>
+      )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Check-in form */}
-          <div className="lg:col-span-7">
-            <form
-              onSubmit={handleSubmit}
-              className="p-6 space-y-5 rounded-3xl"
-              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-            >
-              <h2 className="font-black text-xl" style={{ color: '#2B2B2B' }}>Check-In Hari Ini 🌱</h2>
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Check-in Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="lg:col-span-7 surface-card p-6 space-y-6"
+        >
+          <h2 className="text-base font-medium text-ink">Check-in hari ini</h2>
 
-              {/* Mood options */}
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#5C4A3A' }}>
-                  Kondisi emosionalmu:
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {options.map((opt) => {
-                    const isSelected = selectedMoodId === opt.id;
-                    return (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setSelectedMoodId(opt.id)}
-                        className="hs-btn py-2 px-4 text-xs transition-all"
-                        style={
-                          isSelected
-                            ? { backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }
-                            : { backgroundColor: '#C8BA96', color: '#2B2B2B', border: '1.5px solid #5C4A3A' }
-                        }
-                      >
-                        <span className="text-base">{opt.emoji}</span> {opt.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Energy level */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
-                    Tingkat energi hari ini:
-                  </p>
-                  <span className="text-sm font-black" style={{ color: '#4A8DB7' }}>
-                    {energyLevel}/5
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {[1, 2, 3, 4, 5].map((lv) => (
-                    <button
-                      key={lv}
-                      type="button"
-                      onClick={() => setEnergyLevel(lv)}
-                      className="flex-1 h-8 rounded-xl border-2 transition-all font-black text-xs"
-                      style={{
-                        borderColor: lv <= energyLevel ? '#4A8DB7' : '#5C4A3A30',
-                        backgroundColor: lv <= energyLevel ? '#4A8DB7' : 'transparent',
-                        color: lv <= energyLevel ? '#DDD0A8' : '#5C4A3A',
-                      }}
-                    >
-                      {lv}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tags */}
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#5C4A3A' }}>
-                  Apa yang memengaruhi harimu?
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {availableTags.map((tag) => (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => toggleTag(tag)}
-                      className="hs-chip text-[11px] transition-all"
-                      style={
-                        selectedTags.includes(tag)
-                          ? { backgroundColor: '#4A8DB7', color: '#DDD0A8', border: 'none' }
-                          : { background: '#C8BA96', color: '#5C4A3A', border: '1px solid #5C4A3A' }
-                      }
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Journal */}
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#5C4A3A' }}>
-                  Jurnal singkat (opsional):
-                </p>
-                <textarea
-                  value={journalNote}
-                  onChange={(e) => setJournalNote(e.target.value)}
-                  rows={3}
-                  placeholder="Ceritakan apa yang kamu rasakan hari ini, tanpa filter..."
-                  className="w-full p-3 rounded-2xl text-xs resize-none transition"
-                  style={{
-                    background: '#C8BA96',
-                    border: '1.5px solid #5C4A3A',
-                    color: '#2B2B2B',
-                  }}
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="hs-btn w-full justify-center font-black"
-                style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
-              >
-                {saveSuccess ? '✅ Check-in Tersimpan!' : 'Simpan Check-in Hari Ini'}
-              </button>
-            </form>
+          {/* Mood options */}
+          <div className="space-y-2.5">
+            <label className="block text-xs font-medium text-ink-secondary">
+              Kondisi emosional saat ini
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {options.map((opt) => {
+                const isSelected = selectedMoodId === opt.id;
+                const meta = getMoodMeta(opt.id);
+                const Icon = meta.icon;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setSelectedMoodId(opt.id)}
+                    className={`h-10 px-3.5 rounded-lg border text-sm font-medium flex items-center gap-2.5 transition-colors duration-150 active:scale-[0.98] ${
+                      isSelected
+                        ? 'bg-ink text-paper-card border-ink'
+                        : 'bg-paper text-ink border-line hover:bg-paper-raised'
+                    }`}
+                  >
+                    <Icon
+                      className={`w-4 h-4 shrink-0 ${
+                        isSelected ? 'text-paper-card' : 'text-ink-muted'
+                      }`}
+                      strokeWidth={1.5}
+                    />
+                    <span className="truncate">{opt.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Right column */}
-          <div className="lg:col-span-5 space-y-5">
-            {/* Recommendations */}
-            {recommendations.length > 0 && (
-              <div
-                className="p-5 rounded-3xl"
-                style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-              >
-                <h3 className="font-black mb-3" style={{ color: '#2B2B2B' }}>🌿 Rekomendasi Untukmu</h3>
-                <div className="space-y-2">
-                  {recommendations.slice(0, 3).map((rec, i) => (
-                    <div
-                      key={i}
-                      className="p-3 rounded-xl flex items-start gap-2.5"
-                      style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-                    >
-                      <span className="text-lg shrink-0">{rec.icon}</span>
-                      <div>
-                        <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>{rec.title}</p>
-                        <p className="text-[11px]" style={{ color: '#5C4A3A' }}>{rec.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          {/* Energy Level */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-ink-secondary">
+                Tingkat energi tubuh
+              </label>
+              <span className="font-mono text-xs font-medium text-ink tabular">
+                {energyLevel} / 5
+              </span>
+            </div>
+            <div className="grid grid-cols-5 gap-2">
+              {[1, 2, 3, 4, 5].map((lv) => {
+                const filled = lv <= energyLevel;
+                return (
+                  <button
+                    key={lv}
+                    type="button"
+                    onClick={() => setEnergyLevel(lv)}
+                    className={`h-9 rounded-lg border font-mono text-xs font-medium tabular transition-colors duration-150 ${
+                      filled
+                        ? 'bg-accent text-paper-card border-accent'
+                        : 'bg-paper text-ink-secondary border-line hover:bg-paper-raised'
+                    }`}
+                  >
+                    {lv}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Tags */}
+          <div className="space-y-2.5">
+            <label className="block text-xs font-medium text-ink-secondary">
+              Faktor yang memengaruhi harimu
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {availableTags.map((tag) => {
+                const active = selectedTags.includes(tag);
+                return (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => toggleTag(tag)}
+                    className={`h-8 px-3 rounded-lg border text-xs font-medium transition-colors duration-150 ${
+                      active
+                        ? 'bg-ink text-paper-card border-ink'
+                        : 'bg-paper text-ink-secondary border-line hover:bg-paper-raised hover:text-ink'
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Journal */}
+          <div className="space-y-2">
+            <label className="block text-xs font-medium text-ink-secondary">
+              Catatan jurnal singkat (opsional)
+            </label>
+            <textarea
+              value={journalNote}
+              onChange={(e) => setJournalNote(e.target.value)}
+              rows={3}
+              placeholder="Tuliskan hal yang sedang kamu rasakan atau pikirkan hari ini"
+              className="w-full p-3 rounded-lg bg-paper border border-line-strong text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent resize-none"
+            />
+          </div>
+
+          <button type="submit" className="btn-primary w-full h-10">
+            {saveSuccess ? (
+              <>
+                <Check className="w-4 h-4" strokeWidth={1.5} />
+                <span>Check-in tersimpan</span>
+              </>
+            ) : (
+              <span>Simpan check-in hari ini</span>
             )}
+          </button>
+        </form>
 
-            {/* Mood history */}
-            <div
-              className="p-5 rounded-3xl"
-              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-black" style={{ color: '#2B2B2B' }}>📈 Riwayat Mood</h3>
-                <span className="text-[10px] font-bold" style={{ color: '#5C4A3A' }}>7 hari terakhir</span>
+        {/* Right Column */}
+        <div className="lg:col-span-5 space-y-5">
+          {/* 7-day Mood & Energy Chart (One Moment) */}
+          <section className="surface-card p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-medium text-ink">Tren energi 7 hari</h3>
+                <p className="text-xs text-ink-muted mt-0.5">Skala 1 hingga 5</p>
               </div>
-              <div className="flex items-end gap-2 h-20">
-                {history.slice(-7).map((m, i) => {
-                  const h = ((m.energyLevel || 3) / 5) * 100;
+              <span className="font-mono text-xs text-accent tabular">
+                Hari ini: {recent7[recent7.length - 1]?.energyLevel || energyLevel}/5
+              </span>
+            </div>
+
+            <div className="relative pt-4">
+              {/* Muted horizontal reference lines */}
+              <div className="absolute inset-x-0 top-4 bottom-6 flex flex-col justify-between pointer-events-none">
+                {[5, 3, 1].map((mark) => (
+                  <div key={mark} className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] text-ink-muted w-3 tabular">
+                      {mark}
+                    </span>
+                    <div className="flex-1 border-t border-dashed border-line" />
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-end gap-2.5 h-32 pl-5 relative z-10">
+                {recent7.map((m, i) => {
+                  const pct = ((m.energyLevel || 3) / 5) * 100;
+                  const isLatest = i === recent7.length - 1;
                   return (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                      <div
-                        className="w-full rounded-t-lg transition-all"
-                        style={{
-                          height: `${h}%`,
-                          minHeight: '8px',
-                          backgroundColor: moodBarColors[i % moodBarColors.length],
-                          opacity: 0.75 + i * 0.035,
-                        }}
-                      />
-                      <span className="text-[9px]" style={{ color: '#5C4A3A' }}>
-                        {m.date?.slice(5)}
+                    <div
+                      key={m.id || i}
+                      className="flex-1 h-full flex flex-col justify-end items-center gap-2"
+                    >
+                      <div className="w-full flex-1 flex items-end">
+                        <div
+                          className={`w-full rounded-t-md transition-[height] duration-300 ease-unslop ${
+                            isLatest ? 'bg-accent' : 'bg-ink/20'
+                          }`}
+                          style={{ height: `${pct}%`, minHeight: '8px' }}
+                          title={`${m.dayName}: Energi ${m.energyLevel}/5 (${m.label})`}
+                        />
+                      </div>
+                      <span
+                        className={`font-mono text-[11px] tabular ${
+                          isLatest ? 'text-ink font-medium' : 'text-ink-muted'
+                        }`}
+                      >
+                        {m.dayName || m.date?.slice(5)}
                       </span>
                     </div>
                   );
                 })}
               </div>
             </div>
+          </section>
 
-            {/* Professional help */}
-            <div
-              className="p-4 rounded-2xl text-white"
-              style={{ background: 'linear-gradient(135deg, #4A8DB7, #1F3A7A)' }}
-            >
-              <HeartHandshake className="w-5 h-5 mb-2" />
-              <p className="font-black text-sm">Butuh bicara dengan profesional?</p>
-              <p className="text-xs mt-1 mb-3" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                Konselor kampus tersedia secara online. Privat dan tanpa biaya.
-              </p>
-              <button
-                onClick={openHelpModal}
-                className="px-4 py-2 rounded-full text-xs font-black"
-                style={{ background: '#C8BA96', color: '#1F3A7A' }}
-              >
-                Hubungi Sekarang →
-              </button>
+          {/* Recommendations */}
+          {recommendations.length > 0 && (
+            <section className="surface-card p-5 space-y-3">
+              <h3 className="text-sm font-medium text-ink">Rekomendasi rehat</h3>
+              <div className="space-y-2.5">
+                {recommendations.slice(0, 3).map((rec, i) => {
+                  const Icon = REC_ICONS[i % REC_ICONS.length];
+                  return (
+                    <div
+                      key={rec.title}
+                      className="p-3 rounded-lg bg-paper border border-line flex items-start gap-3"
+                    >
+                      <Icon
+                        className="w-4 h-4 text-ink-muted shrink-0 mt-0.5"
+                        strokeWidth={1.5}
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-xs font-medium text-ink">{rec.title}</p>
+                          <span className="font-mono text-[11px] text-ink-muted tabular shrink-0">
+                            {rec.duration}
+                          </span>
+                        </div>
+                        <p className="text-xs text-ink-secondary mt-0.5 leading-relaxed">
+                          {rec.description}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {/* Professional Help */}
+          <section className="surface-calm p-5 space-y-3">
+            <div className="flex items-center gap-2 text-accent">
+              <HeartHandshake className="w-4 h-4" strokeWidth={1.5} />
+              <span className="text-xs font-medium">Konsultasi profesional</span>
             </div>
-          </div>
+            <p className="text-sm font-medium text-ink">
+              Butuh ruang bicara bersama konselor?
+            </p>
+            <p className="text-xs text-ink-secondary leading-relaxed">
+              Layanan konseling kemahasiswaan kampus dan hotline Sejiwa tersedia secara rahasia.
+            </p>
+            <button
+              onClick={openHelpModal}
+              className="btn-primary h-9 px-4 text-xs"
+            >
+              Lihat kontak konseling
+            </button>
+          </section>
         </div>
       </div>
     </div>
@@ -300,4 +349,3 @@ const MoodPage = () => {
 };
 
 export default MoodPage;
-

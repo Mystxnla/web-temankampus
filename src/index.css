@@ -1,204 +1,100 @@
-/* ══════════════════════════════════════════════
-   TemanKampus — Figma Lean Canvas Theme
-   Fonts: Anton (display) · Nunito 800 (body) · Patrick Hand (label)
-   ══════════════════════════════════════════════ */
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Nunito:wght@400;600;700;800;900&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  html { scroll-behavior: smooth; color-scheme: light; }
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
 
   body {
-    background-color: #C8BA96;
-    color: #1A1208;
-    font-family: 'Nunito', 'Plus Jakarta Sans', sans-serif;
-    font-weight: 800;
+    background-color: #F6F5F0;
+    color: #222926;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3,
-  .font-display,
-  .font-headline {
-    font-family: 'Anton', sans-serif;
-    letter-spacing: 0.01em;
+  :focus-visible {
+    outline: 2px solid #356854;
+    outline-offset: 2px;
   }
 }
 
-/* ── Scrollbar ─────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #F7F0DA; }
-::-webkit-scrollbar-thumb { background: #75685B; border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: #8B0A0A; }
-
-/* ── Figma Card (double outline + drop shadow) ─ */
-.figma-card {
-  background: #DDD0A8;
-  border: 2.37px solid #75685B;
-  border-radius: 1.75rem;
-  box-shadow:
-    0 0 0 12px #C8BA96,
-    0 0 0 16px #342B27,
-    0 6px 0 16px rgba(0,0,0,0.12);
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(34, 41, 38, 0.14);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 41, 38, 0.25);
 }
 
-/* ── Figma Heading Box (tilted title container) */
-.figma-heading-box {
-  background: #C8BA96;
-  border-radius: 1.5rem;
-  box-shadow:
-    0 0 0 3px #342B27,
-    0 7px 0 3px rgba(0,0,0,0.12);
+/* Reusable quiet primitives */
+@layer components {
+  .surface-card {
+    @apply bg-paper-card border border-line rounded-xl shadow-subtle;
+  }
+
+  .surface-calm {
+    @apply bg-calm-surface border border-calm-border rounded-xl;
+  }
+
+  .surface-inset {
+    @apply bg-paper-raised/70 border border-line rounded-lg;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 h-9 px-4 rounded-lg bg-accent text-paper-card text-sm font-medium transition-colors duration-150 ease-unslop hover:bg-accent-hover active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 h-9 px-4 rounded-lg bg-paper-raised border border-line text-ink text-sm font-medium transition-colors duration-150 ease-unslop hover:bg-paper-hover active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 h-9 px-3 rounded-lg text-ink-secondary text-sm font-medium transition-colors duration-150 ease-unslop hover:bg-paper-raised hover:text-ink active:scale-[0.98];
+  }
+
+  .input-field {
+    @apply w-full h-9 px-3 rounded-lg bg-paper-card border border-line-strong text-sm text-ink placeholder:text-ink-muted transition-colors duration-150 ease-unslop focus:outline-none focus:border-accent;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
-/* ── Soft white card (no double outline) ─────── */
-.headspace-card {
-  background: #DDD0A8;
-  border-radius: 2rem 2rem 0 0;
-  box-shadow: 0 -4px 40px rgba(52,43,39,0.12);
-  position: relative;
-  z-index: 2;
-}
-
-.headspace-card-full {
-  background: #DDD0A8;
-  border: 2.37px solid #75685B;
-  border-radius: 1.75rem;
-  box-shadow:
-    0 0 0 12px #C8BA96,
-    0 0 0 16px #342B27,
-    0 6px 0 16px rgba(0,0,0,0.12);
-}
-
-/* ── CTA Button ──────────────────────────────── */
-.hs-btn {
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800;
-  border-radius: 9999px;
-  padding: 0.75rem 2rem;
-  font-size: 0.9375rem;
-  letter-spacing: 0.01em;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-}
-.hs-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(52,43,39,0.18); }
-.hs-btn:active { transform: translateY(0); }
-
-/* ── Chip / Badge ────────────────────────────── */
-.hs-chip {
-  border-radius: 9999px;
-  padding: 0.25rem 0.875rem;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 700;
-  font-size: 0.75rem;
-  letter-spacing: 0.03em;
-}
-
-/* ── Headline styles ─────────────────────────── */
-.hs-headline {
-  font-family: 'Anton', sans-serif;
-  line-height: 1.0;
-  letter-spacing: 0.01em;
-}
-
-.hs-subtext {
-  font-family: 'Patrick Hand', cursive;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #1F3A7A;
-}
-
-/* ── Section heading number + label (Anton red/blue) */
-.section-num-red  { font-family: 'Anton', sans-serif; color: #8B0A0A; }
-.section-num-blue { font-family: 'Anton', sans-serif; color: #4A8DB7; }
-
-/* ── Tape decorative strip ───────────────────── */
-.tape {
-  background: #F6D0D6;
-  opacity: 0.9;
-  border-radius: 4px;
-}
-
-/* ── Bobi mascot floats ──────────────────────── */
-.bobi-float {
-  animation: bobi-float 3.5s ease-in-out infinite;
-  transform-origin: center bottom;
-}
-@keyframes bobi-float {
-  0%, 100% { transform: translateY(0px) rotate(-2deg); }
-  50%       { transform: translateY(-10px) rotate(2deg); }
-}
-.bobi-bounce { animation: bobi-bounce 2s ease-in-out infinite; }
-@keyframes bobi-bounce {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-6px); }
-}
-
-/* ── Focus timer ring ────────────────────────── */
+/* Focus timer progress ring */
 .progress-ring {
-  transition: stroke-dashoffset 0.35s ease;
+  transition: stroke-dashoffset 300ms cubic-bezier(0.22, 1, 0.36, 1);
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
 }
 
-/* ── Session dots (Focus Timer) ──────────────── */
-.session-dot {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800; font-size: 13px;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  cursor: pointer;
-}
-.session-dot-active { transform: scale(1.1); box-shadow: 0 4px 12px rgba(139,10,10,0.2); }
-
-/* ── Sidebar nav item ────────────────────────── */
-.sidebar-nav-item {
-  border-radius: 1rem;
-  padding: 0.625rem 1.25rem;
-  transition: all 0.2s ease;
-  display: flex; align-items: center; gap: 0.75rem;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800; font-size: 0.875rem;
-  cursor: pointer; text-decoration: none;
+/* Subtle entrance for modals & popovers */
+@keyframes fadeRise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ── Topbar frosted ──────────────────────────── */
-.topbar-frosted {
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+.animate-enter {
+  animation: fadeRise 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-
-/* ── Icon button micro interaction ──────────── */
-.icon-btn { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
-.icon-btn:hover  { transform: scale(1.08); }
-.icon-btn:active { transform: scale(0.95); }
-
-/* ── Bottom nav active ───────────────────────── */
-.bottom-nav-active::before {
-  content: '';
-  position: absolute;
-  inset: -4px -8px;
-  border-radius: 9999px;
-  background: rgba(139,10,10,0.1);
-  z-index: -1;
-}
-
-/* ── hs-card (kept for compat) ───────────────── */
-.hs-card {
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border-radius: 1.25rem;
-  background: #FFFBEF;
-  border: 2px solid #75685B;
-}
-.hs-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 0 12px #F7F0DA, 0 0 0 16px #342B27, 0 6px 0 16px rgba(0,0,0,0.12);
-}
-

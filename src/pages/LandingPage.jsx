@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  CheckCircle2, Clock, Smile, MessageCircle, ArrowRight,
-  ShieldCheck, Sparkles, ChevronRight, Play, Flame
+  CheckCircle2,
+  Clock,
+  Smile,
+  MessageCircle,
+  ArrowRight,
+  ChevronRight,
+  Sun,
+  Cloud,
+  CloudRain,
+  Coffee,
+  BookOpen,
+  HeartHandshake,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import KucingMascot from '../components/KucingMascot';
@@ -14,248 +25,265 @@ const LandingPage = () => {
 
   const features = [
     {
-      icon: CheckCircle2,
-      badge: 'PRODUKTIVITAS',
-      badgeColor: '#8B0A0A',
-      title: 'Task Manager',
-      desc: 'Kelola tugas per mata kuliah, deadline, dan kalender akademik.',
-      to: '/tasks',
-      numColor: '#8B0A0A',
       num: '01',
+      icon: CheckCircle2,
+      title: 'Manajemen tugas',
+      desc: 'Susun tugas per mata kuliah, pantau tenggat terdekat, dan lihat kalender akademik dalam satu daftar.',
+      to: '/tasks',
     },
     {
-      icon: Smile,
-      badge: 'KESEHATAN MENTAL',
-      badgeColor: '#4A8DB7',
-      title: 'Mood Check-In',
-      desc: 'Validasi perasaanmu setiap hari dan deteksi dini burnout.',
-      to: '/mood',
-      numColor: '#4A8DB7',
       num: '02',
+      icon: Smile,
+      title: 'Mood check-in',
+      desc: 'Catat kondisi emosi serta tingkat energi harian untuk mengenali pola kelelahan sebelum menjadi burnout.',
+      to: '/mood',
+    },
+    {
+      num: '03',
+      icon: Clock,
+      title: 'Ruang fokus pomodoro',
+      desc: 'Sesi belajar 25 menit terukur dengan pengingat rehat dan suara latar hujan kampus.',
+      to: '/focus',
+    },
+    {
+      num: '04',
+      icon: MessageCircle,
+      title: 'Teman curhat Mimi',
+      desc: 'Ruang percakapan privat untuk mengurai tekanan kuliah dan mendapatkan arahan langkah kecil.',
+      to: '/curhat',
+    },
+  ];
+
+  const previewMoods = [
+    {
+      id: 'baik',
+      icon: Sun,
+      label: 'Semangat & siap',
+      dot: 'bg-semantic-positive',
+      note: 'Manfaatkan energi baik ini untuk menuntaskan satu bagian tugas terpenting lewat satu sesi Pomodoro 25 menit.',
+    },
+    {
+      id: 'biasa',
+      icon: Cloud,
+      label: 'Biasa saja',
+      dot: 'bg-semantic-info',
+      note: 'Hari yang tenang adalah fondasi konsistensi. Pilih tiga prioritas utama hari ini dan kerjakan bertahap.',
+    },
+    {
+      id: 'stres',
+      icon: CloudRain,
+      label: 'Kewalahan',
+      dot: 'bg-semantic-warning',
+      note: 'Tidak perlu menyelesaikan semuanya sekaligus. Pecah tugas terbesar menjadi satu langkah 15 menit atau ceritakan ke Mimi.',
+    },
+    {
+      id: 'lelah',
+      icon: Coffee,
+      label: 'Butuh rehat',
+      dot: 'bg-accent',
+      note: 'Tutup laptop sejenak selama 15 menit, lakukan latihan napas 4-7-8, dan penuhi asupan air minum sebelum lanjut.',
+    },
+  ];
+
+  const studentScenarios = [
+    {
+      icon: BookOpen,
+      category: 'Manajemen skripsi',
+      title: 'Menghadapi revisi dan bimbingan',
+      desc: 'Saat dosen pembimbing memberi banyak catatan revisi dengan tenggat dekat, pecah pekerjaan ke sesi Pomodoro 25 menit agar fokus tetap terjaga.',
+      solution: 'Task Manager & Ruang Fokus',
     },
     {
       icon: Clock,
-      badge: 'FOKUS TERARAH',
-      badgeColor: '#8B0A0A',
-      title: 'Pomodoro Timer',
-      desc: 'Belajar 25 menit dengan ambience hujan kampus yang menenangkan.',
-      to: '/focus',
-      numColor: '#8B0A0A',
-      num: '03',
+      category: 'Pencegahan burnout',
+      title: 'Pekan ujian dan kurang tidur',
+      desc: 'Ketika begadang berulang mulai menguras konsentrasi, catatan mood harian membantu melihat pola kelelahan dan mengingatkan waktu jeda.',
+      solution: 'Mood Tracker & Latihan Napas 4-7-8',
     },
     {
-      icon: MessageCircle,
-      badge: 'AI COMPANION',
-      badgeColor: '#4A8DB7',
-      title: 'Teman Curhat Mimi',
-      desc: 'Ruang aman curhat tanpa dihakimi, tersedia 24/7 bersama AI empatik.',
-      to: '/curhat',
-      numColor: '#4A8DB7',
-      num: '04',
+      icon: HeartHandshake,
+      category: 'Dukungan sebaya',
+      title: 'Merantau dan butuh teman cerita',
+      desc: 'Saat jauh dari keluarga dan merasa cemas di kosan, Mimi dan forum mahasiswa anonim memberi ruang bercerita tanpa menghakimi.',
+      solution: 'Curhat AI & Komunitas Sebaya',
     },
   ];
 
-  const testimonials = [
-    {
-      quote: 'Dulu selalu overthinking tiap mau bimbingan. Pomodoro sama Mimi ngebantu banget bikin aku ga panik.',
-      name: 'Nadira Az-Zahra', campus: 'Teknik Informatika · UI', avatar: 'NA', tag: 'Skripsi Tepat Waktu 🎓',
-    },
-    {
-      quote: 'Mood tracker-nya ngingetin kalau aku udah 3 hari begadang. Fitur pengingat rehat penyelamat dari burnout.',
-      name: 'Rian Pratama', campus: 'Teknik Sipil · UNNES', avatar: 'RP', tag: 'Pengguna 4 Bulan 📅',
-    },
-    {
-      quote: 'Forum komunitasnya suportif, ga toxic kaya medsos lain. Nemu teman senasib di perantauan.',
-      name: 'Alya Salsabila', campus: 'Psikologi · UGM', avatar: 'AS', tag: 'Komunitas Sebaya 👥',
-    },
-  ];
+  const activePreviewMood =
+    previewMoods.find((m) => m.id === selectedPreviewMood) || previewMoods[0];
 
-  const handleDemoAccess = () => { login(); navigate('/dashboard'); };
+  const handleDemoAccess = (targetPath = '/dashboard') => {
+    login();
+    navigate(targetPath);
+  };
 
   return (
-    <div className="min-h-screen font-sans" style={{ backgroundColor: '#C8BA96' }}>
-      {/* ── Sticky Header ── */}
-      <header
-        className="fixed top-0 left-0 right-0 z-50 topbar-frosted"
-        style={{
-          backgroundColor: '#DDD0A8',
-          borderBottom: '2px solid #5C4A3A',
-          boxShadow: '0 4px 0 0 #C8BA96',
-        }}
-      >
-        <div className="h-16 max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between">
+    <div className="min-h-screen bg-paper text-ink">
+      {/* Header */}
+      <header className="sticky top-0 z-50 h-16 bg-paper/95 backdrop-blur-sm border-b border-line">
+        <div className="h-full max-w-[1200px] mx-auto px-5 sm:px-8 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
-            <div
-              className="w-9 h-9 rounded-xl font-display text-base flex items-center justify-center shadow-sm"
-              style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-            >
-              TK
-            </div>
-            <span className="font-display text-lg tracking-tight" style={{ color: '#8B0A0A' }}>
+            <KucingMascot pose="mark" size={30} className="shrink-0" />
+            <span className="text-[16px] font-semibold text-ink tracking-[-0.01em]">
               TemanKampus
             </span>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6">
-            {['#fitur', '#mood-preview', '#testimoni'].map((href, i) => (
-              <a
-                key={href}
-                href={href}
-                className="text-xs font-bold uppercase tracking-wider transition"
-                style={{ color: '#5C4A3A' }}
-              >
-                {['Fitur', 'Mood Preview', 'Cerita Teman'][i]}
-              </a>
-            ))}
+          <nav className="hidden md:flex items-center gap-6" aria-label="Navigasi halaman">
+            <a
+              href="#fitur"
+              className="text-sm text-ink-secondary hover:text-ink transition-colors duration-150"
+            >
+              Fitur
+            </a>
+            <a
+              href="#mood-preview"
+              className="text-sm text-ink-secondary hover:text-ink transition-colors duration-150"
+            >
+              Simulasi mood
+            </a>
+            <a
+              href="#skenario"
+              className="text-sm text-ink-secondary hover:text-ink transition-colors duration-150"
+            >
+              Skenario
+            </a>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Link
               to="/auth"
-              className="text-xs font-bold px-3 py-1.5 transition"
-              style={{ color: '#5C4A3A' }}
+              className="text-sm text-ink-secondary hover:text-ink transition-colors duration-150 px-2 py-1"
             >
               Masuk
             </Link>
             <button
-              onClick={handleDemoAccess}
-              className="hs-btn text-xs py-2 px-5 font-black"
-              style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
+              onClick={() => handleDemoAccess('/dashboard')}
+              className="btn-primary h-9 px-4 text-sm"
             >
-              Daftar Gratis ✨
+              Buka prototipe
             </button>
           </div>
         </div>
       </header>
 
-      {/* ── Hero Section ── */}
-      <section className="pt-20 px-5 sm:px-8 max-w-7xl mx-auto">
-        <div className="pt-12 pb-0 flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-          {/* Left: Headline */}
-          <div className="flex-1 flex flex-col items-start gap-5">
-            {/* Category chip */}
-            <span
-              className="hs-chip text-xs uppercase tracking-widest"
-              style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
-            >
-              🌸 Ruang Aman Mahasiswa Indonesia
-            </span>
-
-            {/* 2-line bold headline */}
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl leading-none" style={{ color: '#8B0A0A' }}>
-              Kuliah lebih<br />
-              <span style={{ color: '#4A8DB7' }}>tenang & berdaya.</span>
+      {/* Hero */}
+      <section className="max-w-[1200px] mx-auto px-5 sm:px-8 pt-14 pb-20 lg:pt-20 lg:pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+          {/* Left: Copy */}
+          <div className="lg:col-span-6 space-y-6">
+            <h1 className="font-serif text-[40px] sm:text-[52px] lg:text-[58px] font-normal leading-[1.06] tracking-[-0.02em] text-ink">
+              Kuliah lebih tenang, tugas tetap teratur
             </h1>
 
-            <p className="font-hand text-sm sm:text-base max-w-lg" style={{ color: '#1F3A7A' }}>
-              Kelola deadline, lacak mood, fokus belajar, dan curhat ke Mimi AI — semua dalam satu platform yang memahami perjalananmu sebagai mahasiswa.
+            <p className="text-base sm:text-[17px] leading-[1.6] text-ink-secondary max-w-[34rem]">
+              Satu ruang kerja mahasiswa Indonesia untuk menyusun tenggat kuliah, memantau mood harian, menjaga sesi fokus Pomodoro, dan bercerita bersama Mimi AI.
             </p>
 
-            {/* Stats */}
-            <div className="flex items-center gap-8 py-3">
-              {[['500+', 'Mahasiswa', '#8B0A0A'], ['98%', 'Lebih Tenang', '#4A8DB7'], ['24/7', 'Teman AI', '#8B0A0A']].map(([val, lbl, col]) => (
-                <div key={lbl}>
-                  <div className="font-display text-2xl leading-none" style={{ color: col }}>{val}</div>
-                  <div
-                    className="text-[10px] font-bold uppercase tracking-wider mt-0.5"
-                    style={{ color: '#5C4A3A' }}
-                  >
-                    {lbl}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <button
-                onClick={handleDemoAccess}
-                className="hs-btn font-black"
-                style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
+                onClick={() => handleDemoAccess('/dashboard')}
+                className="btn-primary h-11 px-5 text-sm"
               >
-                Mulai Sekarang (Gratis) <ArrowRight className="w-4 h-4" />
+                <span>Eksplorasi prototipe</span>
+                <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
               </button>
               <button
-                onClick={handleDemoAccess}
-                className="hs-btn"
-                style={{ backgroundColor: '#DDD0A8', color: '#1F3A7A', border: '2px solid #5C4A3A' }}
+                onClick={() => handleDemoAccess('/tasks')}
+                className="btn-secondary h-11 px-5 text-sm"
               >
-                <Play className="w-4 h-4" /> Demo Langsung
+                Lihat daftar tugas
               </button>
             </div>
 
-            <div className="flex items-center gap-1.5 text-[11px]" style={{ color: '#5C4A3A' }}>
-              <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
-              Gratis · Email kampus .ac.id dapat 3 bulan bonus Premium
+            <div className="pt-4 border-t border-line flex flex-wrap items-center gap-6 text-xs text-ink-muted">
+              <span className="inline-flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-ink-muted" strokeWidth={1.5} />
+                Akses demo langsung tanpa registrasi
+              </span>
+              <span className="font-mono tabular">4 modul terintegrasi</span>
+              <span className="font-mono tabular">Prototipe MVP</span>
             </div>
           </div>
 
-          {/* Right: App preview card */}
-          <div className="flex-shrink-0 flex flex-col items-center gap-3">
-            <KucingMascot pose="happy" size={130} />
-            <div
-              className="rounded-3xl p-4 w-72 sm:w-80"
-              style={{ background: '#DDD0A8', border: '2.37px solid #5C4A3A', boxShadow: '0 0 0 12px #C8BA96, 0 0 0 16px #342B27' }}
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#8B0A0A' }} />
-                <span
-                  className="text-xs font-black uppercase tracking-wide"
-                  style={{ color: '#2B2B2B' }}
-                >
-                  Dashboard Nadira
-                </span>
-                <span
-                  className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full"
-                  style={{ background: '#4A8DB7', color: '#DDD0A8' }}
-                >
-                  Smt 6
+          {/* Right: Realistic Product Preview + Refined Static Mascot */}
+          <div className="lg:col-span-6">
+            <div className="surface-card p-5 sm:p-6 shadow-float">
+              {/* Preview window header */}
+              <div className="flex items-center justify-between pb-4 border-b border-line">
+                <div className="flex items-center gap-2.5">
+                  <KucingMascot pose="mark" size={24} />
+                  <div>
+                    <p className="text-xs font-medium text-ink">Ringkasan mahasiswa</p>
+                    <p className="font-mono text-[11px] text-ink-muted tabular">
+                      Semester 5 · 13 Nov 2026
+                    </p>
+                  </div>
+                </div>
+                <span className="font-mono text-[11px] text-accent bg-accent-soft px-2 py-0.5 rounded-md tabular">
+                  3 tugas aktif
                 </span>
               </div>
-              <div className="space-y-2.5">
-                <div
-                  className="p-2.5 rounded-xl flex items-center justify-between"
-                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-                >
-                  <div>
-                    <p className="text-[10px] font-black uppercase" style={{ color: '#8B0A0A' }}>
-                      Deadline Hari Ini
+
+              {/* Preview body */}
+              <div className="mt-4 space-y-3">
+                {/* Urgent task row */}
+                <div className="p-3.5 rounded-lg bg-paper-raised/70 border border-line flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs text-ink-muted">Metodologi Penelitian</p>
+                    <p className="text-sm font-medium text-ink truncate mt-0.5">
+                      Revisi Bab 2: Tinjauan Pustaka
                     </p>
-                    <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>Revisi Bab 2 Metodologi</p>
                   </div>
-                  <span
-                    className="text-[11px] font-bold px-2 py-1 rounded-lg"
-                    style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-                  >
-                    23:59
+                  <span className="font-mono text-xs text-accent font-medium tabular shrink-0">
+                    23:59 WIB
                   </span>
                 </div>
-                <div
-                  className="p-2.5 rounded-xl"
-                  style={{ background: 'linear-gradient(135deg, #8B0A0A, #4A2010)' }}
-                >
-                  <p className="text-[10px] font-bold uppercase mb-0.5" style={{ color: 'rgba(247,240,218,0.7)' }}>
-                    Mimi AI
-                  </p>
-                  <p className="text-xs leading-snug" style={{ color: '#C8BA96' }}>
-                    "Kamu sudah sampai sejauh ini, Nadira! Satu langkah lagi." 🌸
-                  </p>
+
+                {/* Focus & Mascot row */}
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-stretch">
+                  <div className="sm:col-span-7 p-3.5 rounded-lg bg-paper-card border border-line flex flex-col justify-between gap-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-ink-muted">Ruang fokus</span>
+                      <span className="font-mono text-xs text-ink-secondary tabular">
+                        Sesi 4 / 6
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-mono text-2xl font-medium text-ink tabular">
+                        25:00
+                      </span>
+                      <span className="text-xs text-ink-muted">Hujan kampus</span>
+                    </div>
+                    <div className="h-1.5 w-full rounded-full bg-paper-raised overflow-hidden">
+                      <div className="h-full w-2/3 rounded-full bg-accent" />
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-5 p-3.5 rounded-lg bg-paper-raised/50 border border-line flex flex-col items-center justify-center text-center">
+                    <KucingMascot pose="happy" size={88} />
+                    <p className="text-[11px] text-ink-secondary mt-1">
+                      Ritme harian terjaga
+                    </p>
+                  </div>
                 </div>
-                <div
-                  className="flex items-center gap-2 p-2.5 rounded-xl"
-                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-                >
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm"
-                    style={{ background: '#8B0A0A', color: '#C8BA96' }}
+
+                {/* Mimi prompt row */}
+                <div className="p-3.5 rounded-lg bg-calm-surface border border-calm-border flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <p className="font-mono text-[11px] text-accent">
+                      Mimi · Ruang curhat
+                    </p>
+                    <p className="text-xs leading-relaxed text-ink-secondary">
+                      Satu langkah kecil hari ini sudah cukup untuk menjaga ritme belajarmu tetap berjalan.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleDemoAccess('/curhat')}
+                    className="text-xs font-medium text-accent underline underline-offset-4 shrink-0 hover:opacity-80 transition-opacity"
                   >
-                    25
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-bold" style={{ color: '#2B2B2B' }}>Pomodoro Aktif</p>
-                    <p className="text-[10px]" style={{ color: '#5C4A3A' }}>Hujan Kampus · Sesi ke-3</p>
-                  </div>
-                  <Flame className="w-4 h-4 ml-auto" style={{ color: '#8B0A0A' }} />
+                    Buka
+                  </button>
                 </div>
               </div>
             </div>
@@ -263,267 +291,221 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ── Feature Section ── */}
-      <div
-        className="mt-12 py-16 px-5 sm:px-8"
-        id="fitur"
-        style={{ backgroundColor: '#DDD0A8', borderTop: '2.37px solid #5C4A3A' }}
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <span
-              className="hs-chip text-xs"
-              style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
-            >
-              Solusi Terintegrasi
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl mt-3" style={{ color: '#2B2B2B' }}>
-              Satu tempat untuk<br />akademik & kesehatan mental.
+      {/* Features */}
+      <section id="fitur" className="border-t border-line bg-paper-card py-20">
+        <div className="max-w-[1200px] mx-auto px-5 sm:px-8">
+          <div className="max-w-xl mb-12">
+            <p className="text-xs font-medium text-ink-muted mb-2">Fitur inti</p>
+            <h2 className="font-serif text-3xl sm:text-4xl font-normal tracking-[-0.02em] text-ink leading-[1.15]">
+              Satu tempat untuk akademik dan kesehatan mental
             </h2>
-            <p
-              className="font-hand text-sm mt-2 max-w-xl mx-auto"
-              style={{ color: '#1F3A7A' }}
-            >
-              Tidak perlu berganti-ganti aplikasi. TemanKampus mengurus semuanya.
+            <p className="text-sm text-ink-secondary mt-3 leading-relaxed">
+              Tanpa perlu berpindah-pindah aplikasi. Tugas kuliah, refleksi emosi, dan waktu fokus saling terhubung.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {features.map((f, i) => {
+            {features.map((f) => {
               const Icon = f.icon;
               return (
-                <div
-                  key={i}
-                  className="p-5 rounded-3xl cursor-pointer transition group"
-                  style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-                  onClick={() => handleDemoAccess()}
+                <button
+                  key={f.num}
+                  type="button"
+                  onClick={() => handleDemoAccess(f.to)}
+                  className="text-left p-5 rounded-xl bg-paper border border-line hover:border-line-strong transition-colors duration-150 flex flex-col justify-between gap-6 group"
                 >
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3"
-                    style={{ backgroundColor: f.numColor + '20' }}
-                  >
-                    <Icon className="w-6 h-6" style={{ color: f.numColor }} />
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-9 h-9 rounded-lg bg-paper-card border border-line flex items-center justify-center">
+                        <Icon className="w-4 h-4 text-ink-secondary" strokeWidth={1.5} />
+                      </div>
+                      <span className="font-mono text-xs text-ink-muted tabular">
+                        {f.num}
+                      </span>
+                    </div>
+                    <h3 className="text-base font-medium text-ink mb-2">{f.title}</h3>
+                    <p className="text-sm text-ink-secondary leading-relaxed">{f.desc}</p>
                   </div>
-                  <div
-                    className="font-display text-3xl leading-none mb-1"
-                    style={{ color: f.numColor }}
-                  >
-                    {f.num}
-                  </div>
-                  <span
-                    className="hs-chip text-[10px] mb-2 inline-block"
-                    style={{ backgroundColor: f.numColor, color: '#C8BA96' }}
-                  >
-                    {f.badge}
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-accent group-hover:underline underline-offset-4">
+                    Buka modul
+                    <ChevronRight className="w-3.5 h-3.5" strokeWidth={1.5} />
                   </span>
-                  <h3 className="font-black text-base mb-1" style={{ color: '#2B2B2B' }}>{f.title}</h3>
-                  <p className="font-hand text-xs leading-relaxed mb-4" style={{ color: '#1F3A7A' }}>{f.desc}</p>
-                  <button
-                    className="text-xs font-bold flex items-center gap-1 transition"
-                    style={{ color: f.numColor }}
-                  >
-                    Coba Fitur <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                </button>
               );
             })}
           </div>
         </div>
+      </section>
 
-        {/* ── Mood Preview ── */}
-        <div id="mood-preview" className="max-w-3xl mx-auto mt-16">
-          <div
-            className="p-6 sm:p-10 text-center space-y-6 rounded-3xl"
-            style={{ background: '#C8BA96', border: '2.37px solid #5C4A3A', boxShadow: '0 0 0 12px #C8BA96, 0 0 0 16px #342B27' }}
-          >
-            <span
-              className="hs-chip text-xs"
-              style={{ background: '#8B0A0A', color: '#C8BA96' }}
-            >
-              ✨ Coba Interaktif
-            </span>
-            <h2 className="font-display text-2xl sm:text-3xl" style={{ color: '#8B0A0A' }}>
-              Bagaimana perasaan<br />kuliahmu hari ini?
-            </h2>
-            <div className="flex flex-wrap justify-center gap-3">
-              {[
-                { id: 'baik', emoji: '✨', label: 'Semangat & Siap' },
-                { id: 'biasa', emoji: '🌤️', label: 'Biasa Aja' },
-                { id: 'stres', emoji: '🌧️', label: 'Kewalahan' },
-                { id: 'lelah', emoji: '☕', label: 'Butuh Rehat' },
-              ].map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => setSelectedPreviewMood(m.id)}
-                  className="hs-btn py-2 px-4 text-xs"
-                  style={
-                    selectedPreviewMood === m.id
-                      ? { backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }
-                      : { backgroundColor: '#DDD0A8', color: '#2B2B2B', border: '2px solid #5C4A3A' }
-                  }
-                >
-                  <span className="text-base">{m.emoji}</span> {m.label}
-                </button>
-              ))}
-            </div>
-            <div
-              className="p-4 rounded-2xl text-left"
-              style={{ background: '#DDD0A8', border: '1px solid #5C4A3A' }}
-            >
-              {selectedPreviewMood === 'baik' && (
-                <p className="font-hand text-sm leading-relaxed" style={{ color: '#1F3A7A' }}>
-                  "Manfaatkan momentum ini! Selesaikan 1 tugas terberatmu dengan Pomodoro 25 menit." ✨
+      {/* Interactive Mood Preview */}
+      <section id="mood-preview" className="border-t border-line py-20">
+        <div className="max-w-[960px] mx-auto px-5 sm:px-8">
+          <div className="surface-card p-6 sm:p-10">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+              <div className="md:col-span-5 space-y-3">
+                <p className="text-xs font-medium text-ink-muted">Simulasi check-in</p>
+                <h2 className="font-serif text-2xl sm:text-3xl font-normal tracking-[-0.015em] text-ink leading-tight">
+                  Bagaimana kondisi kuliahmu hari ini?
+                </h2>
+                <p className="text-sm text-ink-secondary leading-relaxed">
+                  Pilih salah satu kondisi di samping untuk melihat contoh arahan harian dari TemanKampus.
                 </p>
-              )}
-              {selectedPreviewMood === 'biasa' && (
-                <p className="font-hand text-sm leading-relaxed" style={{ color: '#1F3A7A' }}>
-                  "Hari biasa adalah kanvas terbaik untuk konsistensi. Susun 3 to-do dan nikmati secangkir teh." 🌤️
-                </p>
-              )}
-              {selectedPreviewMood === 'stres' && (
-                <p className="font-hand text-sm leading-relaxed" style={{ color: '#1F3A7A' }}>
-                  "Jangan paksa selesaikan semua hari ini. Mimi siap menemanimu kapan saja." 🌧️
-                </p>
-              )}
-              {selectedPreviewMood === 'lelah' && (
-                <p className="font-hand text-sm leading-relaxed" style={{ color: '#1F3A7A' }}>
-                  "Tutup laptop 15 menit, napas 4-7-8, minum air dingin. Tubuhmu berterima kasih." ☕
-                </p>
-              )}
-            </div>
-            <button
-              onClick={handleDemoAccess}
-              className="text-xs font-bold uppercase tracking-wider hover:underline"
-              style={{ color: '#8B0A0A' }}
-            >
-              Buka Dashboard Lengkap →
-            </button>
-          </div>
-        </div>
+              </div>
 
-        {/* ── Testimonials ── */}
-        <div id="testimoni" className="max-w-7xl mx-auto mt-16">
-          <div className="text-center mb-8">
-            <h2 className="font-display text-2xl sm:text-3xl" style={{ color: '#2B2B2B' }}>
-              Suara teman<br />mahasiswamu.
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {testimonials.map((t, i) => (
-              <div
-                key={i}
-                className="p-5 flex flex-col justify-between rounded-3xl"
-                style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-              >
-                <div>
-                  <span
-                    className="hs-chip text-[10px] mb-3 inline-block"
-                    style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
-                  >
-                    {t.tag}
-                  </span>
-                  <p
-                    className="font-hand text-sm leading-relaxed italic mb-4"
-                    style={{ color: '#1F3A7A' }}
-                  >
-                    "{t.quote}"
+              <div className="md:col-span-7 space-y-4">
+                <div className="grid grid-cols-2 gap-2.5">
+                  {previewMoods.map((m) => {
+                    const Icon = m.icon;
+                    const isSelected = selectedPreviewMood === m.id;
+                    return (
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => setSelectedPreviewMood(m.id)}
+                        className={`h-10 px-3.5 rounded-lg border text-sm font-medium flex items-center gap-2.5 transition-colors duration-150 active:scale-[0.98] ${
+                          isSelected
+                            ? 'bg-ink text-paper-card border-ink'
+                            : 'bg-paper text-ink border-line hover:bg-paper-raised'
+                        }`}
+                      >
+                        <Icon
+                          className={`w-4 h-4 shrink-0 ${
+                            isSelected ? 'text-paper-card' : 'text-ink-muted'
+                          }`}
+                          strokeWidth={1.5}
+                        />
+                        <span className="truncate">{m.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="p-4 rounded-lg bg-paper-raised/70 border border-line">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className={`w-2 h-2 rounded-full ${activePreviewMood.dot}`} />
+                    <span className="text-xs font-medium text-ink">
+                      Saran untuk kondisi {activePreviewMood.label.toLowerCase()}
+                    </span>
+                  </div>
+                  <p className="text-sm text-ink-secondary leading-relaxed">
+                    {activePreviewMood.note}
                   </p>
                 </div>
-                <div
-                  className="flex items-center gap-2.5 pt-3"
-                  style={{ borderTop: '1px solid #C8BA96' }}
-                >
-                  <div
-                    className="w-9 h-9 rounded-full font-black text-xs flex items-center justify-center"
-                    style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
+
+                <div className="pt-1">
+                  <button
+                    onClick={() => handleDemoAccess('/mood')}
+                    className="text-sm font-medium text-accent hover:underline underline-offset-4 inline-flex items-center gap-1"
                   >
-                    {t.avatar}
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>{t.name}</p>
-                    <p className="text-[10px]" style={{ color: '#5C4A3A' }}>{t.campus}</p>
-                  </div>
+                    <span>Buka Mood Tracker lengkap</span>
+                    <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  </button>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* ── Bottom CTA ── */}
-        <div className="max-w-4xl mx-auto mt-16">
-          <div
-            className="rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, #8B0A0A 0%, #4A2010 100%)' }}
-          >
-            <div className="absolute top-4 right-6 opacity-20 text-6xl">✨</div>
-            <div className="relative z-10 space-y-5">
-              <div
-                className="w-16 h-16 rounded-full font-display text-2xl flex items-center justify-center mx-auto"
-                style={{ backgroundColor: 'rgba(247,240,218,0.2)', color: '#C8BA96' }}
-              >
-                TK
-              </div>
-              <h2 className="font-display text-3xl sm:text-4xl" style={{ color: '#C8BA96' }}>
-                Mulai semester ini<br />dengan lebih tenang.
+      {/* Student Scenarios */}
+      <section id="skenario" className="border-t border-line bg-paper-card py-20">
+        <div className="max-w-[1200px] mx-auto px-5 sm:px-8">
+          <div className="max-w-xl mb-12">
+            <p className="text-xs font-medium text-ink-muted mb-2">Skenario nyata</p>
+            <h2 className="font-serif text-3xl sm:text-4xl font-normal tracking-[-0.02em] text-ink leading-[1.15]">
+              Dirancang untuk ritme kehidupan perkuliahan
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {studentScenarios.map((sc) => {
+              const Icon = sc.icon;
+              return (
+                <article
+                  key={sc.title}
+                  className="p-6 rounded-xl bg-paper border border-line flex flex-col justify-between gap-6"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xs text-ink-muted">{sc.category}</span>
+                      <Icon className="w-4 h-4 text-ink-muted" strokeWidth={1.5} />
+                    </div>
+                    <h3 className="text-base font-medium text-ink mb-2">{sc.title}</h3>
+                    <p className="text-sm text-ink-secondary leading-relaxed">{sc.desc}</p>
+                  </div>
+                  <div className="pt-4 border-t border-line">
+                    <p className="text-xs text-ink-muted">Fitur terkait</p>
+                    <p className="text-xs font-medium text-ink mt-0.5">{sc.solution}</p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="border-t border-line py-20">
+        <div className="max-w-[960px] mx-auto px-5 sm:px-8">
+          <div className="rounded-2xl bg-calm-surface border border-calm-border text-ink p-8 sm:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div className="max-w-lg space-y-3">
+              <h2 className="font-serif text-3xl sm:text-4xl font-normal tracking-[-0.015em] leading-[1.12] text-ink">
+                Mulai atur semester ini dengan lebih tenang
               </h2>
-              <p className="text-sm" style={{ color: 'rgba(247,240,218,0.85)' }}>
-                Bergabung bersama ribuan mahasiswa. Daftar dalam 1 menit.
+              <p className="text-sm text-ink-secondary leading-relaxed">
+                Coba langsung seluruh fitur manajemen tugas, mood tracker, ruang fokus, dan curhat AI di prototipe TemanKampus.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-                <button
-                  onClick={handleDemoAccess}
-                  className="hs-btn font-black"
-                  style={{ backgroundColor: '#C8BA96', color: '#8B0A0A', border: '2px solid #342B27' }}
-                >
-                  Buka Dashboard (Gratis) <ArrowRight className="w-4 h-4" />
-                </button>
-                <Link
-                  to="/premium"
-                  className="hs-btn"
-                  style={{ backgroundColor: 'rgba(247,240,218,0.15)', color: '#C8BA96', border: '2px solid rgba(247,240,218,0.3)' }}
-                >
-                  Pelajari Pro Plan
-                </Link>
-              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <button
+                onClick={() => handleDemoAccess('/dashboard')}
+                className="btn-primary h-10 px-5 text-sm"
+              >
+                <span>Buka dashboard</span>
+                <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
+              </button>
+              <Link
+                to="/premium"
+                className="btn-secondary h-10 px-4 text-sm bg-paper-card"
+              >
+                Paket Pro
+              </Link>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* ── Footer ── */}
-        <footer
-          className="max-w-7xl mx-auto mt-16 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs"
-          style={{ borderTop: '2px solid #5C4A3A', color: '#5C4A3A' }}
-        >
+      {/* Footer */}
+      <footer className="border-t border-line py-8">
+        <div className="max-w-[1200px] mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-ink-muted">
           <div className="flex items-center gap-2.5">
-            <div
-              className="w-8 h-8 rounded-xl font-display text-sm flex items-center justify-center"
-              style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-            >
-              TK
-            </div>
-            <div>
-              <span className="font-black text-sm" style={{ color: '#2B2B2B' }}>TemanKampus</span>
-              <p className="text-[10px]">Ruang Tenang & Tumbuh Mahasiswa Indonesia</p>
-            </div>
+            <KucingMascot pose="mark" size={24} />
+            <span className="font-medium text-ink">TemanKampus</span>
+            <span>· Prototipe MVP</span>
           </div>
-          <div className="flex flex-wrap gap-4">
-            {['/dashboard', '/tasks', '/mood', '/curhat', '/community', '/premium'].map((path, i) => (
+          <div className="flex flex-wrap gap-5">
+            {[
+              { path: '/dashboard', label: 'Beranda' },
+              { path: '/tasks', label: 'Tugas' },
+              { path: '/mood', label: 'Mood' },
+              { path: '/curhat', label: 'Mimi AI' },
+              { path: '/community', label: 'Komunitas' },
+              { path: '/premium', label: 'Paket Pro' },
+            ].map((item) => (
               <Link
-                key={path}
-                to={path}
-                className="font-medium transition hover:underline"
-                style={{ color: '#5C4A3A' }}
+                key={item.path}
+                to={item.path}
+                className="hover:text-ink transition-colors duration-150"
               >
-                {['Dashboard', 'Task Manager', 'Mood Tracker', 'Curhat AI', 'Komunitas', 'Premium'][i]}
+                {item.label}
               </Link>
             ))}
           </div>
-          <p>© 2026 TemanKampus · Prototype MVP</p>
-        </footer>
-      </div>
+          <span className="font-mono tabular">© {new Date().getFullYear()} TemanKampus</span>
+        </div>
+      </footer>
     </div>
   );
 };
 
 export default LandingPage;
-

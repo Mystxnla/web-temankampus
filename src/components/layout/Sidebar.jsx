@@ -1,6 +1,14 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { Home, CheckSquare, Smile, Clock, MessageCircle, Users, Sparkles } from 'lucide-react';
+import {
+  Home,
+  CheckSquare,
+  Smile,
+  Clock,
+  MessageCircle,
+  Users,
+  ChevronRight,
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTasks } from '../../context/TaskContext';
 import KucingMascot from '../KucingMascot';
@@ -9,122 +17,111 @@ const Sidebar = () => {
   const { user } = useAuth();
   const { urgentTasks } = useTasks();
 
-  const navItems = [
-    { to: '/dashboard', label: 'Beranda',             icon: Home,          badge: null },
-    { to: '/tasks',     label: 'Tugas Kuliah',        icon: CheckSquare,
-      badge: urgentTasks.length > 0 ? urgentTasks.length : null },
-    { to: '/mood',      label: 'Mood Tracker',        icon: Smile,         badge: null },
-    { to: '/focus',     label: 'Ruang Fokus',         icon: Clock,         badge: 'LIVE' },
-    { to: '/curhat',    label: 'Teman Curhat (Mimi)', icon: MessageCircle, badge: null },
-    { to: '/community', label: 'Komunitas Sebaya',    icon: Users,         badge: null },
-    { to: '/premium',   label: 'Langganan Pro',       icon: Sparkles,
-      badge: user?.isPremium ? 'PRO' : 'UPGRADE' },
+  const calmNav = [
+    { to: '/dashboard', label: 'Beranda', icon: Home },
+    { to: '/mood', label: 'Mood Tracker', icon: Smile },
+    { to: '/curhat', label: 'Curhat ke Mimi', icon: MessageCircle },
+    { to: '/community', label: 'Komunitas Sebaya', icon: Users },
   ];
 
+  const studyNav = [
+    {
+      to: '/tasks',
+      label: 'Tugas Kuliah',
+      icon: CheckSquare,
+      count: urgentTasks.length > 0 ? urgentTasks.length : null,
+    },
+    { to: '/focus', label: 'Ruang Fokus', icon: Clock },
+  ];
+
+  const renderLink = (item) => {
+    const Icon = item.icon;
+    return (
+      <NavLink
+        key={item.to}
+        to={item.to}
+        className={({ isActive }) =>
+          `h-9 px-3 rounded-lg flex items-center gap-2.5 text-sm transition-colors duration-150 ease-unslop ${
+            isActive
+              ? 'bg-paper-card text-ink font-medium border border-line shadow-subtle'
+              : 'text-ink-secondary hover:bg-paper-raised hover:text-ink border border-transparent'
+          }`
+        }
+      >
+        {({ isActive }) => (
+          <>
+            <Icon
+              className={`w-4 h-4 shrink-0 ${isActive ? 'text-accent' : 'text-ink-muted'}`}
+              strokeWidth={1.5}
+            />
+            <span className="flex-1 truncate">{item.label}</span>
+            {item.count !== null && item.count !== undefined && (
+              <span className="font-mono text-xs tabular text-accent font-medium">
+                {item.count}
+              </span>
+            )}
+          </>
+        )}
+      </NavLink>
+    );
+  };
+
   return (
-    <aside
-      className="hidden lg:flex w-[272px] min-h-screen flex-col justify-between p-5 sticky top-0 shrink-0 select-none"
-      style={{
-        backgroundColor: '#DDD0A8',
-        borderRight: '2.37px solid #5C4A3A',
-        boxShadow: '4px 0 0 0 #C8BA96',
-      }}
-    >
-      <div className="space-y-6">
+    <aside className="hidden lg:flex w-[256px] h-screen flex-col justify-between p-4 sticky top-0 shrink-0 bg-paper-sidebar border-r border-line select-none">
+      <div>
         {/* Brand */}
-        <Link to="/dashboard" className="flex items-center gap-2 group mt-1">
-          {/* Maskot kecil di sebelah logo */}
-          <div className="shrink-0 group-hover:scale-110 transition-transform">
-            <KucingMascot pose="happy" size={52} />
-          </div>
-          <div>
-            <span className="font-display text-xl text-[#8B0A0A] tracking-wide block leading-none">
+        <Link
+          to="/dashboard"
+          className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-paper-raised transition-colors duration-150"
+        >
+          <KucingMascot pose="mark" size={32} className="shrink-0" />
+          <div className="min-w-0">
+            <span className="text-[15px] font-semibold text-ink tracking-[-0.01em] block leading-tight">
               TemanKampus
             </span>
-            <span className="font-hand text-[11px] text-[#1F3A7A] block mt-0.5">
-              Ruang Tenang & Tumbuh
+            <span className="text-xs text-ink-muted block leading-tight mt-0.5">
+              Teman cerita & ritme kuliah
             </span>
           </div>
         </Link>
 
-        {/* Navigation */}
-        <nav aria-label="Main Navigation" className="space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm transition-all font-bold ${
-                    isActive
-                      ? 'bg-[#8B0A0A] text-[#C8BA96] shadow-md'
-                      : 'text-[#2B2B2B] hover:bg-[#C8BA96] hover:text-[#8B0A0A]'
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <Icon
-                      className="shrink-0"
-                      style={{ width: '18px', height: '18px',
-                        color: isActive ? '#C8BA96' : '#5C4A3A' }}
-                    />
-                    <span className="flex-1">{item.label}</span>
-                    {item.badge && (
-                      <span
-                        className="text-[10px] px-2 py-0.5 rounded-full font-black"
-                        style={isActive
-                          ? { background: 'rgba(247,240,218,0.3)', color: '#C8BA96' }
-                          : typeof item.badge === 'number'
-                          ? { background: '#8B0A0A', color: '#C8BA96' }
-                          : { background: '#4A8DB7', color: '#DDD0A8' }
-                        }
-                      >
-                        {item.badge}
-                      </span>
-                    )}
-                  </>
-                )}
-              </NavLink>
-            );
-          })}
+        {/* Grouped Navigation (Mental Health First) */}
+        <nav aria-label="Navigasi utama" className="mt-6">
+          <p className="px-3 mb-2 text-xs font-medium text-ink-muted">Ruang Tenang</p>
+          <div className="space-y-1">{calmNav.map(renderLink)}</div>
+
+          <p className="px-3 mt-6 mb-2 text-xs font-medium text-ink-muted">Ritme Kuliah</p>
+          <div className="space-y-1">{studyNav.map(renderLink)}</div>
         </nav>
       </div>
 
-      {/* Bottom */}
-      <div className="space-y-3 pt-4 border-t-2 border-[#C8BA96]">
-        {/* Wellness quote */}
-        <div className="p-3.5 rounded-2xl" style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A' }}>
-          <p className="font-hand text-[12px] text-[#1F3A7A] leading-relaxed">
-            "Istirahat bukan tanda menyerah, tapi cara tubuhmu bersiap lebih kuat." 🌸
+      {/* Bottom: Gentle note + Account & Pro link */}
+      <div className="space-y-3 pt-4 border-t border-line">
+        <div className="px-3 py-2.5 rounded-lg bg-calm-surface/80 border border-calm-border">
+          <p className="text-xs text-ink-secondary leading-relaxed">
+            Pelan-pelan saja hari ini. Istirahat juga bagian dari prosesmu bertahan.
           </p>
         </div>
 
-        {/* User Profile */}
         <Link
           to="/premium"
-          className="flex items-center gap-3 p-2.5 rounded-2xl transition cursor-pointer hover:bg-[#C8BA96]"
-          style={{ border: '1.5px solid #5C4A3A' }}
+          className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-paper-raised transition-colors duration-150 group"
         >
-          <div
-            className="w-10 h-10 rounded-full font-black text-xs flex items-center justify-center shadow-sm shrink-0"
-            style={{ background: '#8B0A0A', color: '#C8BA96' }}
-          >
+          <div className="w-8 h-8 rounded-lg bg-accent text-paper-card font-mono text-xs font-medium flex items-center justify-center shrink-0">
             {user?.avatar || 'TK'}
           </div>
-          <div className="overflow-hidden min-w-0 flex-1">
-            <p className="text-xs font-bold text-[#2B2B2B] truncate">{user?.name || 'Mahasiswa'}</p>
-            <p className="font-hand text-[11px] text-[#1F3A7A] truncate">
-              {user?.major} · Smt {user?.semester}
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium text-ink truncate">
+              {user?.name || 'Mahasiswa'}
+            </p>
+            <p className="text-xs text-ink-muted truncate">
+              {user?.isPremium ? 'Paket Pro aktif' : 'Lihat Paket Pro'}
             </p>
           </div>
-          {user?.isPremium && (
-            <span className="text-[9px] font-black px-2 py-0.5 rounded-full shrink-0"
-              style={{ background: '#4A8DB7', color: '#DDD0A8' }}>
-              PRO
-            </span>
-          )}
+          <ChevronRight
+            className="w-4 h-4 text-ink-muted group-hover:text-ink transition-colors shrink-0"
+            strokeWidth={1.5}
+          />
         </Link>
       </div>
     </aside>
@@ -132,4 +129,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-

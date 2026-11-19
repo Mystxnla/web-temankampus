@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Search, Plus, MessageSquare, Heart, X, Send
+  Search,
+  Plus,
+  MessageSquare,
+  Heart,
+  X,
+  Share2,
+  Check,
+  Send,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import initialCommunity from '../mock-data/community.json';
-import KucingMascot from '../components/KucingMascot';
 
 const CommunityPage = () => {
   const { user } = useAuth();
@@ -16,8 +22,12 @@ const CommunityPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isNewPostModalOpen, setIsNewPostModalOpen] = useState(false);
   const [activeThreadDetail, setActiveThreadDetail] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
   const [newPost, setNewPost] = useState({
-    title: '', content: '', category: 'Skripsi & Tugas Akhir', isAnonymous: false,
+    title: '',
+    content: '',
+    category: 'Skripsi & Tugas Akhir',
+    isAnonymous: false,
   });
   const [replyContent, setReplyContent] = useState('');
   const [replyAnonymous, setReplyAnonymous] = useState(false);
@@ -29,7 +39,8 @@ const CommunityPage = () => {
   const categories = initialCommunity.categories;
 
   const filteredThreads = threads.filter((th) => {
-    const matchCat = selectedCategory === 'Semua' || th.category === selectedCategory;
+    const matchCat =
+      selectedCategory === 'Semua' || th.category === selectedCategory;
     const matchSearch =
       th.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       th.content.toLowerCase().includes(searchQuery.toLowerCase());
@@ -41,8 +52,17 @@ const CommunityPage = () => {
     setThreads((prev) =>
       prev.map((th) => (th.id === threadId ? { ...th, hugs: th.hugs + 1 } : th))
     );
-    if (activeThreadDetail?.id === threadId)
+    if (activeThreadDetail?.id === threadId) {
       setActiveThreadDetail((prev) => ({ ...prev, hugs: prev.hugs + 1 }));
+    }
+  };
+
+  const handleShare = (thread, e) => {
+    e?.stopPropagation();
+    const shareText = `[TemanKampus] "${thread.title}" - Diskusi Mahasiswa: ${window.location.origin}/community#${thread.id}`;
+    navigator.clipboard?.writeText(shareText).catch(() => {});
+    setCopiedId(thread.id);
+    setTimeout(() => setCopiedId(null), 2500);
   };
 
   const handleCreatePost = (e) => {
@@ -50,20 +70,27 @@ const CommunityPage = () => {
     if (!newPost.title.trim() || !newPost.content.trim()) return;
     const createdThread = {
       id: `th_${Date.now()}`,
-      title: newPost.title,
-      content: newPost.content,
+      title: newPost.title.trim(),
+      content: newPost.content.trim(),
       category: newPost.category,
       author: newPost.isAnonymous ? 'Mahasiswa Anonim' : user?.name || 'Mahasiswa',
       faculty: newPost.isAnonymous
         ? `${user?.faculty || 'Fakultas'} (Anonim)`
-        : `${user?.major || 'Mahasiswa'} ${user?.university || 'UI'}`,
-      avatarColor: newPost.isAnonymous ? '#4A8DB7' : '#8B0A0A',
+        : `${user?.major || 'Mahasiswa'} · ${user?.university || 'UI'}`,
       isAnonymous: newPost.isAnonymous,
-      timeAgo: 'Baru saja', hugs: 1, repliesCount: 0, replies: [],
+      timeAgo: 'Baru saja',
+      hugs: 1,
+      repliesCount: 0,
+      replies: [],
     };
     setThreads((prev) => [createdThread, ...prev]);
     setIsNewPostModalOpen(false);
-    setNewPost({ title: '', content: '', category: 'Skripsi & Tugas Akhir', isAnonymous: false });
+    setNewPost({
+      title: '',
+      content: '',
+      category: 'Skripsi & Tugas Akhir',
+      isAnonymous: false,
+    });
   };
 
   const handleAddReply = (e) => {
@@ -80,257 +107,252 @@ const CommunityPage = () => {
     };
     const updatedThreads = threads.map((th) =>
       th.id === activeThreadDetail.id
-        ? { ...th, repliesCount: th.repliesCount + 1, replies: [...(th.replies || []), newReply] }
+        ? {
+            ...th,
+            repliesCount: (th.replies?.length || 0) + 1,
+            replies: [...(th.replies || []), newReply],
+          }
         : th
     );
     setThreads(updatedThreads);
     setActiveThreadDetail((prev) => ({
       ...prev,
-      repliesCount: prev.repliesCount + 1,
+      repliesCount: (prev.replies?.length || 0) + 1,
       replies: [...(prev.replies || []), newReply],
     }));
     setReplyContent('');
   };
 
   return (
-    <div>
-      {/* ── Header Block ── */}
-      <div
-        className="px-5 sm:px-8 pt-6 pb-10"
-        style={{ backgroundColor: '#C8BA96' }}
-      >
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
-              Komunitas Mahasiswa Sebaya
-            </p>
-            <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#4A8DB7' }}>
-              Ruang aman berbagi,
-            </h1>
-            <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
-              tanpa takut dihakimi.
-            </p>
-          </div>
-          <KucingMascot pose="happy" size={130} />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-[28px] font-semibold tracking-[-0.02em] text-ink leading-tight">
+            Komunitas sebaya
+          </h1>
+          <p className="text-sm text-ink-secondary mt-1">
+            Forum berbagi pengalaman kuliah, skripsi, dan keseimbangan hidup secara suportif
+          </p>
         </div>
-        <div className="flex items-center gap-6 mt-4">
-          {[
-            { val: threads.length, lbl: 'Thread Aktif' },
-            { val: threads.reduce((s, t) => s + t.hugs, 0), lbl: 'Pelukan Hangat' },
-            { val: threads.reduce((s, t) => s + t.repliesCount, 0), lbl: 'Respon Suportif' },
-          ].map((s) => (
-            <div key={s.lbl}>
-              <div className="font-display text-2xl" style={{ color: '#4A8DB7' }}>{s.val}</div>
-              <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
-                {s.lbl}
-              </div>
-            </div>
-          ))}
-        </div>
+
         <button
           onClick={() => setIsNewPostModalOpen(true)}
-          className="hs-btn mt-5 text-xs font-black py-2.5 px-5"
-          style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
+          className="btn-primary text-xs h-9 self-start sm:self-auto"
         >
-          <Plus className="w-4 h-4" /> Tulis Cerita Baru
+          <Plus className="w-4 h-4" strokeWidth={1.5} />
+          <span>Tulis cerita</span>
         </button>
       </div>
 
-      {/* ── Card Body ── */}
-      <div className="px-5 sm:px-8 py-6 space-y-5">
-        {/* Search + categories */}
-        <div
-          className="p-4 space-y-3 rounded-2xl"
-          style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-        >
-          <div className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari topik diskusi, tips skripsi..."
-              className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl transition"
-              style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
-            />
-            <Search className="w-4 h-4 absolute left-3 top-3" style={{ color: '#5C4A3A' }} />
-          </div>
-          <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            {categories.map((cat) => (
+      {/* Search & Categories */}
+      <section className="space-y-3">
+        <div className="relative max-w-md">
+          <Search
+            className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+            strokeWidth={1.5}
+          />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Cari topik diskusi"
+            className="input-field pl-9 text-xs"
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {categories.map((cat) => {
+            const active = selectedCategory === cat;
+            return (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className="px-4 py-2 rounded-full text-xs font-bold transition-all shrink-0 uppercase tracking-wider"
-                style={
-                  selectedCategory === cat
-                    ? { backgroundColor: '#8B0A0A', color: '#C8BA96' }
-                    : { background: '#C8BA96', color: '#5C4A3A', border: '1px solid #5C4A3A' }
-                }
+                className={`h-8 px-3 rounded-lg border text-xs font-medium transition-colors duration-150 ${
+                  active
+                    ? 'bg-ink text-paper-card border-ink'
+                    : 'bg-paper-card text-ink-secondary border-line hover:bg-paper-raised hover:text-ink'
+                }`}
               >
                 {cat}
               </button>
-            ))}
-          </div>
+            );
+          })}
         </div>
+      </section>
 
-        {/* Thread feed */}
-        <div className="space-y-3">
-          {filteredThreads.map((thread) => (
-            <div
+      {/* Threads List */}
+      <section className="space-y-3">
+        {filteredThreads.length === 0 ? (
+          <div className="surface-card p-12 text-center space-y-1.5">
+            <p className="text-sm font-medium text-ink">Belum ada diskusi di kategori ini</p>
+            <p className="text-xs text-ink-muted">
+              Coba ganti kata kunci atau mulai diskusi baru.
+            </p>
+          </div>
+        ) : (
+          filteredThreads.map((thread) => (
+            <article
               key={thread.id}
               onClick={() => setActiveThreadDetail(thread)}
-              className="p-5 cursor-pointer space-y-3 transition rounded-3xl"
-              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
+              className="surface-card p-5 cursor-pointer hover:border-line-strong transition-colors duration-150 space-y-3"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="hs-chip text-[10px]"
-                    style={{ backgroundColor: '#4A8DB7', color: '#DDD0A8' }}
-                  >
-                    {thread.category}
-                  </span>
-                  <span className="text-xs" style={{ color: '#5C4A3A' }}>· {thread.timeAgo}</span>
-                </div>
-                <span className="text-xs font-bold" style={{ color: '#4A8DB7' }}>{thread.faculty}</span>
-              </div>
-              <h3 className="font-black text-sm sm:text-base leading-snug" style={{ color: '#2B2B2B' }}>
-                "{thread.title}"
-              </h3>
-              <p className="text-xs line-clamp-2 leading-relaxed" style={{ color: '#5C4A3A' }}>
-                {thread.content}
-              </p>
-              <div
-                className="pt-3 flex items-center justify-between text-xs"
-                style={{ borderTop: '1px solid #C8BA96', color: '#5C4A3A' }}
-              >
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={(e) => handleHug(thread.id, e)}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold transition hover:scale-105"
-                    style={{ backgroundColor: '#F6D0D6', color: '#8B0A0A' }}
-                  >
-                    <Heart className="w-3.5 h-3.5 fill-current" />{thread.hugs} Pelukan
-                  </button>
-                  <span className="flex items-center gap-1.5">
-                    <MessageSquare className="w-3.5 h-3.5" />{thread.repliesCount} Respon
+              <div className="flex items-center justify-between gap-2 text-xs">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="font-medium text-accent">{thread.category}</span>
+                  <span className="text-ink-muted">·</span>
+                  <span className="text-ink-secondary truncate">{thread.author}</span>
+                  <span className="hidden sm:inline text-ink-muted truncate">
+                    ({thread.faculty})
                   </span>
                 </div>
-                <span className="text-[11px] font-bold" style={{ color: '#8B0A0A' }}>
-                  {thread.author}
+                <span className="font-mono text-[11px] text-ink-muted tabular shrink-0">
+                  {thread.timeAgo}
                 </span>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Thread detail modal */}
-      {activeThreadDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div
-            className="rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
-            style={{ background: '#DDD0A8' }}
-          >
-            <div
-              className="p-4 flex items-center justify-between"
-              style={{ background: '#C8BA96', borderBottom: '2px solid #5C4A3A' }}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className="hs-chip text-[10px]"
-                  style={{ backgroundColor: '#4A8DB7', color: '#DDD0A8' }}
-                >
-                  {activeThreadDetail.category}
-                </span>
-                <span className="text-xs" style={{ color: '#5C4A3A' }}>{activeThreadDetail.timeAgo}</span>
-              </div>
-              <button
-                onClick={() => setActiveThreadDetail(null)}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition"
-                style={{ background: '#5C4A3A30', color: '#2B2B2B' }}
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="p-5 overflow-y-auto space-y-5 flex-1">
-              <div className="space-y-2 pb-4" style={{ borderBottom: '1px solid #C8BA96' }}>
-                <h2 className="font-black text-lg leading-snug" style={{ color: '#8B0A0A' }}>
-                  "{activeThreadDetail.title}"
+              <div>
+                <h2 className="text-base font-medium text-ink leading-snug">
+                  {thread.title}
                 </h2>
-                <p className="text-xs flex items-center gap-1" style={{ color: '#5C4A3A' }}>
-                  <span className="font-bold" style={{ color: '#4A8DB7' }}>{activeThreadDetail.author}</span>
-                  · {activeThreadDetail.faculty}
+                <p className="text-sm text-ink-secondary mt-1.5 leading-relaxed line-clamp-2">
+                  {thread.content}
                 </p>
-                <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: '#2B2B2B' }}>
-                  {activeThreadDetail.content}
-                </p>
+              </div>
+
+              <div className="pt-3 border-t border-line flex items-center gap-2">
                 <button
-                  onClick={() => handleHug(activeThreadDetail.id)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-bold text-xs"
-                  style={{ backgroundColor: '#F6D0D6', color: '#8B0A0A' }}
+                  onClick={(e) => handleHug(thread.id, e)}
+                  className="h-8 px-2.5 rounded-lg text-xs text-ink-secondary hover:bg-paper-raised hover:text-accent inline-flex items-center gap-1.5 transition-colors duration-150 tabular"
                 >
-                  <Heart className="w-4 h-4 fill-current" />
-                  {activeThreadDetail.hugs} Beri Pelukan Hangat
+                  <Heart className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  <span>{thread.hugs} dukungan</span>
+                </button>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveThreadDetail(thread);
+                  }}
+                  className="h-8 px-2.5 rounded-lg text-xs text-ink-secondary hover:bg-paper-raised hover:text-ink inline-flex items-center gap-1.5 transition-colors duration-150 tabular"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  <span>{thread.replies?.length || thread.repliesCount || 0} balasan</span>
+                </button>
+
+                <button
+                  onClick={(e) => handleShare(thread, e)}
+                  className="ml-auto h-8 px-2.5 rounded-lg text-xs text-ink-muted hover:bg-paper-raised hover:text-ink inline-flex items-center gap-1.5 transition-colors duration-150"
+                >
+                  {copiedId === thread.id ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-semantic-positive" strokeWidth={1.5} />
+                      <span className="text-semantic-positive">Tersalin</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+                      <span>Bagikan</span>
+                    </>
+                  )}
                 </button>
               </div>
-              <div className="space-y-3">
-                <h4 className="text-xs font-black uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
-                  Respon ({activeThreadDetail.replies?.length || 0})
-                </h4>
-                {(!activeThreadDetail.replies || activeThreadDetail.replies.length === 0) && (
-                  <p className="text-xs italic py-3" style={{ color: '#5C4A3A' }}>
-                    Belum ada respon. Jadilah yang pertama!
-                  </p>
-                )}
-                {activeThreadDetail.replies?.map((reply) => (
-                  <div
-                    key={reply.id}
-                    className="p-3.5 rounded-2xl space-y-1"
-                    style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-                  >
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold" style={{ color: '#2B2B2B' }}>{reply.author}</span>
-                      <span className="text-[10px]" style={{ color: '#5C4A3A' }}>{reply.timeAgo}</span>
-                    </div>
-                    <p className="text-xs leading-relaxed" style={{ color: '#2B2B2B' }}>{reply.content}</p>
-                  </div>
-                ))}
-              </div>
+            </article>
+          ))
+        )}
+      </section>
+
+      {/* New Post Modal */}
+      {isNewPostModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-[2px]"
+          onClick={() => setIsNewPostModalOpen(false)}
+        >
+          <div
+            className="bg-paper-card rounded-2xl max-w-lg w-full border border-line-strong shadow-float overflow-hidden animate-enter"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-6 py-4 border-b border-line flex items-center justify-between">
+              <h2 className="text-base font-semibold text-ink">Tulis cerita baru</h2>
+              <button
+                onClick={() => setIsNewPostModalOpen(false)}
+                aria-label="Tutup"
+                className="w-8 h-8 rounded-lg text-ink-muted hover:text-ink hover:bg-paper-raised flex items-center justify-center"
+              >
+                <X className="w-4 h-4" strokeWidth={1.5} />
+              </button>
             </div>
-            <form
-              onSubmit={handleAddReply}
-              className="p-4 space-y-2.5"
-              style={{ background: '#DDD0A8', borderTop: '2px solid #5C4A3A' }}
-            >
-              <div className="flex items-center justify-between text-[11px]" style={{ color: '#5C4A3A' }}>
-                <label className="flex items-center gap-1.5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={replyAnonymous}
-                    onChange={(e) => setReplyAnonymous(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded"
-                    style={{ accentColor: '#8B0A0A' }}
-                  />
-                  Kirim sebagai Anonim
+
+            <form onSubmit={handleCreatePost} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                  Kategori
                 </label>
-                <span>Jaga etika & empati kampus</span>
+                <select
+                  value={newPost.category}
+                  onChange={(e) => setNewPost({ ...newPost, category: e.target.value })}
+                  className="input-field"
+                >
+                  {categories
+                    .filter((c) => c !== 'Semua')
+                    .map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                </select>
               </div>
-              <div className="flex items-center gap-2">
+
+              <div>
+                <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                  Judul diskusi
+                </label>
                 <input
                   type="text"
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder="Tuliskan kata penyemangat..."
-                  className="flex-1 px-4 py-2.5 text-xs rounded-xl transition"
-                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
+                  required
+                  value={newPost.title}
+                  onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+                  placeholder="Ringkasan singkat topik yang ingin kamu bahas"
+                  className="input-field"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                  Isi cerita
+                </label>
+                <textarea
+                  rows={4}
+                  required
+                  value={newPost.content}
+                  onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
+                  placeholder="Ceritakan pengalaman atau pertanyaanmu secara terbuka"
+                  className="w-full p-3 rounded-lg bg-paper-card border border-line-strong text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent resize-none"
+                />
+              </div>
+
+              <label className="flex items-center gap-2 text-xs text-ink-secondary cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={newPost.isAnonymous}
+                  onChange={(e) =>
+                    setNewPost({ ...newPost, isAnonymous: e.target.checked })
+                  }
+                  className="w-4 h-4 rounded accent-accent"
+                />
+                <span>Kirim sebagai Mahasiswa Anonim</span>
+              </label>
+
+              <div className="pt-2 flex items-center justify-end gap-2">
                 <button
-                  type="submit"
-                  disabled={!replyContent.trim()}
-                  className="px-4 py-2.5 text-xs font-bold rounded-xl transition disabled:opacity-50 shrink-0"
-                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
+                  type="button"
+                  onClick={() => setIsNewPostModalOpen(false)}
+                  className="btn-secondary"
                 >
-                  Kirim
+                  Batal
+                </button>
+                <button type="submit" className="btn-primary">
+                  Terbitkan
                 </button>
               </div>
             </form>
@@ -338,120 +360,108 @@ const CommunityPage = () => {
         </div>
       )}
 
-      {/* New post modal */}
-      {isNewPostModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      {/* Thread Detail Modal */}
+      {activeThreadDetail && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-[2px]"
+          onClick={() => setActiveThreadDetail(null)}
+        >
           <div
-            className="rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden"
-            style={{ background: '#DDD0A8' }}
+            className="bg-paper-card rounded-2xl max-w-2xl w-full max-h-[85vh] border border-line-strong shadow-float flex flex-col overflow-hidden animate-enter"
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal header */}
-            <div
-              className="p-5 flex items-center justify-between"
-              style={{ background: '#C8BA96', borderBottom: '2px solid #5C4A3A' }}
-            >
-              <div>
-                <h3 className="font-display text-xl" style={{ color: '#8B0A0A' }}>
-                  Tulis Cerita & Diskusi Baru 🌱
-                </h3>
-                <p className="font-hand text-xs mt-0.5" style={{ color: '#1F3A7A' }}>
-                  Ruang aman berbagi tanpa takut dihakimi.
-                </p>
+            <div className="px-6 py-4 border-b border-line flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-xs text-ink-muted mb-1">
+                  <span className="font-medium text-accent">
+                    {activeThreadDetail.category}
+                  </span>
+                  <span>·</span>
+                  <span>{activeThreadDetail.author}</span>
+                  <span>·</span>
+                  <span className="font-mono tabular">{activeThreadDetail.timeAgo}</span>
+                </div>
+                <h2 className="text-base font-semibold text-ink leading-snug">
+                  {activeThreadDetail.title}
+                </h2>
               </div>
               <button
-                onClick={() => setIsNewPostModalOpen(false)}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition"
-                style={{ background: '#5C4A3A30', color: '#2B2B2B' }}
+                onClick={() => setActiveThreadDetail(null)}
+                aria-label="Tutup"
+                className="w-8 h-8 rounded-lg text-ink-muted hover:text-ink hover:bg-paper-raised flex items-center justify-center shrink-0"
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4" strokeWidth={1.5} />
               </button>
             </div>
-            <form onSubmit={handleCreatePost} className="p-5 space-y-4">
-              <div>
-                <label
-                  className="block text-xs font-bold uppercase tracking-wider mb-1"
-                  style={{ color: '#5C4A3A' }}
-                >
-                  Kategori
-                </label>
-                <select
-                  value={newPost.category}
-                  onChange={(e) => setNewPost({ ...newPost, category: e.target.value })}
-                  className="w-full px-4 py-2.5 text-xs rounded-xl"
-                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
-                >
-                  {categories.filter((c) => c !== 'Semua').map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
+
+            <div className="p-6 overflow-y-auto space-y-6 flex-1">
+              <p className="text-sm text-ink leading-relaxed whitespace-pre-line">
+                {activeThreadDetail.content}
+              </p>
+
+              <div className="pt-4 border-t border-line space-y-3">
+                <h3 className="text-xs font-medium text-ink-secondary">
+                  Balasan ({activeThreadDetail.replies?.length || 0})
+                </h3>
+
+                {(!activeThreadDetail.replies ||
+                  activeThreadDetail.replies.length === 0) ? (
+                  <p className="text-xs text-ink-muted py-4">
+                    Belum ada balasan. Jadilah yang pertama memberi dukungan.
+                  </p>
+                ) : (
+                  <div className="space-y-2.5">
+                    {activeThreadDetail.replies.map((rep) => (
+                      <div
+                        key={rep.id}
+                        className="p-3.5 rounded-lg bg-paper border border-line space-y-1"
+                      >
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-medium text-ink">{rep.author}</span>
+                          <span className="font-mono text-[11px] text-ink-muted tabular">
+                            {rep.timeAgo}
+                          </span>
+                        </div>
+                        <p className="text-xs text-ink-secondary leading-relaxed">
+                          {rep.content}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div>
-                <label
-                  className="block text-xs font-bold uppercase tracking-wider mb-1"
-                  style={{ color: '#5C4A3A' }}
-                >
-                  Judul Cerita / Pertanyaan
-                </label>
+            </div>
+
+            <form
+              onSubmit={handleAddReply}
+              className="p-4 border-t border-line bg-paper space-y-2.5"
+            >
+              <div className="flex items-center gap-2">
                 <input
                   type="text"
-                  required
-                  value={newPost.title}
-                  onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-                  placeholder="Cara mengatasi overthinking sebelum seminar proposal..."
-                  className="w-full px-4 py-2.5 text-xs rounded-xl transition"
-                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
+                  value={replyContent}
+                  onChange={(e) => setReplyContent(e.target.value)}
+                  placeholder="Tulis balasan yang suportif"
+                  className="input-field flex-1 text-xs"
                 />
-              </div>
-              <div>
-                <label
-                  className="block text-xs font-bold uppercase tracking-wider mb-1"
-                  style={{ color: '#5C4A3A' }}
-                >
-                  Isi Cerita
-                </label>
-                <textarea
-                  rows="4"
-                  required
-                  value={newPost.content}
-                  onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
-                  placeholder="Ceritakan detail situasimu..."
-                  className="w-full px-4 py-2.5 text-xs rounded-xl resize-none transition"
-                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
-                />
-              </div>
-              <div
-                className="p-3 rounded-xl flex items-center justify-between"
-                style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-              >
-                <div>
-                  <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>Posting sebagai Anonim</p>
-                  <p className="text-[10px]" style={{ color: '#5C4A3A' }}>Identitasmu tidak akan terlihat</p>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={newPost.isAnonymous}
-                  onChange={(e) => setNewPost({ ...newPost, isAnonymous: e.target.checked })}
-                  className="w-4 h-4 rounded cursor-pointer"
-                  style={{ accentColor: '#8B0A0A' }}
-                />
-              </div>
-              <div className="flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsNewPostModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold transition"
-                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
-                >
-                  Batal
-                </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition shadow-sm"
-                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
+                  disabled={!replyContent.trim()}
+                  className="btn-primary h-9 px-3.5 text-xs shrink-0"
                 >
-                  Publikasikan
+                  <Send className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  <span>Kirim</span>
                 </button>
               </div>
+              <label className="inline-flex items-center gap-2 text-xs text-ink-muted cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={replyAnonymous}
+                  onChange={(e) => setReplyAnonymous(e.target.checked)}
+                  className="w-3.5 h-3.5 rounded accent-accent"
+                />
+                <span>Balas secara anonim</span>
+              </label>
             </form>
           </div>
         </div>
@@ -461,4 +471,3 @@ const CommunityPage = () => {
 };
 
 export default CommunityPage;
-

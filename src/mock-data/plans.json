@@ -2,13 +2,13 @@
   "plans": [
     {
       "id": "free",
-      "name": "Paket Mahasiswa Hemat",
-      "tagline": "Cocok untuk memulai kebiasaan belajar sehat dan manajemen deadline dasar.",
+      "name": "Paket Mahasiswa Bebas",
+      "tagline": "Dukungan produktivitas akademik dan manajemen deadline dasar untuk mahasiswa.",
       "price": 0,
       "priceFormatted": "Gratis Selamanya",
       "billingCycle": "Tanpa biaya",
       "popular": false,
-      "badge": "Dasar",
+      "badge": "Akses Dasar",
       "features": [
         "Task & Deadline Manager standar (hingga 30 tugas aktif)",
         "Mood Check-In harian & riwayat 7 hari terakhir",
@@ -22,48 +22,48 @@
         "Analisis korelasi performa akademik vs tren mood",
         "Custom durasi Pomodoro & Audio Ambience lengkap",
         "Export laporan evaluasi kesejahteraan ke format PDF",
-        "Badge donatur & prioritas konsultasi kampus"
+        "Prioritas rujukan konseling kampus"
       ],
       "ctaText": "Paket Saat Ini",
       "isCurrent": true
     },
     {
       "id": "pro_monthly",
-      "name": "TemanKampus Pro",
-      "tagline": "Dukungan penuh produktivitas akademik & kesehatan mental tanpa batasan.",
+      "name": "TemanKampus Pro Bulanan",
+      "tagline": "Dukungan lengkap produktivitas akademik & kesehatan mental tanpa batasan kuota.",
       "price": 19000,
       "priceFormatted": "Rp 19.000",
       "billingCycle": "per bulan",
-      "popular": true,
-      "badge": "Paling Populer 🔥",
+      "popular": false,
+      "badge": "Rekomendasi Bulanan",
       "features": [
         "Semua fitur Paket Bebas Mahasiswa",
-        "Sesi Curhat AI Mimi UNLIMITED tanpa batasan kuota",
-        "Analisis tren mood & produktivitas mendalam (Bulanan & Semester)",
-        "Audio Ambience eksklusif (Hujan Kampus, Kafe Senja, Binaural Beats)",
-        "Unlimited tugas aktif, label mata kuliah & arsip skripsi",
-        "Export laporan PDF ringkasan kesehatan mental untuk konseling kampus",
-        "Badge verifikasi 'Pro Mahasiswa' di komunitas",
-        "Dukungan prioritas dari tim TemanKampus"
+        "Sesi Curhat AI Mimi tanpa batas kuota harian",
+        "Analisis tren mood & produktivitas bulanan",
+        "Audio Ambience lengkap (Hujan Kampus, Kafe Senja, Binaural)",
+        "Pencatatan tugas, label mata kuliah & arsip skripsi tanpa batas",
+        "Export ringkasan catatan kesehatan mental (PDF) untuk konseling",
+        "Label verifikasi mahasiswa Pro di komunitas",
+        "Dukungan prioritas tim TemanKampus"
       ],
       "unavailableFeatures": [],
-      "ctaText": "Upgrade ke Pro Sekarang",
+      "ctaText": "Pilih Pro Bulanan",
       "isCurrent": false
     },
     {
       "id": "pro_semester",
       "name": "Paket Satu Semester",
-      "tagline": "Hemat 40% untuk pendampingan penuh satu semester aktif perkuliahan (6 bulan).",
+      "tagline": "Tarif hemat untuk pendampingan penuh satu semester aktif perkuliahan (6 bulan).",
       "price": 49000,
       "priceFormatted": "Rp 49.000",
       "billingCycle": "per 6 bulan (Rp 8.100/bln)",
       "popular": false,
-      "badge": "Hemat 40% 💡",
+      "badge": "Hemat 57%",
       "features": [
         "Seluruh keuntungan fitur TemanKampus Pro",
-        "Masa aktif langsung 6 bulan penuh",
-        "Bonus template Notion Academic OS versi TemanKampus",
-        "Akses webinar eksklusif mental health mahasiswa per semester"
+        "Masa aktif 6 bulan penuh (satu semester akademik)",
+        "Template to-do list & kalender akademik mahasiswa",
+        "Akses panduan pencegahan burnout mahasiswa per semester"
       ],
       "unavailableFeatures": [],
       "ctaText": "Pilih Paket Semester",

@@ -4,77 +4,63 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: "class",
   theme: {
     extend: {
       colors: {
-        // ── Figma Design Tokens ──────────────────────────
-        // Backgrounds
-        "paper":        "#C8BA96",   // halaman utama
-        "paper-warm":   "#DDD0A8",   // card surface
-        "paper-gold":   "#C8BA96",   // heading box / tape bg
-        "paper-dark":   "#342B27",   // shadow layer luar card
-
-        // Text
-        "ink":          "#1A1208",   // body text
-        "ink-navy":     "#1F3A7A",   // label / patrick hand text
-        "ink-dark":     "#342B27",   // border gelap
-        "ink-brown":    "#5C4A3A",   // border card
-
-        // Accents
-        "red-heading":  "#8B0A0A",   // heading merah (PROBLEM, CHANNELS, dll)
-        "blue-heading": "#4A8DB7",   // heading biru (SOLUTION, KEY METRICS, dll)
-        "blue-dark":    "#2F6C93",   // biru tua untuk bintang/dekorasi
-        "tape-pink":    "#F6D0D6",   // selotip dekoratif
-
-        // Bobi mascot palette (keep)
-        "bobi-cream":   "#FFF1D0",
-        "bobi-cheek":   "#FFB8A0",
+        // Warm Oat & Eucalyptus Neutral Ramp (low-glare, soothing for reading)
+        paper: {
+          DEFAULT: "#F6F5F0",
+          sidebar: "#EFEFE8",
+          card: "#FCFBF8",
+          raised: "#EAEBE3",
+          hover: "#E2E4DA",
+        },
+        // Soft sage sanctuary tint for calming moments (Mimi AI, counseling, breathing)
+        calm: {
+          surface: "#E8F0EC",
+          border: "rgba(53, 104, 84, 0.16)",
+        },
+        // Warm pine-charcoal ink (softer than harsh pure black)
+        ink: {
+          DEFAULT: "#222926",
+          secondary: "#525D58",
+          muted: "#707B76",
+        },
+        line: {
+          DEFAULT: "rgba(34, 41, 38, 0.08)",
+          strong: "rgba(34, 41, 38, 0.15)",
+        },
+        // Single Soothing Brand Accent (Deep Sage / Eucalyptus)
+        accent: {
+          DEFAULT: "#356854",
+          hover: "#295342",
+          soft: "rgba(53, 104, 84, 0.09)",
+        },
+        // Toned Semantic Colors (gentle, never alarming)
+        semantic: {
+          positive: "#2E7D5B",
+          "positive-soft": "rgba(46, 125, 91, 0.10)",
+          warning: "#9C6624",
+          "warning-soft": "rgba(156, 102, 36, 0.10)",
+          danger: "#B34A3C",
+          "danger-soft": "rgba(179, 74, 60, 0.09)",
+          info: "#3B6C8C",
+          "info-soft": "rgba(59, 108, 140, 0.09)",
+        },
       },
       fontFamily: {
-        // Anton: semua heading besar
-        display:  ['Anton', 'sans-serif'],
-        headline: ['Anton', 'sans-serif'],
-        // Nunito 800: body & list items
-        sans:     ['Nunito', 'Plus Jakarta Sans', 'sans-serif'],
-        // Patrick Hand: label/subtitle handwritten
-        hand:     ['"Patrick Hand"', 'cursive'],
+        sans: ['"Plus Jakarta Sans"', "system-ui", "-apple-system", "sans-serif"],
+        serif: ['"Newsreader"', "Georgia", "serif"],
+        mono: ['"JetBrains Mono"', "ui-monospace", "SFMono-Regular", "monospace"],
       },
       boxShadow: {
-        // Card signature: double outline + drop
-        'figma-card': '0 0 0 12px #F7F0DA, 0 0 0 16px #342B27, 0 6px 0 16px rgba(0,0,0,0.12)',
-        // Heading box
-        'figma-heading': '0 0 0 3px #342B27, 0 7px 0 3px rgba(0,0,0,0.12)',
-        // Soft card
-        'card':     '0 8px 32px -4px rgba(52,43,39,0.10)',
-        'card-sm':  '0 4px 16px -2px rgba(52,43,39,0.08)',
+        subtle: "0 1px 2px rgba(34, 41, 38, 0.04)",
+        float: "0 10px 28px rgba(34, 41, 38, 0.07)",
       },
-      borderRadius: {
-        '2xl': '1rem',
-        '3xl': '1.5rem',
-        '4xl': '2rem',
-        '5xl': '2.5rem',
-      },
-      animation: {
-        'float':       'float 3s ease-in-out infinite',
-        'bounce-soft': 'bounce-soft 2s ease-in-out infinite',
-        'wiggle':      'wiggle 1s ease-in-out infinite',
-      },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%':      { transform: 'translateY(-8px)' },
-        },
-        'bounce-soft': {
-          '0%, 100%': { transform: 'translateY(-3px)' },
-          '50%':      { transform: 'translateY(3px)' },
-        },
-        wiggle: {
-          '0%, 100%': { transform: 'rotate(-5deg)' },
-          '50%':      { transform: 'rotate(5deg)' },
-        },
+      transitionTimingFunction: {
+        unslop: "cubic-bezier(0.22, 1, 0.36, 1)",
       },
     },
   },
   plugins: [],
-}
+};

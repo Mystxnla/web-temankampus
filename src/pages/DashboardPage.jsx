@@ -1,471 +1,668 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  CheckSquare, Clock, Flame, Plus, ArrowRight, Droplet,
-  Wind, Headphones, Send, MessageSquare, Heart, ChevronRight, Sparkles, Calendar
+  Send,
+  MessageSquare,
+  Heart,
+  Check,
+  Droplets,
+  Wind,
+  Headphones,
+  Play,
+  Pause,
+  ArrowRight,
+  X,
+  Calendar,
+  BarChart3,
+  HeartHandshake,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTasks } from '../context/TaskContext';
 import { useMood } from '../context/MoodContext';
+import { getMoodMeta } from '../utils/moodIcons';
 import communityData from '../mock-data/community.json';
-import KucingMascot from '../components/KucingMascot';
+
+const MOOD_SUPPORT_COPY = {
+  baik: 'Senang dengar kamu merasa cukup baik hari ini. Kamu bisa pakai energi ini untuk satu sesi fokus pendek tanpa perlu memaksakan diri.',
+  biasa: 'Hari yang biasa saja tetap valid. Pilih satu hal kecil yang paling ringan untuk dimulai pelan-pelan.',
+  stres: 'Kedengarannya hari ini sedang terasa berat. Kamu tidak harus membereskan semuanya sekaligus — coba tarik napas sebentar atau cerita ke Mimi dulu.',
+  lelah: 'Tubuh dan pikiranmu sedang minta jeda. Ambil waktu 5 menit untuk minum air, meregangkan bahu, atau istirahat sejenak sebelum lanjut.',
+};
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { tasks, urgentTasks, toggleTaskStatus } = useTasks();
+  const { tasks, urgentTasks, toggleTaskStatus, setActiveFocusTaskId } = useTasks();
   const { options, todayMood, logMood } = useMood();
 
+  const [activeTab, setActiveTab] = useState('tenang');
   const [waterMl, setWaterMl] = useState(1250);
   const waterTarget = 2000;
   const [curhatInput, setCurhatInput] = useState('');
   const [showBreathing, setShowBreathing] = useState(false);
-  const [breathPhase, setBreathPhase] = useState('Tarik Napas perlahan (4 detik)... 🌸');
+  const [breathStage, setBreathStage] = useState({
+    label: 'Tarik napas perlahan',
+    seconds: 4,
+    scale: 'scale-100',
+  });
   const [isPlayingLofi, setIsPlayingLofi] = useState(false);
+  const [joinedStudyJam, setJoinedStudyJam] = useState(false);
 
   const recentThreads = communityData.threads.slice(0, 2);
+  const completedTasksCount = tasks.filter((t) => t.status === 'Selesai').length;
+  const firstName = user?.name?.split(' ')[0] || 'Teman';
 
-  const handleMoodSelect = (moodId) => logMood(moodId, 'Check-in cepat dari beranda', ['Check-in Beranda']);
+  const handleMoodSelect = (moodId) =>
+    logMood(moodId, 'Check-in cepat dari beranda', ['Check-in Beranda']);
   const handleAddWater = () => setWaterMl((prev) => Math.min(prev + 250, 3000));
   const handleSendCurhat = (e) => {
     e.preventDefault();
     navigate('/curhat', { state: { initialPrompt: curhatInput } });
   };
+  const handleFocusTask = (taskId) => {
+    setActiveFocusTaskId(taskId);
+    navigate('/focus');
+  };
 
   const triggerBreathingExercise = () => {
     setShowBreathing(true);
-    setBreathPhase('Tarik Napas perlahan (4 detik)... 🌸');
+    setBreathStage({ label: 'Tarik napas perlahan', seconds: 4, scale: 'scale-110' });
     setTimeout(() => {
-      setBreathPhase('Tahan napas (7 detik)... 🧘');
+      setBreathStage({ label: 'Tahan dengan tenang', seconds: 7, scale: 'scale-110' });
       setTimeout(() => {
-        setBreathPhase('Hembuskan pelan lewat mulut (8 detik)... 🍃');
-        setTimeout(() => setBreathPhase('Hebat! Tubuhmu kini lebih tenang ✨'), 8000);
+        setBreathStage({
+          label: 'Hembuskan pelan lewat mulut',
+          seconds: 8,
+          scale: 'scale-90',
+        });
+        setTimeout(() => {
+          setBreathStage({
+            label: 'Satu siklus selesai. Rasakan bahumu lebih rileks',
+            seconds: 0,
+            scale: 'scale-100',
+          });
+        }, 8000);
       }, 7000);
     }, 4000);
   };
 
+  const scheduleItems = [
+    {
+      time: '10:00',
+      label: 'Interaksi Manusia & Komputer',
+      sub: 'R.Lab 304 · Fasilkom',
+      isGroup: false,
+    },
+    {
+      time: '14:00',
+      label: 'Diskusi Kelompok Metopen',
+      sub: 'Ruang Diskusi Perpustakaan',
+      isGroup: false,
+    },
+    {
+      time: '19:30',
+      label: 'Study Jam TemanKampus',
+      sub: 'Voice Room · Sesi Pomodoro bersama',
+      isGroup: true,
+    },
+  ];
+
+  const tabs = [
+    { id: 'tenang', label: 'Ruang Tenang', icon: HeartHandshake },
+    {
+      id: 'kuliah',
+      label: 'Prioritas & Agenda',
+      icon: Calendar,
+      count: urgentTasks.length > 0 ? urgentTasks.length : null,
+    },
+    { id: 'progres', label: 'Ringkasan Progres', icon: BarChart3 },
+  ];
+
+  const activeMoodSupport =
+    todayMood?.moodId && MOOD_SUPPORT_COPY[todayMood.moodId]
+      ? MOOD_SUPPORT_COPY[todayMood.moodId]
+      : null;
+
   return (
-    <div>
-      {/* ── Header Block ── */}
-      <div
-        className="px-5 sm:px-8 pt-6 pb-10"
-        style={{ backgroundColor: '#C8BA96' }}
-      >
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
-              Dashboard Mahasiswa
-            </p>
-            <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
-              Halo, {user?.name?.split(' ')[0] || 'Teman'}! ☀️
+    <div className="space-y-6 max-w-5xl mx-auto">
+      {/* Step 1: Emotion & Calm First */}
+      <section className="surface-calm p-6 sm:p-7 space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div className="space-y-1">
+            <h1 className="text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-ink leading-snug">
+              Bagaimana kabarmu hari ini, {firstName}?
             </h1>
-            <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
-              Mulai harimu dengan niat baik.
+            <p className="text-sm text-ink-secondary">
+              Ambil jeda sebentar untuk menyapa perasaanmu sebelum masuk ke daftar kuliah.
             </p>
           </div>
-          <KucingMascot pose="happy" size={130} />
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={triggerBreathingExercise}
+              className="btn-secondary bg-paper-card h-9 px-3.5 text-xs"
+            >
+              <Wind className="w-4 h-4 text-accent" strokeWidth={1.5} />
+              <span>Latihan napas 4-7-8</span>
+            </button>
+          </div>
         </div>
-        {/* Stats row */}
-        <div className="flex items-center gap-6 mt-4">
-          {[
-            { val: urgentTasks.length, lbl: 'Tugas Mendesak', icon: '📋' },
-            { val: '1j 45m', lbl: 'Waktu Fokus', icon: '⏱️' },
-            { val: `${user?.wellnessStreak || 5} 🔥`, lbl: 'Hari Streak', icon: '' },
-          ].map((s) => (
-            <div key={s.lbl}>
-              <div className="font-display text-2xl" style={{ color: '#8B0A0A' }}>
-                {s.icon} {s.val}
-              </div>
-              <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
-                {s.lbl}
-              </div>
-            </div>
-          ))}
+
+        {/* 1-click Mood Check-in */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {options.map((opt) => {
+            const isSelected = todayMood?.moodId === opt.id;
+            const meta = getMoodMeta(opt.id);
+            const Icon = meta.icon;
+            return (
+              <button
+                key={opt.id}
+                onClick={() => handleMoodSelect(opt.id)}
+                className={`h-11 px-3.5 rounded-lg border text-xs sm:text-sm font-medium flex items-center gap-2.5 transition-colors duration-150 active:scale-[0.98] ${
+                  isSelected
+                    ? 'bg-accent text-paper-card border-accent shadow-subtle'
+                    : 'bg-paper-card text-ink border-calm-border hover:bg-paper'
+                }`}
+              >
+                <Icon
+                  className={`w-4 h-4 shrink-0 ${
+                    isSelected ? 'text-paper-card' : 'text-ink-muted'
+                  }`}
+                  strokeWidth={1.5}
+                />
+                <span className="truncate">{opt.label}</span>
+              </button>
+            );
+          })}
         </div>
-      </div>
 
-      {/* ── Main Card Section ── */}
-      <div className="px-5 sm:px-8 py-8 space-y-6">
-
-        {/* Mood Check-in */}
-        <section
-          className="p-5 rounded-3xl"
-          style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-lg" style={{ color: '#2B2B2B' }}>
-              Perasaanmu hari ini? 🌱
-            </h2>
+        {/* Empathetic peer-like response based on selected mood */}
+        {activeMoodSupport && (
+          <div className="pt-4 border-t border-calm-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <p className="text-sm text-ink-secondary leading-relaxed max-w-2xl">
+              {activeMoodSupport}
+            </p>
             <Link
               to="/mood"
-              className="text-xs font-bold hover:underline"
-              style={{ color: '#8B0A0A' }}
+              className="text-xs font-medium text-accent hover:underline underline-offset-4 inline-flex items-center gap-1 shrink-0"
             >
-              Catat Lengkap →
+              <span>Catat di jurnal</span>
+              <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
             </Link>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {options.map((opt) => {
-              const isSelected = todayMood?.moodId === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  onClick={() => handleMoodSelect(opt.id)}
-                  className="hs-btn py-2 px-4 text-xs"
-                  style={
-                    isSelected
-                      ? { backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }
-                      : { backgroundColor: '#DDD0A8', color: '#2B2B2B', border: '2px solid #5C4A3A' }
-                  }
-                >
-                  <span>{opt.emoji}</span> {opt.label}
-                </button>
-              );
-            })}
-          </div>
-        </section>
+        )}
+      </section>
 
-        {/* 3-col cards */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {/* Card 1: Urgent Tasks */}
-          <article
-            className="p-5 flex flex-col rounded-3xl"
-            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold" style={{ color: '#2B2B2B' }}>📋 Tugas Mendesak</h3>
-              <span
-                className="hs-chip text-[10px]"
-                style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
+      {/* Step 2: Calm Segmented Tabs (Zero Overwhelm, Everything Accessible) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3">
+        <div
+          role="tablist"
+          aria-label="Bagian beranda"
+          className="inline-flex p-1 rounded-lg bg-paper-raised border border-line"
+        >
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                role="tab"
+                aria-selected={active}
+                onClick={() => setActiveTab(tab.id)}
+                className={`h-8 px-3.5 rounded-md text-xs font-medium inline-flex items-center gap-2 transition-colors duration-150 ${
+                  active
+                    ? 'bg-paper-card text-ink shadow-subtle'
+                    : 'text-ink-secondary hover:text-ink'
+                }`}
               >
-                Due Segera
-              </span>
-            </div>
-            <ul className="space-y-2.5 flex-1">
-              {urgentTasks.slice(0, 3).map((task) => (
-                <li
-                  key={task.id}
-                  className="p-3 rounded-xl"
-                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-                >
-                  <div className="flex items-start gap-2.5">
-                    <input
-                      type="checkbox"
-                      checked={task.status === 'Selesai'}
-                      onChange={() => toggleTaskStatus(task.id)}
-                      className="mt-0.5 w-4 h-4 rounded cursor-pointer"
-                      style={{ accentColor: '#8B0A0A' }}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p
-                        className={`text-xs font-bold leading-snug ${task.status === 'Selesai' ? 'line-through' : ''}`}
-                        style={{ color: task.status === 'Selesai' ? '#5C4A3A' : '#2B2B2B' }}
-                      >
-                        {task.course}
-                      </p>
-                      <p className="text-[11px] truncate" style={{ color: '#5C4A3A' }}>{task.title}</p>
-                      <span className="text-[10px] font-bold" style={{ color: '#8B0A0A' }}>
-                        {task.dueLabel || 'Hari ini'}
-                      </span>
-                    </div>
+                <Icon
+                  className={`w-3.5 h-3.5 ${active ? 'text-accent' : 'text-ink-muted'}`}
+                  strokeWidth={1.5}
+                />
+                <span>{tab.label}</span>
+                {tab.count && (
+                  <span className="font-mono text-[11px] text-accent tabular">
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="text-xs text-ink-muted hidden sm:block">
+          Pilih satu bagian yang kamu butuhkan saat ini
+        </p>
+      </div>
+
+      {/* TAB 1: RUANG TENANG (Self-care + Mimi + Community) */}
+      {activeTab === 'tenang' && (
+        <div className="space-y-6 animate-enter">
+          {/* Quick Self-Care Strip */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Hydration */}
+            <div className="surface-card p-5 flex flex-col justify-between gap-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <Droplets className="w-4 h-4 text-accent shrink-0" strokeWidth={1.5} />
+                  <div>
+                    <p className="text-sm font-medium text-ink">Minum air hari ini</p>
+                    <p className="font-mono text-xs text-ink-muted tabular">
+                      {waterMl} / {waterTarget} ml
+                    </p>
                   </div>
+                </div>
+                <button
+                  onClick={handleAddWater}
+                  className="btn-secondary h-8 px-3 text-xs font-mono tabular"
+                >
+                  +250 ml
+                </button>
+              </div>
+              <div className="w-full h-1.5 rounded-full bg-paper-raised overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-accent transition-[width] duration-300 ease-unslop"
+                  style={{ width: `${Math.min((waterMl / waterTarget) * 100, 100)}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Ambience */}
+            <div className="surface-card p-5 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <Headphones className="w-4 h-4 text-accent shrink-0" strokeWidth={1.5} />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-ink">Suara hujan kampus</p>
+                  <p className="text-xs text-ink-muted truncate">
+                    {isPlayingLofi
+                      ? 'Sedang diputar untuk menemanimu'
+                      : 'Putar suara lembut saat butuh tenang'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsPlayingLofi(!isPlayingLofi)}
+                aria-label={isPlayingLofi ? 'Jeda audio' : 'Putar audio'}
+                className={`h-9 px-3.5 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 transition-colors duration-150 shrink-0 ${
+                  isPlayingLofi
+                    ? 'bg-accent text-paper-card'
+                    : 'bg-paper-raised text-ink hover:bg-paper-hover'
+                }`}
+              >
+                {isPlayingLofi ? (
+                  <>
+                    <Pause className="w-3.5 h-3.5" strokeWidth={1.5} />
+                    <span>Jeda</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3.5 h-3.5" strokeWidth={1.5} />
+                    <span>Putar</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </section>
+
+          {/* Mimi + Community */}
+          <section className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            {/* Mimi AI */}
+            <div className="lg:col-span-5 surface-card p-5 flex flex-col justify-between gap-5">
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-medium text-accent">Curhat ke Mimi</span>
+                  <span className="inline-flex items-center gap-1.5 text-xs text-ink-muted">
+                    <span className="w-1.5 h-1.5 rounded-full bg-semantic-positive" />
+                    Privat
+                  </span>
+                </div>
+                <h2 className="text-base font-medium text-ink">
+                  Lagi ada yang mengganjal di pikiranmu?
+                </h2>
+                <p className="text-xs text-ink-secondary leading-relaxed mt-1 mb-4">
+                  Ceritakan saja pelan-pelan. Mimi siap mendengarkan tanpa menghakimi.
+                </p>
+                <div className="space-y-2">
+                  {[
+                    'Mimi, aku takut nilai sempro besok mengecewakan.',
+                    'Gimana cara mengurangi rasa bersalah saat sedang istirahat?',
+                  ].map((prompt) => (
+                    <button
+                      key={prompt}
+                      onClick={() =>
+                        navigate('/curhat', { state: { initialPrompt: prompt } })
+                      }
+                      className="w-full text-left px-3 py-2.5 rounded-lg bg-paper border border-line text-xs text-ink-secondary hover:text-ink hover:bg-paper-raised transition-colors duration-150"
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <form
+                onSubmit={handleSendCurhat}
+                className="pt-4 border-t border-line flex items-center gap-2"
+              >
+                <input
+                  type="text"
+                  value={curhatInput}
+                  onChange={(e) => setCurhatInput(e.target.value)}
+                  placeholder="Tulis apa yang kamu rasakan"
+                  className="input-field flex-1 text-xs"
+                />
+                <button
+                  type="submit"
+                  aria-label="Kirim ke Mimi"
+                  className="btn-primary w-9 h-9 p-0 shrink-0"
+                >
+                  <Send className="w-4 h-4" strokeWidth={1.5} />
+                </button>
+              </form>
+            </div>
+
+            {/* Community Threads */}
+            <div className="lg:col-span-7 surface-card p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h2 className="text-sm font-medium text-ink">
+                      Cerita dari teman sekampus
+                    </h2>
+                    <p className="text-xs text-ink-muted mt-0.5">
+                      Kamu tidak sendirian menghadapi semester ini
+                    </p>
+                  </div>
+                  <Link
+                    to="/community"
+                    className="text-xs font-medium text-accent hover:underline underline-offset-4"
+                  >
+                    Lihat forum
+                  </Link>
+                </div>
+
+                <div className="space-y-3">
+                  {recentThreads.map((thread) => (
+                    <Link
+                      key={thread.id}
+                      to="/community"
+                      className="block p-4 rounded-lg bg-paper border border-line hover:border-line-strong transition-colors duration-150"
+                    >
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span className="text-xs font-medium text-accent">
+                          {thread.category}
+                        </span>
+                        <span className="font-mono text-[11px] text-ink-muted tabular">
+                          {thread.timeAgo}
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-medium text-ink leading-snug line-clamp-2">
+                        {thread.title}
+                      </h3>
+                      <div className="flex items-center gap-4 mt-2.5 text-xs text-ink-muted tabular">
+                        <span className="inline-flex items-center gap-1">
+                          <MessageSquare className="w-3.5 h-3.5" strokeWidth={1.5} />
+                          {thread.replies?.length || thread.repliesCount || 0} balasan
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <Heart className="w-3.5 h-3.5" strokeWidth={1.5} />
+                          {thread.hugs} dukungan
+                        </span>
+                        <span className="ml-auto text-ink-secondary">
+                          {thread.faculty}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-line flex items-center justify-between">
+                <span className="text-xs text-ink-muted">
+                  Mau berbagi cerita atau menyemangati teman lain?
+                </span>
+                <Link to="/community" className="btn-secondary h-8 px-3 text-xs">
+                  Tulis cerita
+                </Link>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {/* TAB 2: PRIORITAS & AGENDA */}
+      {activeTab === 'kuliah' && (
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 animate-enter">
+          {/* Urgent Tasks */}
+          <article className="lg:col-span-7 surface-card p-5 flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-sm font-medium text-ink">Prioritas hari ini</h2>
+                <p className="text-xs text-ink-muted mt-0.5">
+                  Kerjakan satu per satu, mulai dari yang paling ringan
+                </p>
+              </div>
+              <Link
+                to="/tasks"
+                className="text-xs font-medium text-accent hover:underline underline-offset-4"
+              >
+                Semua tugas ({tasks.length})
+              </Link>
+            </div>
+
+            <ul className="divide-y divide-line flex-1">
+              {urgentTasks.length === 0 ? (
+                <li className="py-10 text-center text-sm text-ink-muted">
+                  Semua tugas prioritas hari ini sudah selesai. Waktunya istirahat.
                 </li>
-              ))}
+              ) : (
+                urgentTasks.slice(0, 4).map((task) => {
+                  const isDone = task.status === 'Selesai';
+                  return (
+                    <li
+                      key={task.id}
+                      className="py-3.5 first:pt-1 last:pb-1 flex items-start justify-between gap-3"
+                    >
+                      <label className="flex items-start gap-3 cursor-pointer min-w-0 flex-1">
+                        <input
+                          type="checkbox"
+                          checked={isDone}
+                          onChange={() => toggleTaskStatus(task.id)}
+                          className="mt-0.5 w-4 h-4 rounded border-line-strong accent-accent cursor-pointer shrink-0"
+                        />
+                        <div className="min-w-0">
+                          <p
+                            className={`text-sm font-medium leading-snug ${
+                              isDone ? 'line-through text-ink-muted' : 'text-ink'
+                            }`}
+                          >
+                            {task.title}
+                          </p>
+                          <p className="text-xs text-ink-muted mt-0.5">
+                            {task.course} ·{' '}
+                            <span className="font-mono tabular">
+                              {task.dueLabel || 'Hari ini'}
+                            </span>
+                          </p>
+                        </div>
+                      </label>
+
+                      {!isDone && (
+                        <button
+                          onClick={() => handleFocusTask(task.id)}
+                          className="btn-secondary h-8 px-2.5 text-xs shrink-0"
+                        >
+                          <Play className="w-3 h-3" strokeWidth={1.5} />
+                          <span>Fokus</span>
+                        </button>
+                      )}
+                    </li>
+                  );
+                })
+              )}
             </ul>
-            <Link
-              to="/tasks"
-              className="mt-4 block w-full py-2 rounded-full text-xs font-black text-center transition"
-              style={{ border: '2px solid #8B0A0A', color: '#8B0A0A' }}
-            >
-              Lihat Semua {tasks.length} Tugas →
-            </Link>
           </article>
 
-          {/* Card 2: Schedule */}
-          <article
-            className="p-5 flex flex-col rounded-3xl"
-            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-          >
+          {/* Today's Agenda */}
+          <article className="lg:col-span-5 surface-card p-5 flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold" style={{ color: '#2B2B2B' }}>📅 Agenda Hari Ini</h3>
-              <span
-                className="hs-chip text-[10px]"
-                style={{ background: '#4A8DB7', color: '#DDD0A8' }}
-              >
-                Hari Ini
+              <h2 className="text-sm font-medium text-ink">Agenda hari ini</h2>
+              <span className="font-mono text-xs text-ink-muted tabular">
+                13 Nov 2026
               </span>
             </div>
+
             <div className="space-y-3 flex-1">
-              {[
-                { time: '10:00', label: 'Interaksi Manusia & Komputer', sub: 'R.Lab 304 · Dr. Ir. Herman', alert: '🔔 Mulai dalam 45 mnt', color: '#8B0A0A' },
-                { time: '14:00', label: 'Diskusi Kelompok Sempro', sub: 'Discord · Bersama Arya & Fika', color: '#4A8DB7' },
-                { time: '19:30', label: 'Study Jam TemanKampus', sub: 'Voice Room · Pomodoro Bareng', color: '#5C4A3A' },
-              ].map((s, i) => (
-                <div key={i} className="flex gap-3 items-start">
-                  <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black shrink-0"
-                    style={{ backgroundColor: s.color, color: '#C8BA96' }}
-                  >
-                    {s.time.split(':')[0]}
-                  </div>
-                  <div className="flex-1 pt-0.5">
-                    <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>{s.label}</p>
-                    <p className="text-[11px]" style={{ color: '#5C4A3A' }}>{s.sub}</p>
-                    {s.alert && (
-                      <p className="text-[10px] font-bold mt-0.5" style={{ color: '#8B0A0A' }}>{s.alert}</p>
+              {scheduleItems.map((s) => (
+                <div
+                  key={s.time}
+                  className={`p-3.5 rounded-lg border flex items-start gap-3 ${
+                    s.isGroup
+                      ? 'bg-calm-surface/60 border-calm-border'
+                      : 'bg-paper border-line'
+                  }`}
+                >
+                  <span className="font-mono text-xs font-medium text-ink-secondary tabular pt-0.5 w-11 shrink-0">
+                    {s.time}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-ink leading-snug">{s.label}</p>
+                    <p className="text-xs text-ink-muted mt-0.5">{s.sub}</p>
+                    {s.isGroup && (
+                      <button
+                        onClick={() => setJoinedStudyJam(!joinedStudyJam)}
+                        className={`mt-2.5 h-7 px-3 rounded-md text-xs font-medium inline-flex items-center gap-1.5 transition-colors duration-150 ${
+                          joinedStudyJam
+                            ? 'bg-semantic-positive-soft text-semantic-positive'
+                            : 'bg-accent text-paper-card hover:bg-accent-hover'
+                        }`}
+                      >
+                        {joinedStudyJam ? (
+                          <>
+                            <Check className="w-3.5 h-3.5" strokeWidth={1.5} />
+                            <span>Terdaftar pukul 19:30</span>
+                          </>
+                        ) : (
+                          'Ikut Study Jam'
+                        )}
+                      </button>
                     )}
                   </div>
                 </div>
               ))}
             </div>
-            <Link
-              to="/tasks"
-              className="mt-4 block w-full py-2 rounded-full text-xs font-black text-center transition"
-              style={{ border: '2px solid #4A8DB7', color: '#4A8DB7' }}
-            >
-              Buka Kalender Akademik →
-            </Link>
-          </article>
-
-          {/* Card 3: Wellness */}
-          <article
-            className="p-5 flex flex-col rounded-3xl"
-            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold" style={{ color: '#2B2B2B' }}>🌿 Rehat & Nutrisi</h3>
-              <span
-                className="hs-chip text-[10px]"
-                style={{ background: '#C8BA96', color: '#5C4A3A', border: '1px solid #5C4A3A' }}
-              >
-                Self-Care
-              </span>
-            </div>
-            <div className="space-y-3 flex-1">
-              {/* Water */}
-              <div
-                className="p-3 rounded-xl"
-                style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div>
-                    <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>💧 Hidrasi</p>
-                    <p className="text-[10px]" style={{ color: '#5C4A3A' }}>{waterMl}/{waterTarget} ml</p>
-                  </div>
-                  <button
-                    onClick={handleAddWater}
-                    className="px-3 py-1 font-bold text-[10px] rounded-full"
-                    style={{ backgroundColor: '#4A8DB7', color: '#DDD0A8' }}
-                  >
-                    +250ml
-                  </button>
-                </div>
-                <div className="w-full rounded-full h-1.5" style={{ background: '#5C4A3A30' }}>
-                  <div
-                    className="h-1.5 rounded-full transition-all"
-                    style={{ width: `${Math.min((waterMl / waterTarget) * 100, 100)}%`, backgroundColor: '#4A8DB7' }}
-                  />
-                </div>
-              </div>
-              {/* Breathing */}
-              <div
-                className="p-3 rounded-xl flex items-center justify-between"
-                style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-              >
-                <div>
-                  <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>🌬️ Napas 4-7-8</p>
-                  <p className="text-[10px]" style={{ color: '#5C4A3A' }}>Relaksasi 3 menit</p>
-                </div>
-                <button
-                  onClick={triggerBreathingExercise}
-                  className="px-3 py-1.5 font-bold text-[10px] rounded-full"
-                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-                >
-                  Mulai
-                </button>
-              </div>
-              {/* Lo-fi */}
-              <div
-                className="p-3 rounded-xl flex items-center justify-between"
-                style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-              >
-                <div>
-                  <p className="text-xs font-bold" style={{ color: '#2B2B2B' }}>🎧 Lo-Fi Hujan Kampus</p>
-                  <p className="text-[10px]" style={{ color: '#5C4A3A' }}>
-                    {isPlayingLofi ? 'Memutar... 🎵' : 'Musik penenang belajar'}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setIsPlayingLofi(!isPlayingLofi)}
-                  className="w-8 h-8 rounded-full flex items-center justify-center transition"
-                  style={{ backgroundColor: isPlayingLofi ? '#8B0A0A' : '#5C4A3A', color: '#C8BA96' }}
-                >
-                  <span className="text-xs">{isPlayingLofi ? '⏸' : '▶'}</span>
-                </button>
-              </div>
-            </div>
           </article>
         </section>
+      )}
 
-        {/* Community + Mimi row */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          {/* Mimi AI */}
-          <div
-            className="lg:col-span-5 rounded-3xl p-6 text-white flex flex-col justify-between"
-            style={{ background: 'linear-gradient(135deg, #8B0A0A 0%, #4A2010 100%)' }}
-          >
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span
-                  className="hs-chip text-[10px] uppercase"
-                  style={{ background: 'rgba(247,240,218,0.2)', color: '#C8BA96' }}
-                >
-                  AI Companion
+      {/* TAB 3: RINGKASAN PROGRES */}
+      {activeTab === 'progres' && (
+        <section className="space-y-4 animate-enter">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="surface-card p-5">
+              <p className="text-xs text-ink-muted">Tugas yang sudah tuntas</p>
+              <p className="font-mono text-[28px] font-medium text-ink tabular leading-none mt-2">
+                {completedTasksCount}{' '}
+                <span className="text-sm font-sans font-normal text-ink-muted">
+                  / {tasks.length}
                 </span>
-                <span className="flex items-center gap-1.5 text-xs" style={{ color: '#C8BA9699' }}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                  Mimi Online
-                </span>
-              </div>
-              <h3 className="font-black text-xl mb-1.5">Ada yang mengganjal di pikiranmu?</h3>
-              <p className="text-xs leading-relaxed mb-4" style={{ color: 'rgba(247,240,218,0.75)' }}>
-                Mimi siap mendengarkan tanpa menghakimi. Ceritakan keluh kesahmu kapan saja.
               </p>
-              <div className="space-y-2">
-                {[
-                  { text: '"Mimi, aku takut nilai sempro besok..."', prompt: 'Mimi, aku takut nilai sempro besok mengecewakan...' },
-                  { text: '"Gimana cara ngilangin rasa bersalah pas istirahat?"', prompt: 'Gimana cara ngilangin rasa bersalah kalau lagi istirahat?' },
-                ].map((q) => (
-                  <button
-                    key={q.text}
-                    onClick={() => navigate('/curhat', { state: { initialPrompt: q.prompt } })}
-                    className="w-full text-left p-2.5 rounded-xl border text-xs text-white transition"
-                    style={{ background: 'rgba(247,240,218,0.12)', borderColor: 'rgba(247,240,218,0.2)' }}
-                  >
-                    💬 {q.text}
-                  </button>
-                ))}
-              </div>
+              <p className="text-xs text-ink-secondary mt-2">
+                Setiap langkah kecil tetap berarti
+              </p>
             </div>
-            <form
-              onSubmit={handleSendCurhat}
-              className="mt-5 pt-4 flex items-center gap-2"
-              style={{ borderTop: '1px solid rgba(247,240,218,0.15)' }}
-            >
-              <input
-                type="text"
-                value={curhatInput}
-                onChange={(e) => setCurhatInput(e.target.value)}
-                placeholder="Tulis ceritamu ke Mimi..."
-                className="flex-1 text-xs rounded-xl px-4 py-2.5 border focus:outline-none transition"
-                style={{
-                  background: 'rgba(247,240,218,0.15)',
-                  color: '#C8BA96',
-                  borderColor: 'rgba(247,240,218,0.2)',
-                }}
-              />
-              <button
-                type="submit"
-                className="p-2.5 rounded-xl transition shrink-0"
-                style={{ background: 'rgba(247,240,218,0.25)', color: '#C8BA96' }}
-              >
-                <Send className="w-4 h-4" />
-              </button>
-            </form>
+
+            <div className="surface-card p-5">
+              <p className="text-xs text-ink-muted">Waktu fokus hari ini</p>
+              <p className="font-mono text-[28px] font-medium text-accent tabular leading-none mt-2">
+                {user?.focusMinutesToday || 105}{' '}
+                <span className="text-sm font-sans font-normal text-ink-muted">
+                  menit
+                </span>
+              </p>
+              <p className="text-xs text-ink-secondary mt-2 tabular">
+                4 sesi selesai · target 6 sesi
+              </p>
+            </div>
+
+            <div className="surface-card p-5">
+              <p className="text-xs text-ink-muted">Konsistensi check-in mood</p>
+              <p className="font-mono text-[28px] font-medium text-ink tabular leading-none mt-2">
+                {user?.wellnessStreak || 5}{' '}
+                <span className="text-sm font-sans font-normal text-ink-muted">
+                  hari
+                </span>
+              </p>
+              <p className="text-xs text-semantic-positive mt-2">
+                +2 hari dibanding pekan lalu
+              </p>
+            </div>
           </div>
 
-          {/* Community Threads */}
-          <div
-            className="lg:col-span-7 p-6 flex flex-col rounded-3xl"
-            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-[11px] font-black uppercase tracking-wider" style={{ color: '#4A8DB7' }}>
-                  Ruang Aman Berbagi
-                </p>
-                <h3 className="font-black text-lg" style={{ color: '#2B2B2B' }}>
-                  Diskusi Hangat Mahasiswa
-                </h3>
-              </div>
-              <Link
-                to="/community"
-                className="text-xs font-bold hover:underline uppercase"
-                style={{ color: '#8B0A0A' }}
-              >
-                Lihat Semua →
+          <div className="surface-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium text-ink">
+                Ingin melihat pola energimu selama seminggu terakhir?
+              </p>
+              <p className="text-xs text-ink-secondary mt-0.5">
+                Buka Mood Tracker untuk melihat grafik 7 hari dan catatan jurnalmu.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link to="/mood" className="btn-secondary text-xs h-9">
+                Lihat Mood Tracker
               </Link>
-            </div>
-            <div className="space-y-3 flex-1">
-              {recentThreads.map((thread) => (
-                <Link
-                  key={thread.id}
-                  to="/community"
-                  className="block p-3.5 rounded-2xl transition"
-                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span
-                      className="hs-chip text-[10px]"
-                      style={{ background: '#4A8DB7', color: '#DDD0A8' }}
-                    >
-                      {thread.category}
-                    </span>
-                    <span className="text-[10px]" style={{ color: '#5C4A3A' }}>{thread.timeAgo}</span>
-                  </div>
-                  <h4 className="text-xs font-bold leading-snug line-clamp-2" style={{ color: '#2B2B2B' }}>
-                    "{thread.title}"
-                  </h4>
-                  <div className="flex items-center gap-4 mt-2 text-[10px]" style={{ color: '#5C4A3A' }}>
-                    <span className="flex items-center gap-1">
-                      <MessageSquare className="w-3 h-3" />{thread.repliesCount} respon
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Heart className="w-3 h-3" style={{ color: '#F6D0D6' }} />{thread.hugs} pelukan
-                    </span>
-                    <span className="ml-auto font-bold" style={{ color: '#4A8DB7' }}>{thread.faculty}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-            <div
-              className="mt-4 pt-3 flex items-center justify-between text-xs"
-              style={{ borderTop: '1px solid #C8BA96' }}
-            >
-              <span style={{ color: '#5C4A3A' }}>Ingin berbagi ceritamu?</span>
-              <Link
-                to="/community"
-                className="px-4 py-2 rounded-full font-black text-[10px] transition"
-                style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-              >
-                + Tulis Anonim
+              <Link to="/focus" className="btn-primary text-xs h-9">
+                Buka Ruang Fokus
               </Link>
             </div>
           </div>
         </section>
-      </div>
+      )}
 
       {/* Breathing Modal */}
       {showBreathing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/35 backdrop-blur-[2px]"
+          onClick={() => setShowBreathing(false)}
+        >
           <div
-            className="rounded-3xl p-8 max-w-sm w-full text-center space-y-4 shadow-2xl"
-            style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
+            className="bg-paper-card rounded-2xl p-6 max-w-sm w-full border border-line-strong shadow-float space-y-6 animate-enter"
+            onClick={(e) => e.stopPropagation()}
           >
-            <span className="text-4xl animate-bounce inline-block">🌸</span>
-            <h3 className="font-black text-xl" style={{ color: '#2B2B2B' }}>Latihan Napas 4-7-8</h3>
-            <div
-              className="p-4 rounded-2xl text-sm font-bold"
-              style={{ background: '#C8BA96', color: '#8B0A0A' }}
-            >
-              {breathPhase}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Wind className="w-4 h-4 text-accent" strokeWidth={1.5} />
+                <h3 className="text-sm font-semibold text-ink">Latihan napas 4-7-8</h3>
+              </div>
+              <button
+                onClick={() => setShowBreathing(false)}
+                aria-label="Tutup"
+                className="w-7 h-7 rounded-lg text-ink-muted hover:text-ink hover:bg-paper-raised flex items-center justify-center transition-colors"
+              >
+                <X className="w-4 h-4" strokeWidth={1.5} />
+              </button>
             </div>
+
+            <div className="py-4 flex flex-col items-center justify-center gap-5">
+              <div
+                className={`w-32 h-32 rounded-full bg-calm-surface border border-calm-border flex items-center justify-center transition-transform duration-[2500ms] ease-unslop ${breathStage.scale}`}
+              >
+                <div className="w-20 h-20 rounded-full bg-accent/15 flex items-center justify-center">
+                  <span className="font-mono text-lg font-medium text-accent tabular">
+                    {breathStage.seconds > 0 ? `${breathStage.seconds} dtk` : 'Tenang'}
+                  </span>
+                </div>
+              </div>
+              <p className="text-sm font-medium text-ink text-center">
+                {breathStage.label}
+              </p>
+            </div>
+
             <button
               onClick={() => setShowBreathing(false)}
-              className="w-full py-3 rounded-full text-xs font-black uppercase tracking-wider"
-              style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
+              className="btn-primary w-full"
             >
-              Selesai Latihan
+              Selesai latihan
             </button>
           </div>
         </div>
@@ -475,4 +672,3 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
-

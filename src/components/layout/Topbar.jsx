@@ -1,105 +1,206 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Search, Bell, ShieldAlert, Sparkles } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Search, Bell, HeartHandshake, Check, Clock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import KucingMascot from '../KucingMascot';
 
+const ROUTE_META = {
+  '/dashboard': { title: 'Beranda', hint: 'Cek kabarmu dan atur ritme pelan-pelan' },
+  '/mood': { title: 'Mood Tracker', hint: 'Catat perasaan dan energimu tanpa menghakimi' },
+  '/curhat': { title: 'Curhat ke Mimi', hint: 'Ruang cerita privat kapan pun kamu butuh' },
+  '/community': { title: 'Komunitas Sebaya', hint: 'Berbagi cerita dengan sesama mahasiswa' },
+  '/tasks': { title: 'Tugas Kuliah', hint: 'Susun prioritas satu per satu' },
+  '/focus': { title: 'Ruang Fokus', hint: 'Belajar tenang dengan jeda teratur' },
+  '/premium': { title: 'Paket Pro', hint: 'Dukungan tambahan untuk satu semester' },
+};
+
 const Topbar = ({ onOpenHelp }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      title: 'Tenggat tugas hari ini',
+      desc: 'Revisi Bab 2: Tinjauan Pustaka pukul 23:59 WIB.',
+      time: '1 jam lalu',
+      read: false,
+      to: '/tasks',
+    },
+    {
+      id: 2,
+      title: 'Check-in mood harian',
+      desc: 'Luangkan 1 menit untuk menyapa perasaanmu hari ini.',
+      time: '3 jam lalu',
+      read: false,
+      to: '/mood',
+    },
+    {
+      id: 3,
+      title: 'Balasan di komunitas',
+      desc: 'Dimas Saputra membalas diskusi skripsi di forum sebaya.',
+      time: '5 jam lalu',
+      read: false,
+      to: '/community',
+    },
+  ]);
 
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 11) return 'Selamat pagi';
-    if (hour < 15) return 'Selamat siang';
-    if (hour < 18) return 'Selamat sore';
-    return 'Selamat malam';
+  const notifRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const routeInfo = ROUTE_META[location.pathname] || {
+    title: 'TemanKampus',
+    hint: '',
   };
 
-  const currentDate = new Intl.DateTimeFormat('id-ID', {
-    weekday: 'long', day: 'numeric', month: 'long',
-  }).format(new Date());
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/tasks?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const markAllRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  };
 
   return (
-    <header
-      className="h-16 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 select-none"
-      style={{
-        backgroundColor: '#DDD0A8',
-        borderBottom: '2.37px solid #5C4A3A',
-        boxShadow: '0 4px 0 0 #C8BA96',
-      }}
-    >
-      {/* Greeting */}
-      <div className="flex items-center gap-3">
-        {/* Mobile logo — kucing kecil */}
-        <div className="shrink-0 lg:hidden">
-          <KucingMascot pose="happy" size={40} />
-        </div>
-        <div>
-          <h1 className="font-display text-sm sm:text-base text-[#8B0A0A] leading-tight tracking-wide">
-            {getGreeting()}, {user?.name?.split(' ')[0] || 'Teman'}! 👋
-          </h1>
-          <p className="font-hand text-[11px] text-[#1F3A7A] hidden sm:block">
-            {currentDate}
-          </p>
+    <header className="h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-30 bg-paper/95 backdrop-blur-sm border-b border-line select-none">
+      {/* Page context */}
+      <div className="flex items-center gap-3 min-w-0">
+        <Link to="/dashboard" className="shrink-0 lg:hidden">
+          <KucingMascot pose="mark" size={28} />
+        </Link>
+        <div className="flex items-baseline gap-2.5 min-w-0">
+          <span className="text-sm font-medium text-ink truncate">{routeInfo.title}</span>
+          {routeInfo.hint && (
+            <span className="hidden md:inline text-xs text-ink-muted truncate">
+              · {routeInfo.hint}
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Right Actions */}
+      {/* Right actions */}
       <div className="flex items-center gap-2">
-        {/* Search */}
-        <div className="relative hidden md:block">
-          <input
-            className="w-52 pl-9 pr-4 py-2 text-xs rounded-full border-2 border-[#5C4A3A] focus:outline-none focus:border-[#8B0A0A] text-[#2B2B2B] placeholder-[#5C4A3A] transition font-bold"
-            style={{ background: '#DDD0A8' }}
-            placeholder="Cari tugas, topik..."
-            type="text"
+        <form onSubmit={handleSearchSubmit} className="relative hidden lg:block">
+          <Search
+            className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+            strokeWidth={1.5}
           />
-          <Search className="w-3.5 h-3.5 text-[#5C4A3A] absolute left-3 top-2.5" />
-        </div>
+          <input
+            className="w-48 h-8 pl-9 pr-3 text-xs rounded-lg bg-paper-card border border-line text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent transition-colors duration-150"
+            placeholder="Cari tugas"
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </form>
 
-        {/* Counseling */}
         <button
           onClick={onOpenHelp}
-          className="text-xs font-black px-3 py-1.5 rounded-full flex items-center gap-1.5 transition border-2"
-          style={{ background: '#F6D0D6', borderColor: '#5C4A3A', color: '#8B0A0A' }}
-          title="Layanan bantuan & konseling"
+          className="h-8 px-3 rounded-lg bg-calm-surface border border-calm-border text-xs font-medium text-accent hover:bg-accent/15 transition-colors duration-150 flex items-center gap-1.5 active:scale-[0.98]"
+          title="Layanan konseling dan dukungan profesional"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#8B0A0A] animate-pulse" />
-          <span className="hidden sm:inline text-[11px]">Konseling</span>
-          <ShieldAlert className="w-3.5 h-3.5 sm:hidden" />
+          <HeartHandshake className="w-4 h-4 shrink-0" strokeWidth={1.5} />
+          <span className="hidden sm:inline">Butuh bantuan</span>
         </button>
 
-        {/* Pro / Upgrade */}
-        {user?.isPremium ? (
-          <Link to="/premium"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black border-2 transition"
-            style={{ background: '#4A8DB7', borderColor: '#342B27', color: '#DDD0A8' }}>
-            <Sparkles className="w-3.5 h-3.5" /><span>Pro Aktif</span>
-          </Link>
-        ) : (
-          <Link to="/premium"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black border-2 transition hover:bg-[#C8BA96]"
-            style={{ background: '#DDD0A8', borderColor: '#4A8DB7', color: '#4A8DB7' }}>
-            <Sparkles className="w-3.5 h-3.5" /><span>Upgrade</span>
-          </Link>
-        )}
+        {/* Notifications */}
+        <div className="relative" ref={notifRef}>
+          <button
+            onClick={() => setShowNotifications(!showNotifications)}
+            title="Notifikasi"
+            aria-label="Notifikasi"
+            className="w-8 h-8 rounded-lg bg-paper-card border border-line text-ink-secondary hover:text-ink hover:bg-paper-raised flex items-center justify-center relative transition-colors duration-150 active:scale-[0.98]"
+          >
+            <Bell className="w-4 h-4" strokeWidth={1.5} />
+            {unreadCount > 0 && (
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-accent" />
+            )}
+          </button>
 
-        {/* Bell */}
-        <button
-          className="w-8 h-8 rounded-full flex items-center justify-center relative transition icon-btn border-2"
-          style={{ background: '#DDD0A8', borderColor: '#5C4A3A', color: '#2B2B2B' }}
-        >
-          <Bell className="w-4 h-4" />
-          <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#8B0A0A]" />
-        </button>
+          {showNotifications && (
+            <div className="absolute right-0 mt-2 w-80 rounded-xl bg-paper-card border border-line-strong shadow-float overflow-hidden z-50 animate-enter">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-line">
+                <span className="text-xs font-medium text-ink">
+                  Notifikasi
+                  {unreadCount > 0 && (
+                    <span className="ml-1.5 font-mono text-ink-muted tabular">
+                      {unreadCount}
+                    </span>
+                  )}
+                </span>
+                {unreadCount > 0 && (
+                  <button
+                    onClick={markAllRead}
+                    className="text-xs text-accent hover:underline flex items-center gap-1"
+                  >
+                    <Check className="w-3.5 h-3.5" strokeWidth={1.5} />
+                    Tandai dibaca
+                  </button>
+                )}
+              </div>
+              <div className="divide-y divide-line max-h-72 overflow-y-auto">
+                {notifications.map((n) => (
+                  <button
+                    key={n.id}
+                    type="button"
+                    onClick={() => {
+                      setNotifications((prev) =>
+                        prev.map((item) =>
+                          item.id === n.id ? { ...item, read: true } : item
+                        )
+                      );
+                      setShowNotifications(false);
+                      navigate(n.to);
+                    }}
+                    className={`w-full text-left px-4 py-3 transition-colors duration-150 hover:bg-paper-raised ${
+                      n.read ? 'opacity-70' : 'bg-paper-card'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-0.5">
+                      <span className="text-xs font-medium text-ink flex items-center gap-1.5">
+                        {!n.read && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                        )}
+                        {n.title}
+                      </span>
+                      <span className="font-mono text-[11px] text-ink-muted flex items-center gap-1 shrink-0">
+                        <Clock className="w-3 h-3" strokeWidth={1.5} />
+                        {n.time}
+                      </span>
+                    </div>
+                    <p className="text-xs text-ink-secondary leading-relaxed">
+                      {n.desc}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
-        {/* Avatar */}
-        <Link to="/auth"
-          className="w-8 h-8 rounded-full flex items-center justify-center transition shadow-sm icon-btn border-2"
-          style={{ background: '#8B0A0A', borderColor: '#342B27', color: '#C8BA96' }}
-          title="Beralih Akun"
+        {/* Account switch */}
+        <Link
+          to="/auth"
+          className="w-8 h-8 rounded-lg bg-accent text-paper-card font-mono text-xs font-medium flex items-center justify-center hover:bg-accent-hover transition-colors duration-150"
+          title="Akun"
         >
-          <span className="font-display text-[10px]">{user?.avatar || 'TK'}</span>
+          {user?.avatar || 'TK'}
         </Link>
       </div>
     </header>
@@ -107,4 +208,3 @@ const Topbar = ({ onOpenHelp }) => {
 };
 
 export default Topbar;
-

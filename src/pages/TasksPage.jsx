@@ -1,28 +1,65 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
-  CheckSquare, Calendar as CalendarIcon, List, Plus, Search,
-  Trash2, Play, CheckCircle2, X
+  Calendar as CalendarIcon,
+  List,
+  Plus,
+  Search,
+  Trash2,
+  Play,
+  CheckCircle2,
+  X,
+  AlertTriangle,
+  Clock,
 } from 'lucide-react';
 import { useTasks } from '../context/TaskContext';
-import KucingMascot from '../components/KucingMascot';
+
+const PRIORITY_META = {
+  Tinggi: {
+    dot: 'bg-accent',
+    text: 'text-accent',
+    bg: 'bg-accent-soft',
+  },
+  Sedang: {
+    dot: 'bg-semantic-warning',
+    text: 'text-semantic-warning',
+    bg: 'bg-semantic-warning-soft',
+  },
+  Rendah: {
+    dot: 'bg-ink-muted',
+    text: 'text-ink-secondary',
+    bg: 'bg-paper-raised',
+  },
+};
 
 const TasksPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { tasks, addTask, toggleTaskStatus, deleteTask, setActiveFocusTaskId } = useTasks();
 
   const [viewMode, setViewMode] = useState('list');
   const [statusFilter, setStatusFilter] = useState('Semua');
   const [priorityFilter, setPriorityFilter] = useState('Semua');
   const [courseFilter, setCourseFilter] = useState('Semua');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+  const [selectedCalDay, setSelectedCalDay] = useState(13);
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q !== null) setSearchQuery(q);
+  }, [searchParams]);
+
   const [newTask, setNewTask] = useState({
-    title: '', description: '', course: 'Metodologi Penelitian',
-    dueDate: '2026-09-21T23:59', dueLabel: '21 Sep, 23:59',
-    priority: 'Tinggi', estimatedMinutes: 45,
+    title: '',
+    description: '',
+    course: 'Metodologi Penelitian',
+    dueDate: '2026-11-13T23:59',
+    dueLabel: '13 Nov, 23:59',
+    priority: 'Tinggi',
+    estimatedMinutes: 45,
   });
-  const [selectedCalDay, setSelectedCalDay] = useState(18);
 
   const courses = ['Semua', ...Array.from(new Set(tasks.map((t) => t.course)))];
 
@@ -36,525 +73,524 @@ const TasksPage = () => {
     return matchStatus && matchPriority && matchCourse && matchSearch;
   });
 
-  const handleStartFocus = (taskId) => { setActiveFocusTaskId(taskId); navigate('/focus'); };
+  const handleStartFocus = (taskId) => {
+    setActiveFocusTaskId(taskId);
+    navigate('/focus');
+  };
 
   const handleCreateTask = (e) => {
     e.preventDefault();
     if (!newTask.title.trim()) return;
-    addTask({ ...newTask, estimatedMinutes: Number(newTask.estimatedMinutes) || 30 });
+    addTask({
+      ...newTask,
+      estimatedMinutes: Number(newTask.estimatedMinutes) || 30,
+    });
     setIsModalOpen(false);
     setNewTask({
-      title: '', description: '', course: 'Metodologi Penelitian',
-      dueDate: '2026-09-22T23:59', dueLabel: '22 Sep, 23:59',
-      priority: 'Sedang', estimatedMinutes: 45,
+      title: '',
+      description: '',
+      course: 'Metodologi Penelitian',
+      dueDate: '2026-11-14T23:59',
+      dueLabel: '14 Nov, 23:59',
+      priority: 'Sedang',
+      estimatedMinutes: 45,
     });
   };
 
-  // Priority badge styles
-  const priorityStyle = {
-    Tinggi: { bg: '#8B0A0A', text: '#C8BA96' },
-    Sedang: { bg: '#4A8DB7', text: '#DDD0A8' },
-    Rendah: { bg: '#C8BA96', text: '#8B0A0A', border: '1px solid #5C4A3A' },
+  const confirmDelete = () => {
+    if (taskToDelete) {
+      deleteTask(taskToDelete.id);
+      setTaskToDelete(null);
+    }
   };
 
+  const getTaskDay = (dueDate) => {
+    if (!dueDate) return null;
+    const parts = dueDate.split('-');
+    if (parts.length >= 3) {
+      return parseInt(parts[2].substring(0, 2), 10);
+    }
+    return null;
+  };
+
+  const tasksForSelectedDay = tasks.filter((t) => getTaskDay(t.dueDate) === selectedCalDay);
+
+  const activeCount = tasks.filter((t) => t.status !== 'Selesai').length;
+  const doneCount = tasks.filter((t) => t.status === 'Selesai').length;
+  const highPriorityCount = tasks.filter(
+    (t) => t.priority === 'Tinggi' && t.status !== 'Selesai'
+  ).length;
+
+  // November 2026 starts on Sunday (offset 6 for Mon-Sun grid)
+  const calendarDays = Array.from({ length: 30 }, (_, i) => i + 1);
+  const leadingBlanks = 6;
+
   return (
-    <div>
-      {/* ── Header Block ── */}
-      <div
-        className="px-5 sm:px-8 pt-6 pb-10"
-        style={{ backgroundColor: '#C8BA96' }}
-      >
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: '#5C4A3A' }}>
-              Manajemen Tugas
-            </p>
-            <h1 className="font-display text-3xl sm:text-4xl" style={{ color: '#8B0A0A' }}>
-              Kelola tugas kuliahmu
-            </h1>
-            <p className="font-hand text-base mt-1" style={{ color: '#1F3A7A' }}>
-              tanpa panik dan tanpa ketinggalan.
-            </p>
-          </div>
-          <KucingMascot pose="stressed" size={130} />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-[28px] font-semibold tracking-[-0.02em] text-ink leading-tight">
+            Tugas kuliah
+          </h1>
+          <p className="text-sm text-ink-secondary mt-1">
+            Daftar tugas aktif, prioritas, dan kalender tenggat November 2026
+          </p>
         </div>
-        <div className="flex items-center gap-6 mt-4">
-          {[
-            { val: tasks.filter((t) => t.status !== 'Selesai').length, lbl: 'Tugas Aktif' },
-            { val: tasks.filter((t) => t.status === 'Selesai').length, lbl: 'Selesai' },
-            { val: tasks.filter((t) => t.priority === 'Tinggi').length, lbl: 'Prioritas Tinggi' },
-          ].map((s) => (
-            <div key={s.lbl}>
-              <div className="font-display text-2xl" style={{ color: '#8B0A0A' }}>{s.val}</div>
-              <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#5C4A3A' }}>
-                {s.lbl}
-              </div>
-            </div>
-          ))}
+
+        <div className="flex items-center gap-2.5">
+          <div className="inline-flex p-1 rounded-lg bg-paper-raised border border-line">
+            {[
+              { mode: 'list', Icon: List, label: 'Daftar' },
+              { mode: 'calendar', Icon: CalendarIcon, label: 'Kalender' },
+            ].map(({ mode, Icon, label }) => (
+              <button
+                key={mode}
+                onClick={() => setViewMode(mode)}
+                className={`h-7 px-3 rounded-md text-xs font-medium inline-flex items-center gap-1.5 transition-colors duration-150 ${
+                  viewMode === mode
+                    ? 'bg-paper-card text-ink shadow-subtle'
+                    : 'text-ink-secondary hover:text-ink'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" strokeWidth={1.5} />
+                <span>{label}</span>
+              </button>
+            ))}
+          </div>
+
+          <button onClick={() => setIsModalOpen(true)} className="btn-primary text-xs h-9">
+            <Plus className="w-4 h-4" strokeWidth={1.5} />
+            <span>Tambah tugas</span>
+          </button>
         </div>
       </div>
 
-      {/* ── Card Body ── */}
-      <div className="px-5 sm:px-8 py-6 space-y-5">
-        {/* Top bar: view toggle + add button */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <div
-              className="flex rounded-2xl p-1"
-              style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A' }}
-            >
-              {[
-                { mode: 'list', Icon: List, label: 'List' },
-                { mode: 'calendar', Icon: CalendarIcon, label: 'Kalender' },
-              ].map(({ mode, Icon, label }) => (
-                <button
-                  key={mode}
-                  onClick={() => setViewMode(mode)}
-                  className="px-4 py-2 rounded-xl text-xs font-black transition uppercase tracking-wider"
-                  style={
-                    viewMode === mode
-                      ? { backgroundColor: '#8B0A0A', color: '#C8BA96' }
-                      : { color: '#5C4A3A' }
-                  }
-                >
-                  <Icon className="w-3.5 h-3.5 inline mr-1.5" />{label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="hs-btn text-xs py-2.5 px-5 font-black"
-            style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
+      {/* Compact Stats */}
+      <section className="grid grid-cols-3 gap-4">
+        <div className="surface-card p-4">
+          <p className="text-xs text-ink-muted">Tugas aktif</p>
+          <p className="font-mono text-2xl font-medium text-ink tabular mt-1.5">
+            {activeCount}
+          </p>
+        </div>
+        <div className="surface-card p-4">
+          <p className="text-xs text-ink-muted">Prioritas tinggi</p>
+          <p className="font-mono text-2xl font-medium text-accent tabular mt-1.5">
+            {highPriorityCount}
+          </p>
+        </div>
+        <div className="surface-card p-4">
+          <p className="text-xs text-ink-muted">Selesai</p>
+          <p className="font-mono text-2xl font-medium text-semantic-positive tabular mt-1.5">
+            {doneCount}
+          </p>
+        </div>
+      </section>
+
+      {/* Filter Bar */}
+      <section className="surface-card p-3.5 flex flex-col lg:flex-row items-stretch lg:items-center gap-3">
+        <div className="relative flex-1 max-w-md">
+          <Search
+            className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+            strokeWidth={1.5}
+          />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Cari tugas atau mata kuliah"
+            className="input-field pl-9 text-xs"
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2.5">
+          <select
+            aria-label="Filter status"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="h-9 px-3 rounded-lg bg-paper border border-line text-xs text-ink focus:outline-none focus:border-accent"
           >
-            <Plus className="w-4 h-4" /> Tambah Tugas
-          </button>
-        </div>
+            <option value="Semua">Semua status</option>
+            <option value="Belum Selesai">Belum selesai</option>
+            <option value="Sedang Berjalan">Sedang berjalan</option>
+            <option value="Selesai">Selesai</option>
+          </select>
 
-        {/* Filter bar */}
-        <div
-          className="p-4 flex flex-col lg:flex-row items-stretch lg:items-center gap-3 rounded-2xl"
-          style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-        >
-          <div className="relative flex-1 max-w-md">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari tugas atau mata kuliah..."
-              className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl focus:outline-none transition font-bold"
-              style={{
-                background: '#C8BA96',
-                color: '#2B2B2B',
-                border: '1.5px solid #5C4A3A',
-              }}
-            />
-            <Search className="w-4 h-4 absolute left-3 top-3" style={{ color: '#5C4A3A' }} />
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {[
-              {
-                label: 'Status:', value: statusFilter, setter: setStatusFilter,
-                options: [['Semua', 'Semua Status'], ['Belum Selesai', 'Belum Selesai'], ['Sedang Berjalan', 'Berjalan'], ['Selesai', 'Selesai']],
-              },
-              {
-                label: 'Prioritas:', value: priorityFilter, setter: setPriorityFilter,
-                options: [['Semua', 'Semua'], ['Tinggi', '🔥 Tinggi'], ['Sedang', 'Sedang'], ['Rendah', 'Rendah']],
-              },
-            ].map((f) => (
-              <div key={f.label} className="flex items-center gap-1.5">
-                <span className="text-[11px] font-bold" style={{ color: '#5C4A3A' }}>{f.label}</span>
-                <select
-                  value={f.value}
-                  onChange={(e) => f.setter(e.target.value)}
-                  className="text-xs font-bold px-3 py-2 rounded-xl"
-                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
-                >
-                  {f.options.map(([val, lbl]) => (
-                    <option key={val} value={val}>{lbl}</option>
-                  ))}
-                </select>
-              </div>
+          <select
+            aria-label="Filter prioritas"
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
+            className="h-9 px-3 rounded-lg bg-paper border border-line text-xs text-ink focus:outline-none focus:border-accent"
+          >
+            <option value="Semua">Semua prioritas</option>
+            <option value="Tinggi">Prioritas tinggi</option>
+            <option value="Sedang">Prioritas sedang</option>
+            <option value="Rendah">Prioritas rendah</option>
+          </select>
+
+          <select
+            aria-label="Filter mata kuliah"
+            value={courseFilter}
+            onChange={(e) => setCourseFilter(e.target.value)}
+            className="h-9 px-3 rounded-lg bg-paper border border-line text-xs text-ink focus:outline-none focus:border-accent max-w-[200px]"
+          >
+            {courses.map((c) => (
+              <option key={c} value={c}>
+                {c === 'Semua' ? 'Semua mata kuliah' : c}
+              </option>
             ))}
-          </div>
+          </select>
         </div>
+      </section>
 
-        {/* Content */}
-        {viewMode === 'list' ? (
-          <div className="space-y-3">
-            {filteredTasks.length === 0 ? (
-              <div
-                className="p-12 text-center space-y-2 rounded-3xl"
-                style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-              >
-                <CheckCircle2 className="w-10 h-10 mx-auto" style={{ color: '#4A8DB7' }} />
-                <p className="font-black" style={{ color: '#2B2B2B' }}>Tidak ada tugas yang cocok!</p>
-                <p className="text-xs" style={{ color: '#5C4A3A' }}>Coba ubah filter atau tambah tugas baru.</p>
-              </div>
-            ) : (
-              filteredTasks.map((task) => {
+      {/* Main Content */}
+      {viewMode === 'list' ? (
+        <section className="surface-card overflow-hidden">
+          {filteredTasks.length === 0 ? (
+            <div className="p-12 text-center space-y-2">
+              <CheckCircle2
+                className="w-8 h-8 text-ink-muted mx-auto"
+                strokeWidth={1.5}
+              />
+              <p className="text-sm font-medium text-ink">
+                Tidak ada tugas yang cocok dengan filter
+              </p>
+              <p className="text-xs text-ink-muted">
+                Ubah kata kunci pencarian atau tambahkan tugas baru.
+              </p>
+            </div>
+          ) : (
+            <ul className="divide-y divide-line">
+              {filteredTasks.map((task) => {
                 const isDone = task.status === 'Selesai';
-                const ps = priorityStyle[task.priority] || priorityStyle.Sedang;
+                const pMeta = PRIORITY_META[task.priority] || PRIORITY_META.Sedang;
                 return (
-                  <div
+                  <li
                     key={task.id}
-                    className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl transition"
-                    style={{
-                      background: '#DDD0A8',
-                      border: `2px solid ${isDone ? '#C8BA96' : '#5C4A3A'}`,
-                      opacity: isDone ? 0.65 : 1,
-                    }}
+                    className={`p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition-colors duration-150 hover:bg-paper-raised/40 ${
+                      isDone ? 'opacity-65' : ''
+                    }`}
                   >
                     <div className="flex items-start gap-3 min-w-0 flex-1">
                       <input
                         type="checkbox"
                         checked={isDone}
                         onChange={() => toggleTaskStatus(task.id)}
-                        className="mt-0.5 w-5 h-5 rounded-lg cursor-pointer shrink-0"
-                        style={{ accentColor: '#8B0A0A' }}
+                        className="mt-1 w-4 h-4 rounded border-line-strong accent-accent cursor-pointer shrink-0"
                       />
-                      <div className="space-y-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <span
-                            className="text-[10px] font-black px-2.5 py-0.5 rounded-full"
-                            style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
-                          >
+                      <div className="min-w-0 flex-1 space-y-1">
+                        <div className="flex flex-wrap items-center gap-2 text-xs">
+                          <span className="text-ink-secondary font-medium">
                             {task.course}
                           </span>
+                          <span className="text-ink-muted">·</span>
                           <span
-                            className="text-[10px] font-bold px-2 py-0.5 rounded-lg"
-                            style={{ backgroundColor: ps.bg, color: ps.text, border: ps.border }}
+                            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium ${pMeta.bg} ${pMeta.text}`}
                           >
+                            <span className={`w-1.5 h-1.5 rounded-full ${pMeta.dot}`} />
                             {task.priority}
                           </span>
-                          <span className="text-[10px]" style={{ color: '#5C4A3A' }}>
-                            ⏱️ {task.estimatedMinutes} mnt
+                          <span className="inline-flex items-center gap-1 font-mono text-[11px] text-ink-muted tabular">
+                            <Clock className="w-3 h-3" strokeWidth={1.5} />
+                            {task.estimatedMinutes} mnt
                           </span>
                         </div>
+
                         <h3
-                          className={`text-sm font-bold leading-snug ${isDone ? 'line-through' : ''}`}
-                          style={{ color: isDone ? '#5C4A3A' : '#2B2B2B' }}
+                          className={`text-sm font-medium leading-snug ${
+                            isDone ? 'line-through text-ink-muted' : 'text-ink'
+                          }`}
                         >
                           {task.title}
                         </h3>
+
                         {task.description && (
-                          <p className="text-xs line-clamp-1" style={{ color: '#5C4A3A' }}>
+                          <p className="text-xs text-ink-muted line-clamp-1">
                             {task.description}
                           </p>
                         )}
                       </div>
                     </div>
+
                     <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                      <span
-                        className="text-xs font-bold px-3 py-1.5 rounded-full"
-                        style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-                      >
-                        {task.dueLabel || 'Deadline'}
+                      <span className="font-mono text-xs text-ink-secondary bg-paper-raised px-2.5 py-1 rounded-md tabular">
+                        {task.dueLabel || 'Tenggat'}
                       </span>
+
                       {!isDone && (
                         <button
                           onClick={() => handleStartFocus(task.id)}
-                          className="w-8 h-8 rounded-xl flex items-center justify-center transition"
-                          style={{ backgroundColor: '#4A8DB7', color: '#DDD0A8' }}
+                          title="Fokus pada tugas ini"
+                          aria-label="Mulai fokus"
+                          className="w-8 h-8 rounded-lg bg-paper-raised border border-line text-ink hover:border-line-strong hover:text-accent flex items-center justify-center transition-colors duration-150 active:scale-[0.98]"
                         >
-                          <Play className="w-3.5 h-3.5 fill-current" />
+                          <Play className="w-3.5 h-3.5" strokeWidth={1.5} />
                         </button>
                       )}
+
                       <button
-                        onClick={() => deleteTask(task.id)}
-                        className="w-8 h-8 rounded-xl flex items-center justify-center transition hover:opacity-80"
-                        style={{ background: '#C8BA96', color: '#8B0A0A' }}
+                        onClick={() => setTaskToDelete(task)}
+                        title="Hapus tugas"
+                        aria-label="Hapus tugas"
+                        className="w-8 h-8 rounded-lg text-ink-muted hover:text-semantic-danger hover:bg-semantic-danger-soft flex items-center justify-center transition-colors duration-150 active:scale-[0.98]"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
                       </button>
                     </div>
-                  </div>
+                  </li>
                 );
-              })
-            )}
+              })}
+            </ul>
+          )}
+        </section>
+      ) : (
+        /* Calendar View */
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          <div className="lg:col-span-8 surface-card p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-medium text-ink">November 2026</h2>
+              <span className="font-mono text-xs text-ink-muted tabular">
+                Tanggal dipilih: {selectedCalDay} Nov
+              </span>
+            </div>
+
+            <div className="grid grid-cols-7 gap-1.5 text-center">
+              {['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'].map((d) => (
+                <div key={d} className="text-xs font-medium text-ink-muted py-1.5">
+                  {d}
+                </div>
+              ))}
+              {Array.from({ length: leadingBlanks }).map((_, i) => (
+                <div key={`blank-${i}`} />
+              ))}
+              {calendarDays.map((day) => {
+                const dayTasks = tasks.filter((t) => getTaskDay(t.dueDate) === day);
+                const isSelected = selectedCalDay === day;
+                const isToday = day === 13;
+                return (
+                  <button
+                    key={day}
+                    onClick={() => setSelectedCalDay(day)}
+                    className={`h-12 rounded-lg border flex flex-col items-center justify-center gap-1 transition-colors duration-150 ${
+                      isSelected
+                        ? 'bg-ink text-paper-card border-ink'
+                        : isToday
+                        ? 'bg-accent-soft text-accent border-accent/30'
+                        : 'bg-paper text-ink border-line hover:bg-paper-raised'
+                    }`}
+                  >
+                    <span className="font-mono text-xs font-medium tabular">{day}</span>
+                    {dayTasks.length > 0 && (
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          isSelected ? 'bg-paper-card' : 'bg-accent'
+                        }`}
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        ) : (
-          /* Calendar view */
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            <div
-              className="lg:col-span-8 p-5 space-y-4 rounded-3xl"
-              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-            >
-              <div
-                className="flex items-center justify-between pb-3"
-                style={{ borderBottom: '1px solid #C8BA96' }}
-              >
-                <h2 className="font-black text-lg" style={{ color: '#2B2B2B' }}>September 2026</h2>
-                <span
-                  className="hs-chip text-[10px]"
-                  style={{ background: '#C8BA96', color: '#8B0A0A', border: '1px solid #5C4A3A' }}
-                >
-                  Semester Ganjil TA 2026/2027
-                </span>
-              </div>
-              <div
-                className="grid grid-cols-7 text-center font-bold text-xs pb-1"
-                style={{ color: '#5C4A3A' }}
-              >
-                {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((d) => (
-                  <span key={d}>{d}</span>
+
+          <div className="lg:col-span-4 surface-card p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-medium text-ink">
+                Tenggat {selectedCalDay} November
+              </h3>
+              <span className="font-mono text-xs text-ink-muted tabular">
+                {tasksForSelectedDay.length}
+              </span>
+            </div>
+
+            {tasksForSelectedDay.length === 0 ? (
+              <p className="text-xs text-ink-muted py-6 text-center">
+                Tidak ada tenggat tugas pada tanggal ini.
+              </p>
+            ) : (
+              <div className="space-y-2.5">
+                {tasksForSelectedDay.map((t) => (
+                  <div
+                    key={t.id}
+                    className="p-3 rounded-lg bg-paper border border-line space-y-1"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-ink-muted">{t.course}</span>
+                      <span className="font-mono text-[11px] text-accent tabular">
+                        {t.dueLabel}
+                      </span>
+                    </div>
+                    <p className="text-xs font-medium text-ink">{t.title}</p>
+                  </div>
                 ))}
               </div>
-              <div className="grid grid-cols-7 gap-1.5">
-                <div className="h-14 rounded-xl" style={{ background: '#C8BA96' }} />
-                <div className="h-14 rounded-xl" style={{ background: '#C8BA96' }} />
-                {Array.from({ length: 30 }, (_, i) => i + 1).map((day) => {
-                  const isSelected = selectedCalDay === day;
-                  const isToday = day === 18;
-                  const hasTask = [18, 19, 20, 22, 25].includes(day);
-                  return (
-                    <button
-                      key={day}
-                      onClick={() => setSelectedCalDay(day)}
-                      className="h-14 rounded-xl p-1.5 flex flex-col justify-between text-left transition"
-                      style={{
-                        background: isSelected ? '#C8BA96' : isToday ? '#4A8DB720' : '#C8BA9640',
-                        border: isSelected
-                          ? '2px solid #8B0A0A'
-                          : isToday
-                          ? '2px solid #4A8DB7'
-                          : '1px solid #5C4A3A30',
-                      }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span
-                          className={`text-xs font-bold ${isToday ? 'w-5 h-5 rounded-full flex items-center justify-center text-[10px]' : ''}`}
-                          style={
-                            isToday
-                              ? { backgroundColor: '#4A8DB7', color: '#DDD0A8' }
-                              : { color: '#2B2B2B' }
-                          }
-                        >
-                          {day}
-                        </span>
-                        {hasTask && (
-                          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#8B0A0A' }} />
-                        )}
-                      </div>
-                      {hasTask && (
-                        <span className="text-[8px] font-black truncate" style={{ color: '#8B0A0A' }}>
-                          {day === 18 ? 'Bab 2' : day === 19 ? 'Wireframe' : 'Tugas'}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            <div
-              className="lg:col-span-4 p-5 rounded-3xl"
-              style={{ background: '#DDD0A8', border: '2px solid #5C4A3A' }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#8B0A0A' }}>
-                    Jadwal Terpilih
-                  </p>
-                  <h3 className="font-black text-lg" style={{ color: '#2B2B2B' }}>
-                    {selectedCalDay} September
-                  </h3>
-                </div>
-                {selectedCalDay === 18 && (
-                  <span
-                    className="hs-chip text-[10px] font-black"
-                    style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-                  >
-                    HARI INI
-                  </span>
-                )}
-              </div>
-              {selectedCalDay === 18 ? (
-                <div className="space-y-2">
-                  {[
-                    { badge: '📋 Deadline 23:59', title: 'Revisi Bab 2: Tinjauan Pustaka', sub: 'Metodologi Penelitian · 45 mnt' },
-                    { badge: '🎓 Kuliah 10:00', title: 'Interaksi Manusia & Komputer', sub: 'Ruang Lab 304 Fasilkom' },
-                  ].map((item, i) => (
-                    <div
-                      key={i}
-                      className="p-3 rounded-xl"
-                      style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-                    >
-                      <p className="text-[10px] font-bold" style={{ color: '#8B0A0A' }}>{item.badge}</p>
-                      <p className="text-xs font-bold mt-0.5" style={{ color: '#2B2B2B' }}>{item.title}</p>
-                      <p className="text-[10px]" style={{ color: '#5C4A3A' }}>{item.sub}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : selectedCalDay === 19 ? (
-                <div
-                  className="p-3 rounded-xl"
-                  style={{ background: '#C8BA96', border: '1px solid #5C4A3A' }}
-                >
-                  <p className="text-[10px] font-bold" style={{ color: '#8B0A0A' }}>📋 Deadline 10:00</p>
-                  <p className="text-xs font-bold mt-0.5" style={{ color: '#2B2B2B' }}>
-                    Finalisasi Low-Fi Wireframes Mobile
-                  </p>
-                  <p className="text-[10px]" style={{ color: '#5C4A3A' }}>UI/UX Design Studio · 60 mnt</p>
-                </div>
-              ) : (
-                <div className="py-8 text-center text-xs" style={{ color: '#5C4A3A' }}>
-                  Tidak ada deadline hari ini 🌸
-                </div>
-              )}
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="w-full mt-4 py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition"
-                style={{ backgroundColor: '#8B0A0A', color: '#C8BA96' }}
-              >
-                + Tambah Tugas
-              </button>
-            </div>
+            )}
           </div>
-        )}
-      </div>
+        </section>
+      )}
 
-      {/* Modal */}
+      {/* Add Task Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-[2px]"
+          onClick={() => setIsModalOpen(false)}
+        >
           <div
-            className="rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden"
-            style={{ background: '#DDD0A8' }}
+            className="bg-paper-card rounded-2xl max-w-md w-full border border-line-strong shadow-float overflow-hidden animate-enter"
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal header */}
-            <div
-              className="p-5 flex items-center justify-between"
-              style={{ backgroundColor: '#C8BA96', borderBottom: '2px solid #5C4A3A' }}
-            >
-              <div>
-                <h3 className="font-display text-xl" style={{ color: '#8B0A0A' }}>
-                  Tambah Tugas Baru ✏️
-                </h3>
-                <p className="font-hand text-xs mt-0.5" style={{ color: '#1F3A7A' }}>
-                  Masukkan rincian tugas untuk dicatat ke kalender.
-                </p>
-              </div>
+            <div className="px-6 py-4 border-b border-line flex items-center justify-between">
+              <h2 className="text-base font-semibold text-ink">Tambah tugas baru</h2>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition"
-                style={{ background: '#5C4A3A30', color: '#2B2B2B' }}
+                aria-label="Tutup"
+                className="w-8 h-8 rounded-lg text-ink-muted hover:text-ink hover:bg-paper-raised flex items-center justify-center"
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4" strokeWidth={1.5} />
               </button>
             </div>
-            <form onSubmit={handleCreateTask} className="p-5 space-y-4">
+
+            <form onSubmit={handleCreateTask} className="p-6 space-y-4">
               <div>
-                <label
-                  className="block text-xs font-bold uppercase tracking-wider mb-1"
-                  style={{ color: '#5C4A3A' }}
-                >
-                  Judul Tugas
+                <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                  Judul tugas
                 </label>
                 <input
                   type="text"
                   required
                   value={newTask.title}
                   onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                  placeholder="Contoh: Laporan Akhir Praktikum Jaringan"
-                  className="w-full px-4 py-2.5 text-xs rounded-xl transition"
-                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
+                  placeholder="Contoh: Revisi Bab 3 Metodologi"
+                  className="input-field"
                 />
               </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label
-                    className="block text-xs font-bold uppercase tracking-wider mb-1"
-                    style={{ color: '#5C4A3A' }}
-                  >
-                    Mata Kuliah
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Mata kuliah
                   </label>
                   <input
                     type="text"
-                    required
                     value={newTask.course}
                     onChange={(e) => setNewTask({ ...newTask, course: e.target.value })}
-                    className="w-full px-4 py-2.5 text-xs rounded-xl transition"
-                    style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
+                    className="input-field"
                   />
                 </div>
                 <div>
-                  <label
-                    className="block text-xs font-bold uppercase tracking-wider mb-1"
-                    style={{ color: '#5C4A3A' }}
-                  >
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
                     Prioritas
                   </label>
                   <select
                     value={newTask.priority}
                     onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
-                    className="w-full px-4 py-2.5 text-xs rounded-xl"
-                    style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
+                    className="input-field"
                   >
-                    <option value="Tinggi">🔥 Tinggi</option>
+                    <option value="Tinggi">Tinggi</option>
                     <option value="Sedang">Sedang</option>
                     <option value="Rendah">Rendah</option>
                   </select>
                 </div>
               </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label
-                    className="block text-xs font-bold uppercase tracking-wider mb-1"
-                    style={{ color: '#5C4A3A' }}
-                  >
-                    Tenggat
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Label tenggat
                   </label>
                   <input
-                    type="datetime-local"
-                    value={newTask.dueDate}
-                    onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                    className="w-full px-4 py-2 text-xs rounded-xl"
-                    style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
+                    type="text"
+                    value={newTask.dueLabel}
+                    onChange={(e) => setNewTask({ ...newTask, dueLabel: e.target.value })}
+                    placeholder="14 Nov, 23:59"
+                    className="input-field font-mono text-xs"
                   />
                 </div>
                 <div>
-                  <label
-                    className="block text-xs font-bold uppercase tracking-wider mb-1"
-                    style={{ color: '#5C4A3A' }}
-                  >
-                    Estimasi (Mnt)
+                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                    Estimasi (menit)
                   </label>
                   <input
                     type="number"
-                    min="15"
-                    step="15"
+                    min="10"
+                    max="300"
                     value={newTask.estimatedMinutes}
-                    onChange={(e) => setNewTask({ ...newTask, estimatedMinutes: e.target.value })}
-                    className="w-full px-4 py-2 text-xs rounded-xl"
-                    style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
+                    onChange={(e) =>
+                      setNewTask({ ...newTask, estimatedMinutes: e.target.value })
+                    }
+                    className="input-field font-mono text-xs tabular"
                   />
                 </div>
               </div>
-              <textarea
-                rows="2"
-                value={newTask.description}
-                onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-                placeholder="Catatan tambahan..."
-                className="w-full px-4 py-2.5 text-xs rounded-xl resize-none"
-                style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
-              />
-              <div className="flex justify-end gap-3">
+
+              <div>
+                <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                  Catatan singkat (opsional)
+                </label>
+                <textarea
+                  rows={2}
+                  value={newTask.description}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, description: e.target.value })
+                  }
+                  placeholder="Detail instruksi atau referensi"
+                  className="w-full p-3 rounded-lg bg-paper-card border border-line-strong text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent resize-none"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold transition"
-                  style={{ background: '#C8BA96', border: '1.5px solid #5C4A3A', color: '#2B2B2B' }}
+                  className="btn-secondary"
                 >
                   Batal
                 </button>
-                <button
-                  type="submit"
-                  className="hs-btn text-xs py-2.5 px-6 font-black"
-                  style={{ backgroundColor: '#8B0A0A', color: '#C8BA96', border: '2px solid #342B27' }}
-                >
-                  Simpan Tugas
+                <button type="submit" className="btn-primary">
+                  Simpan tugas
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {taskToDelete && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-[2px]"
+          onClick={() => setTaskToDelete(null)}
+        >
+          <div
+            className="bg-paper-card rounded-2xl max-w-sm w-full border border-line-strong shadow-float p-6 space-y-4 animate-enter"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-lg bg-semantic-danger-soft text-semantic-danger flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-4 h-4" strokeWidth={1.5} />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-ink">Hapus tugas ini?</h3>
+                <p className="text-xs text-ink-secondary mt-1 leading-relaxed">
+                  Tugas "{taskToDelete.title}" akan dihapus dari daftar aktifmu.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                onClick={() => setTaskToDelete(null)}
+                className="btn-secondary h-8 px-3 text-xs"
+              >
+                Batal
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="h-8 px-3 rounded-lg bg-semantic-danger text-paper-card text-xs font-medium hover:opacity-90 transition-opacity"
+              >
+                Hapus
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -563,4 +599,3 @@ const TasksPage = () => {
 };
 
 export default TasksPage;
-

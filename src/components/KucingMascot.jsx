@@ -1,65 +1,39 @@
 import React from 'react';
 
 /**
- * KucingMascot — maskot kucing asli TemanKampus dari Figma
- * pose: 'happy' | 'stressed'
- * size: number px (default 160)
+ * KucingMascot — Maskot kucing flat-vector TemanKampus
+ * pose: 'happy' | 'stressed' | 'mark'
+ * size: number px (default 120)
  */
-const KucingMascot = ({ pose = 'happy', size = 160, className = '' }) => {
-
-  // ── STRESSED pose (pegang sign DEADLINE) ──────────────────────
-  if (pose === 'stressed') {
+const KucingMascot = ({ pose = 'happy', size = 120, className = '' }) => {
+  if (pose === 'mark') {
     return (
-      <svg
-        width={size}
-        height={size}
-        viewBox="8 8 116 116"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className={`bobi-bounce ${className}`}
+      <span
+        style={{ width: size, height: size }}
+        className={`inline-flex items-center justify-center rounded-lg bg-calm-surface border border-calm-border overflow-hidden shrink-0 ${className}`}
       >
-        <path d="M34.142 90.7643C22.3739 91.2102 16.193 88.8747 15.5991 83.7578C15.0495 78.0095 19.1024 74.4863 27.7579 73.1883M95.9758 77.4827C105.916 75.9573 111.781 78.2708 113.572 84.423C115.384 90.2596 111.195 93.456 101.006 94.0124M39.4036 103.979C35.3573 111.944 36.6156 116.632 43.1784 118.042C49.4256 119.431 54.2567 116.12 57.6716 108.112M70.3901 109.953C72.6792 118.043 77.2267 121.057 84.0323 118.996C88.6725 116.148 89.2972 111.751 85.9064 105.804" fill="#F4B6B6"/>
-        <path d="M34.142 90.7643C22.3739 91.2102 16.193 88.8747 15.5991 83.7578C15.0495 78.0095 19.1024 74.4863 27.7579 73.1883M95.9758 77.4827C105.916 75.9573 111.781 78.2708 113.572 84.423C115.384 90.2596 111.195 93.456 101.006 94.0124M39.4036 103.979C35.3573 111.944 36.6156 116.632 43.1784 118.042C49.4256 119.431 54.2567 116.12 57.6716 108.112M70.3901 109.953C72.6793 118.043 77.2267 121.057 84.0323 118.996C88.6725 116.148 89.2972 111.751 85.9065 105.804" stroke="#641B23" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M31.4068 48.2248C26.2325 40.567 25.6718 34.9766 29.7247 31.4534C33.7114 28.8773 37.6352 29.4689 41.4961 33.2282L47.1152 14.1125C48.5986 11.0441 53.5754 14.7228 62.0455 25.1487C72.03 22.992 79.9107 23.7017 85.6877 27.2778C94.5794 18.0659 100.324 15.2955 102.923 18.9666L106.002 42.9729C114.437 44.8316 116.495 49.4165 112.178 56.7277C116.345 69.7077 114.141 80.8147 105.565 90.0486C101.687 104.686 88.1703 111.989 65.016 111.956C42.5813 110.704 30.0362 104.117 27.3805 92.1945C21.1797 76.5347 22.5218 61.8781 31.4068 48.2248Z" fill="#FFF3CE" stroke="#641B23" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M48.2145 25.6094L50.0654 19.5532L56.6714 27.1524M92.2174 29.1622L98.8365 22.9636L100.476 33.5463" fill="#F4B6B6"/>
-        <path d="M40.2346 71.6815C44.9418 72.0107 48.9801 69.0976 49.2544 65.1749C49.5287 61.2523 45.9351 57.8055 41.2279 57.4764C36.5208 57.1472 32.4825 60.0603 32.2082 63.983C31.9339 67.9056 35.5275 71.3524 40.2346 71.6815Z" fill="#F4B6B6"/>
-        <path d="M94.6877 75.4894C99.3949 75.8185 103.433 72.9054 103.707 68.9828C103.982 65.0602 100.388 61.6134 95.681 61.2842C90.9738 60.9551 86.9356 63.8682 86.6613 67.7908C86.387 71.7135 89.9805 75.1602 94.6877 75.4894Z" fill="#F4B6B6"/>
-        <path d="M46.6914 47.3904L57.6913 53.3936L46.9431 57.4002M87.8864 50.271L76.6316 54.718L87.1911 60.2146" stroke="#641B23" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M60.2542 71.1781C64.6891 66.73 69.7508 66.9254 75.4395 71.7642L71.3535 75.7608L69.3833 69.9132" fill="white" stroke="#641B23" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M27.0228 56.483L37.7148 60.0856M25.1387 63.0127L35.9962 64.2478M26.0626 70.2146L36.1718 68.5424M99.7771 63.9496L112.353 61.0224M100.833 69.2574L113.178 69.6448M99.148 72.9462L109.333 76.9891M34.738 82.241L37.3473 85.7542M39.0658 81.592L41.6751 85.1052" stroke="#641B23" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M39.0989 81.1185L83.7077 82.8104L91.6216 105.727L44.7214 109.585L39.0989 81.1185Z" fill="#F6D0D6" stroke="#641B23" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M36.9399 84.7741L88.8831 83.6481L89.1216 107.456L38.1254 108.648L36.9399 84.7741Z" fill="#FFFBEF" stroke="#641B23" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M90.7075 37.1451C96.8731 44.2378 97.6909 48.4187 93.1612 49.688C88.7639 49.0633 87.946 44.8824 90.7075 37.1451Z" fill="#A9CBE4" stroke="#641B23" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M33.7347 89.784C38.1475 85.6516 41.8914 86.5478 44.9664 92.4727M99.1778 92.9328C94.6414 89.7606 90.9229 90.7695 88.0223 95.9593" stroke="#641B23" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-        {/* DEADLINE text on sign */}
-        <text x="63" y="100" textAnchor="middle" fill="#641B23" fontSize="9.5" fontFamily="'Patrick Hand', cursive">DEADLINE</text>
-      </svg>
+        <img
+          src="/mascot-mark.png"
+          alt="Logo maskot TemanKampus"
+          width={size}
+          height={size}
+          className="w-full h-full object-contain p-0.5 select-none"
+          draggable={false}
+        />
+      </span>
     );
   }
 
-  // ── HAPPY pose (pegang checklist biru) ────────────────────────
   return (
-    <svg
+    <img
+      src="/mascot-cat.png"
+      alt="Maskot kucing TemanKampus"
       width={size}
       height={size}
-      viewBox="15 160 102 115"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={`bobi-float ${className}`}
-    >
-      <path d="M37.9166 250.929C26.3251 253.009 19.8792 251.556 18.5791 246.572C17.2347 240.956 20.7579 236.903 29.1485 234.413M97.3002 229.171C106.931 226.277 113.062 227.752 115.691 233.595C118.298 239.123 114.595 242.871 104.582 244.84M44.9662 263.283C42.0677 271.734 43.9661 276.201 50.6614 276.684C57.041 277.19 61.3644 273.239 63.6315 264.833M76.4824 264.886C79.8753 272.579 84.798 274.931 91.2504 271.942C95.4491 268.477 95.4557 264.035 91.2703 258.618" fill="#A9CBE4" stroke="#234C6C" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M29.2878 209.185C23.098 202.321 21.7647 196.863 25.2879 192.811C28.8772 189.705 32.8452 189.744 37.1917 192.93L40.0957 173.218C41.1377 169.973 46.578 172.923 56.4167 182.069C66.0038 178.544 73.9066 178.15 80.1251 180.887C87.6482 170.527 92.9517 166.984 96.0356 170.258L102.426 193.602C111.038 194.269 113.714 198.523 110.456 206.364C116.39 218.637 115.753 229.943 108.545 240.281C106.742 255.316 94.373 264.428 71.4395 267.618C49.049 269.501 35.7092 264.724 31.4201 253.287C23.1001 238.642 22.3893 223.942 29.2878 209.185Z" fill="#FFF3CE" stroke="#234C6C" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M42.7844 184.45L43.7745 178.195L51.3737 184.801M86.8535 181.844L92.5455 174.784L95.6415 185.036" fill="#A9CBE4"/>
-      <path d="M41.2941 231.184C46.0013 230.855 49.5949 227.408 49.3206 223.486C49.0463 219.563 45.008 216.65 40.3008 216.979C35.5937 217.308 32.0001 220.755 32.2744 224.678C32.5487 228.6 36.587 231.514 41.2941 231.184Z" fill="#A9CBE4"/>
-      <path d="M95.7473 227.377C100.454 227.048 104.048 223.601 103.774 219.678C103.499 215.756 99.4611 212.842 94.754 213.172C90.0468 213.501 86.4532 216.948 86.7275 220.87C87.0018 224.793 91.0401 227.706 95.7473 227.377Z" fill="#A9CBE4"/>
-      <path d="M44.771 212.86C48.0072 204.703 51.7952 204.438 56.1351 212.065M75.0753 210.741C78.3115 202.584 82.2574 202.308 86.9129 209.913" stroke="#234C6C" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M60.751 223.638C65.678 230.589 70.7177 230.078 75.87 222.105L73.5919 230.353L68.9992 225.916" fill="white" stroke="#234C6C" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M26.0956 217.973L37.1849 220.052M25.1386 224.701L36.0624 224.413M27.0558 231.704L36.8339 228.641M99.181 215.241L111.227 210.592M100.966 220.35L113.244 219.016M99.8101 224.238L110.459 226.824M37.3206 242.406L40.3934 245.522M41.5159 241.161L44.5887 244.277" stroke="#234C6C" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Checklist tablet biru */}
-      <path d="M77.595 238.075L61.4958 236.95C59.6652 236.822 58.0775 238.202 57.9495 240.032L56.1946 265.128C56.0666 266.959 57.4468 268.546 59.2774 268.674L75.3765 269.8C77.2071 269.928 78.7948 268.548 78.9228 266.717L80.6777 241.622C80.8057 239.791 79.4255 238.203 77.595 238.075Z" fill="#4A8DB7" stroke="#234C6C" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M62.7045 251.575L68.2441 255.946L75.0918 244.999" stroke="#FFFBEF" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M48.2676 249.254C52.7598 245.45 56.581 245.659 59.731 249.88M87.5354 246.032C82.9394 243.816 79.6801 244.837 77.7573 249.095" stroke="#234C6C" strokeWidth="1.89865" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
+      style={{ width: size, height: size }}
+      className={`object-contain select-none ${className}`}
+      draggable={false}
+    />
   );
 };
 
