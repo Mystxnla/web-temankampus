@@ -130,7 +130,7 @@ const PremiumPage = () => {
                     {plan.unavailableFeatures?.map((feat, idx) => (
                       <li
                         key={idx}
-                        className="flex items-start gap-2.5 text-ink-muted/70"
+                        className="flex items-start gap-2.5 text-ink-muted"
                       >
                         <X className="w-4 h-4 shrink-0 mt-0.5" strokeWidth={1.5} />
                         <span className="leading-relaxed">{feat}</span>
@@ -200,6 +200,9 @@ const PremiumPage = () => {
       {/* Payment Modal */}
       {isPaymentModalOpen && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="payment-modal-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-[2px]"
           onClick={() => setIsPaymentModalOpen(false)}
         >
@@ -212,7 +215,7 @@ const PremiumPage = () => {
                 <p className="font-mono text-[11px] text-ink-muted">
                   Simulasi pembayaran sandbox
                 </p>
-                <h3 className="text-base font-semibold text-ink mt-0.5">
+                <h3 id="payment-modal-title" className="text-base font-semibold text-ink mt-0.5">
                   Aktivasi {activePlanObj.name}
                 </h3>
               </div>

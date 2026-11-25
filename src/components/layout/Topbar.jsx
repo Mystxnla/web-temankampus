@@ -1,7 +1,19 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Bell, HeartHandshake, Check, Clock } from 'lucide-react';
+import {
+  Search,
+  Bell,
+  HeartHandshake,
+  Check,
+  Clock,
+  ShieldCheck,
+  LogOut,
+  Sparkles,
+  User,
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTasks } from '../../context/TaskContext';
+import { useMood } from '../../context/MoodContext';
 import KucingMascot from '../KucingMascot';
 
 const ROUTE_META = {
@@ -14,49 +26,74 @@ const ROUTE_META = {
   '/premium': { title: 'Paket Pro', hint: 'Dukungan tambahan untuk satu semester' },
 };
 
-const Topbar = ({ onOpenHelp }) => {
-  const { user } = useAuth();
+const Topbar = ({ onOpenHelp, onOpenPrivacy }) => {
+  const { user, logout } = useAuth();
+  const { urgentTasks } = useTasks();
+  const { hasCheckedInToday } = useMood();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: 'Tenggat tugas hari ini',
-      desc: 'Revisi Bab 2: Tinjauan Pustaka pukul 23:59 WIB.',
-      time: '1 jam lalu',
-      read: false,
-      to: '/tasks',
-    },
-    {
-      id: 2,
-      title: 'Check-in mood harian',
-      desc: 'Luangkan 1 menit untuk menyapa perasaanmu hari ini.',
-      time: '3 jam lalu',
-      read: false,
-      to: '/mood',
-    },
-    {
-      id: 3,
-      title: 'Balasan di komunitas',
-      desc: 'Dimas Saputra membalas diskusi skripsi di forum sebaya.',
-      time: '5 jam lalu',
-      read: false,
-      to: '/community',
-    },
-  ]);
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [readNotifIds, setReadNotifIds] = useState([]);
 
   const notifRef = useRef(null);
+  const accountRef = useRef(null);
+
+  const notifications = useMemo(() => {
+    const items = [];
+    if (urgentTasks.length > 0) {
+      items.push({
+        id: 'urgent_task',
+        title: `${urgentTasks.length} tugas prioritas tinggi`,
+        desc: `${urgentTasks[0].title} (${urgentTasks[0].dueLabel || 'Segera'}).`,
+        time: 'Aktif',
+        to: '/tasks',
+      });
+    }
+    if (!hasCheckedInToday) {
+      items.push({
+        id: 'mood_checkin',
+        title: 'Check-in mood harian',
+        desc: 'Luangkan 1 menit untuk menyapa perasaanmu hari ini.',
+        time: 'Hari ini',
+        to: '/mood',
+      });
+    }
+    items.push({
+      id: 'community_update',
+      title: 'Diskusi baru di komunitas sebaya',
+      desc: 'Lihat cerita terbaru atau bagikan pengalamanmu secara anonim.',
+      time: 'Komunitas',
+      to: '/community',
+    });
+    return items.map((item) => ({
+      ...item,
+      read: readNotifIds.includes(item.id),
+    }));
+  }, [urgentTasks, hasCheckedInToday, readNotifIds]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (notifRef.current && !notifRef.current.contains(event.target)) {
         setShowNotifications(false);
       }
+      if (accountRef.current && !accountRef.current.contains(event.target)) {
+        setShowAccountMenu(false);
+      }
+    };
+    const handleEsc = (event) => {
+      if (event.key === 'Escape') {
+        setShowNotifications(false);
+        setShowAccountMenu(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('keydown', handleEsc);
+    };
   }, []);
 
   const routeInfo = ROUTE_META[location.pathname] || {
@@ -74,14 +111,24 @@ const Topbar = ({ onOpenHelp }) => {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const markAllRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    setReadNotifIds(notifications.map((n) => n.id));
+  };
+
+  const handleLogout = () => {
+    logout();
+    setShowAccountMenu(false);
+    navigate('/');
   };
 
   return (
     <header className="h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-30 bg-paper/95 backdrop-blur-sm border-b border-line select-none">
       {/* Page context */}
       <div className="flex items-center gap-3 min-w-0">
-        <Link to="/dashboard" className="shrink-0 lg:hidden">
+        <Link
+          to="/dashboard"
+          aria-label="Beranda TemanKampus"
+          className="shrink-0 lg:hidden"
+        >
           <KucingMascot pose="mark" size={28} />
         </Link>
         <div className="flex items-baseline gap-2.5 min-w-0">
@@ -95,13 +142,14 @@ const Topbar = ({ onOpenHelp }) => {
       </div>
 
       {/* Right actions */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
         <form onSubmit={handleSearchSubmit} className="relative hidden lg:block">
           <Search
             className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
             strokeWidth={1.5}
           />
           <input
+            aria-label="Cari tugas"
             className="w-48 h-8 pl-9 pr-3 text-xs rounded-lg bg-paper-card border border-line text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent transition-colors duration-150"
             placeholder="Cari tugas"
             type="text"
@@ -111,20 +159,38 @@ const Topbar = ({ onOpenHelp }) => {
         </form>
 
         <button
+          type="button"
           onClick={onOpenHelp}
-          className="h-8 px-3 rounded-lg bg-calm-surface border border-calm-border text-xs font-medium text-accent hover:bg-accent/15 transition-colors duration-150 flex items-center gap-1.5 active:scale-[0.98]"
-          title="Layanan konseling dan dukungan profesional"
+          aria-label="Bantuan krisis dan layanan konseling profesional"
+          className="h-8 px-2.5 sm:px-3 rounded-lg bg-calm-surface border border-calm-border text-xs font-medium text-accent hover:bg-accent/15 transition-colors duration-150 flex items-center gap-1.5 active:scale-[0.98]"
+          title="Layanan konseling dan dukungan profesional (119 ext 8)"
         >
           <HeartHandshake className="w-4 h-4 shrink-0" strokeWidth={1.5} />
+          <span className="sm:hidden">Bantuan</span>
           <span className="hidden sm:inline">Butuh bantuan</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onOpenPrivacy}
+          title="Privasi & hapus data"
+          aria-label="Privasi dan hapus data lokal"
+          className="w-8 h-8 rounded-lg bg-paper-card border border-line text-ink-secondary hover:text-ink hover:bg-paper-raised flex items-center justify-center transition-colors duration-150 active:scale-[0.98]"
+        >
+          <ShieldCheck className="w-4 h-4" strokeWidth={1.5} />
         </button>
 
         {/* Notifications */}
         <div className="relative" ref={notifRef}>
           <button
-            onClick={() => setShowNotifications(!showNotifications)}
+            type="button"
+            onClick={() => {
+              setShowNotifications((prev) => !prev);
+              setShowAccountMenu(false);
+            }}
             title="Notifikasi"
             aria-label="Notifikasi"
+            aria-expanded={showNotifications}
             className="w-8 h-8 rounded-lg bg-paper-card border border-line text-ink-secondary hover:text-ink hover:bg-paper-raised flex items-center justify-center relative transition-colors duration-150 active:scale-[0.98]"
           >
             <Bell className="w-4 h-4" strokeWidth={1.5} />
@@ -134,7 +200,7 @@ const Topbar = ({ onOpenHelp }) => {
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 rounded-xl bg-paper-card border border-line-strong shadow-float overflow-hidden z-50 animate-enter">
+            <div className="absolute right-0 mt-2 w-72 sm:w-80 rounded-xl bg-paper-card border border-line-strong shadow-float overflow-hidden z-50 animate-enter">
               <div className="flex items-center justify-between px-4 py-3 border-b border-line">
                 <span className="text-xs font-medium text-ink">
                   Notifikasi
@@ -146,6 +212,7 @@ const Topbar = ({ onOpenHelp }) => {
                 </span>
                 {unreadCount > 0 && (
                   <button
+                    type="button"
                     onClick={markAllRead}
                     className="text-xs text-accent hover:underline flex items-center gap-1"
                   >
@@ -160,10 +227,8 @@ const Topbar = ({ onOpenHelp }) => {
                     key={n.id}
                     type="button"
                     onClick={() => {
-                      setNotifications((prev) =>
-                        prev.map((item) =>
-                          item.id === n.id ? { ...item, read: true } : item
-                        )
+                      setReadNotifIds((prev) =>
+                        prev.includes(n.id) ? prev : [...prev, n.id]
                       );
                       setShowNotifications(false);
                       navigate(n.to);
@@ -194,14 +259,74 @@ const Topbar = ({ onOpenHelp }) => {
           )}
         </div>
 
-        {/* Account switch */}
-        <Link
-          to="/auth"
-          className="w-8 h-8 rounded-lg bg-accent text-paper-card font-mono text-xs font-medium flex items-center justify-center hover:bg-accent-hover transition-colors duration-150"
-          title="Akun"
-        >
-          {user?.avatar || 'TK'}
-        </Link>
+        {/* Account dropdown */}
+        <div className="relative" ref={accountRef}>
+          <button
+            type="button"
+            onClick={() => {
+              setShowAccountMenu((prev) => !prev);
+              setShowNotifications(false);
+            }}
+            aria-label="Menu akun dan profil"
+            aria-expanded={showAccountMenu}
+            className="w-8 h-8 rounded-lg bg-accent text-paper-card font-mono text-xs font-medium flex items-center justify-center hover:bg-accent-hover transition-colors duration-150"
+            title="Menu akun"
+          >
+            {user?.avatar || 'TK'}
+          </button>
+
+          {showAccountMenu && (
+            <div className="absolute right-0 mt-2 w-60 rounded-xl bg-paper-card border border-line-strong shadow-float overflow-hidden z-50 animate-enter">
+              <div className="px-4 py-3 border-b border-line">
+                <p className="text-xs font-semibold text-ink truncate">
+                  {user?.name || 'Mahasiswa'}
+                </p>
+                <p className="text-[11px] text-ink-muted truncate mt-0.5">
+                  {user?.isGuest
+                    ? 'Mode Tamu Anonim'
+                    : user?.university || 'Mahasiswa Indonesia'}
+                </p>
+              </div>
+              <div className="p-1.5 space-y-0.5 text-xs">
+                <Link
+                  to="/premium"
+                  onClick={() => setShowAccountMenu(false)}
+                  className="w-full px-3 py-2 rounded-lg text-ink-secondary hover:text-ink hover:bg-paper-raised flex items-center gap-2 transition-colors"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
+                  <span>{user?.isPremium ? 'Paket Pro Aktif' : 'Lihat Paket Pro'}</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowAccountMenu(false);
+                    onOpenPrivacy();
+                  }}
+                  className="w-full px-3 py-2 rounded-lg text-ink-secondary hover:text-ink hover:bg-paper-raised flex items-center gap-2 transition-colors text-left"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-ink-muted" strokeWidth={1.5} />
+                  <span>Privasi & hapus data</span>
+                </button>
+                <Link
+                  to="/auth"
+                  onClick={() => setShowAccountMenu(false)}
+                  className="w-full px-3 py-2 rounded-lg text-ink-secondary hover:text-ink hover:bg-paper-raised flex items-center gap-2 transition-colors"
+                >
+                  <User className="w-3.5 h-3.5 text-ink-muted" strokeWidth={1.5} />
+                  <span>Ganti akun / masuk</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full px-3 py-2 rounded-lg text-semantic-danger hover:bg-semantic-danger-soft flex items-center gap-2 transition-colors text-left"
+                >
+                  <LogOut className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  <span>Keluar ke halaman awal</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

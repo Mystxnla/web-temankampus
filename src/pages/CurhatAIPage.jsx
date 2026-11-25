@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useOutletContext, Link } from 'react-router-dom';
-import { Send, Phone, Trash2, AlertOctagon } from 'lucide-react';
+import { Send, Phone, Trash2, AlertOctagon, ExternalLink } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { hasStorageConsent } from '../context/PrivacyContext';
 import KucingMascot from '../components/KucingMascot';
+import ClinicalDisclaimerBanner from '../components/layout/ClinicalDisclaimerBanner';
+import { detectCrisisKeyword } from '../utils/crisisDetection';
 import curhatData from '../mock-data/curhat.json';
 
 const CurhatAIPage = () => {
@@ -11,17 +14,26 @@ const CurhatAIPage = () => {
   const { user } = useAuth();
 
   const [messages, setMessages] = useState(() => {
-    const saved = localStorage.getItem('temankampus_curhat_messages');
-    return saved ? JSON.parse(saved) : curhatData.initialMessages;
+    try {
+      const saved = localStorage.getItem('temankampus_curhat_messages');
+      return saved ? JSON.parse(saved) : curhatData.initialMessages;
+    } catch {
+      return curhatData.initialMessages;
+    }
   });
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [dailyQuotaUsed, setDailyQuotaUsed] = useState(3);
   const [showCrisisCard, setShowCrisisCard] = useState(false);
+  const [confirmClearChat, setConfirmClearChat] = useState(false);
+  const [quotaReachedNotice, setQuotaReachedNotice] = useState(false);
   const messagesEndRef = useRef(null);
 
+  const dailyQuotaUsed = messages.filter((m) => m.sender === 'user').length;
+
   useEffect(() => {
-    localStorage.setItem('temankampus_curhat_messages', JSON.stringify(messages));
+    if (hasStorageConsent()) {
+      localStorage.setItem('temankampus_curhat_messages', JSON.stringify(messages));
+    }
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
@@ -35,6 +47,13 @@ const CurhatAIPage = () => {
   const handleSendMessage = (textToSend = null) => {
     const text = textToSend || inputMessage;
     if (!text.trim()) return;
+
+    const isCrisisInput = detectCrisisKeyword(text);
+    if (!user?.isPremium && dailyQuotaUsed >= 10 && !isCrisisInput) {
+      setQuotaReachedNotice(true);
+      return;
+    }
+    setQuotaReachedNotice(false);
 
     const nowLabel =
       new Intl.DateTimeFormat('id-ID', {
@@ -51,12 +70,17 @@ const CurhatAIPage = () => {
 
     setMessages((prev) => [...prev, userMsg]);
     setInputMessage('');
-    setDailyQuotaUsed((prev) => prev + 1);
 
     const lowerText = text.toLowerCase();
     const crisisRule = curhatData.responseRules.find(
-      (rule) => rule.isCrisis && rule.keywords.some((k) => lowerText.includes(k))
+      (rule) =>
+        rule.isCrisis &&
+        (isCrisisInput || rule.keywords.some((k) => lowerText.includes(k)))
     );
+
+    if (isCrisisInput || crisisRule) {
+      setShowCrisisCard(true);
+    }
 
     setIsTyping(true);
 
@@ -118,21 +142,27 @@ const CurhatAIPage = () => {
     }, 900);
   };
 
-  const handleClearChat = () => {
-    if (window.confirm('Hapus seluruh riwayat percakapan dengan Mimi?')) {
-      setMessages([curhatData.initialMessages[0]]);
-      setShowCrisisCard(false);
+  const handleConfirmClearChat = () => {
+    setMessages([curhatData.initialMessages[0]]);
+    setShowCrisisCard(false);
+    setConfirmClearChat(false);
+    try {
+      localStorage.removeItem('temankampus_curhat_messages');
+    } catch {
+      // ignore
     }
   };
 
-  const quickPrompts = curhatData.quickPrompts || [
+  const quickPrompts = curhatData.starterPrompts || [
     'Tugas menumpuk dan aku bingung mulai dari mana',
     'Aku merasa lelah dan cemas menjelang ujian',
     'Susah fokus belajar di kosan hari ini',
   ];
 
+  const isTypingCrisisKeyword = detectCrisisKeyword(inputMessage);
+
   return (
-    <div className="space-y-5 max-w-4xl mx-auto">
+    <div className="space-y-4 max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
@@ -140,19 +170,22 @@ const CurhatAIPage = () => {
             Teman curhat Mimi
           </h1>
           <p className="text-sm text-ink-secondary mt-1">
-            Ruang bicara privat untuk mengurai tekanan kuliah. Bukan pengganti diagnosis psikolog profesional.
+            Ruang bicara privat untuk mengurai tekanan kuliah tanpa menghakimi.
           </p>
         </div>
         <button
+          type="button"
           onClick={openHelpModal}
           className="text-xs font-medium text-accent hover:underline underline-offset-4 self-start sm:self-auto shrink-0"
         >
-          Layanan bantuan profesional
+          Layanan bantuan profesional (119)
         </button>
       </div>
 
+      <ClinicalDisclaimerBanner compact />
+
       {/* Chat Surface */}
-      <section className="surface-card overflow-hidden flex flex-col h-[68vh] min-h-[480px]">
+      <section className="surface-card overflow-hidden flex flex-col h-[64vh] min-h-[460px]">
         {/* Chat Bar */}
         <div className="px-5 py-3.5 border-b border-line flex items-center justify-between gap-3 bg-paper-card">
           <div className="flex items-center gap-3 min-w-0">
@@ -166,7 +199,7 @@ const CurhatAIPage = () => {
                 </span>
               </div>
               <p className="text-xs text-ink-muted truncate">
-                Riwayat tersimpan lokal di perangkatmu
+                Riwayat privat di perangkatmu
               </p>
             </div>
           </div>
@@ -186,7 +219,8 @@ const CurhatAIPage = () => {
               </div>
             )}
             <button
-              onClick={handleClearChat}
+              type="button"
+              onClick={() => setConfirmClearChat((prev) => !prev)}
               title="Hapus riwayat percakapan"
               aria-label="Hapus riwayat percakapan"
               className="w-8 h-8 rounded-lg text-ink-muted hover:text-semantic-danger hover:bg-semantic-danger-soft flex items-center justify-center transition-colors duration-150"
@@ -196,32 +230,75 @@ const CurhatAIPage = () => {
           </div>
         </div>
 
+        {/* Calm Inline Clear Confirmation (No blocking window.confirm) */}
+        {confirmClearChat && (
+          <div
+            role="region"
+            aria-label="Konfirmasi hapus percakapan"
+            className="px-5 py-3 bg-paper-raised border-b border-line flex flex-wrap items-center justify-between gap-2 text-xs animate-enter"
+          >
+            <span className="text-ink font-medium">
+              Hapus seluruh riwayat percakapan dengan Mimi?
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setConfirmClearChat(false)}
+                className="btn-secondary h-7 px-3 text-xs"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmClearChat}
+                className="h-7 px-3 rounded-lg bg-semantic-danger text-paper-card text-xs font-medium hover:opacity-90 transition-opacity"
+              >
+                Ya, hapus
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Pinned Crisis Card (Always visible when triggered) */}
+        {(showCrisisCard || isTypingCrisisKeyword) && (
+          <div
+            role="alert"
+            className="px-5 py-3.5 bg-accent-soft border-b border-accent/25 space-y-2 animate-enter shrink-0"
+          >
+            <div className="flex items-center gap-2 text-sm font-medium text-accent">
+              <AlertOctagon className="w-4 h-4 shrink-0" strokeWidth={1.5} />
+              <span>Layanan bantuan krisis & darurat</span>
+            </div>
+            <p className="text-xs text-ink-secondary leading-relaxed">
+              Keselamatanmu adalah prioritas utama. Hubungi layanan profesional berikut secara gratis dan rahasia:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <a href="tel:119" className="btn-primary h-8 px-3 text-xs">
+                <Phone className="w-3.5 h-3.5" strokeWidth={1.5} />
+                <span>Sejiwa: 119 ext 8</span>
+              </a>
+              <a
+                href="https://healing119.id"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary h-8 px-3 text-xs"
+              >
+                <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.5} />
+                <span>Healing119.id</span>
+              </a>
+              <button
+                type="button"
+                onClick={openHelpModal}
+                className="btn-secondary h-8 px-3 text-xs"
+              >
+                Kontak lainnya
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Messages */}
         <div className="flex-1 p-5 overflow-y-auto space-y-4 bg-paper">
-          {showCrisisCard && (
-            <div className="p-4 rounded-xl bg-accent-soft border border-accent/25 space-y-2.5">
-              <div className="flex items-center gap-2 text-sm font-medium text-accent">
-                <AlertOctagon className="w-4 h-4 shrink-0" strokeWidth={1.5} />
-                <span>Layanan bantuan krisis & darurat</span>
-              </div>
-              <p className="text-xs text-ink-secondary leading-relaxed">
-                Keselamatan dan kesehatanmu adalah prioritas utama. Hubungi layanan pendampingan berikut:
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <a href="tel:119" className="btn-primary h-8 px-3 text-xs">
-                  <Phone className="w-3.5 h-3.5" strokeWidth={1.5} />
-                  <span>Sejiwa: 119 ext 8</span>
-                </a>
-                <button
-                  onClick={openHelpModal}
-                  className="btn-secondary h-8 px-3 text-xs"
-                >
-                  Hotline kampus & Yayasan Pulih
-                </button>
-              </div>
-            </div>
-          )}
-
           {messages.map((msg) => {
             const isUser = msg.sender === 'user';
             return (
@@ -230,7 +307,7 @@ const CurhatAIPage = () => {
                 className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[82%] sm:max-w-[75%] rounded-xl px-4 py-3 space-y-1.5 ${
+                  className={`max-w-[85%] sm:max-w-[75%] rounded-xl px-4 py-3 space-y-1.5 ${
                     isUser
                       ? 'bg-accent text-paper-card'
                       : 'bg-paper-card border border-line text-ink'
@@ -241,7 +318,7 @@ const CurhatAIPage = () => {
                   </p>
                   <p
                     className={`font-mono text-[10px] tabular ${
-                      isUser ? 'text-paper-card/60 text-right' : 'text-ink-muted'
+                      isUser ? 'text-paper-card/90 text-right' : 'text-ink-muted'
                     }`}
                   >
                     {msg.timestamp}
@@ -260,6 +337,18 @@ const CurhatAIPage = () => {
           )}
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Quota Reached Friendly Notice */}
+        {quotaReachedNotice && !user?.isPremium && (
+          <div className="px-4 py-2.5 bg-paper-raised border-t border-line flex flex-wrap items-center justify-between gap-2 text-xs">
+            <span className="text-ink-secondary">
+              Kuota 10 pesan harian selesai. Pesan darurat/krisis tetap selalu aktif, atau lanjut tanpa batas dengan Pro.
+            </span>
+            <Link to="/premium" className="text-accent font-medium hover:underline">
+              Lihat Paket Pro
+            </Link>
+          </div>
+        )}
 
         {/* Quick Prompts */}
         <div className="px-4 py-2.5 border-t border-line bg-paper-card flex items-center gap-2 overflow-x-auto">
@@ -288,6 +377,7 @@ const CurhatAIPage = () => {
         >
           <input
             type="text"
+            aria-label="Tulis pesan untuk Mimi"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             placeholder="Tulis ceritamu di sini"

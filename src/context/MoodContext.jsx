@@ -1,15 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import initialMoodData from '../mock-data/moods.json';
+import { hasStorageConsent } from './PrivacyContext';
 
 const MoodContext = createContext();
 
 export const MoodProvider = ({ children }) => {
   const [history, setHistory] = useState(() => {
-    const saved = localStorage.getItem('temankampus_mood_history_v2');
-    if (saved) return JSON.parse(saved);
-    const oldSaved = localStorage.getItem('temankampus_mood_history');
-    if (oldSaved && !oldSaved.includes('2024') && !oldSaved.includes('2026-09')) {
-      return JSON.parse(oldSaved);
+    try {
+      const saved = localStorage.getItem('temankampus_mood_history_v2');
+      if (saved) return JSON.parse(saved);
+      const oldSaved = localStorage.getItem('temankampus_mood_history');
+      if (oldSaved && !oldSaved.includes('2024') && !oldSaved.includes('2026-09')) {
+        return JSON.parse(oldSaved);
+      }
+    } catch {
+      // ignore storage errors
     }
     return initialMoodData.history;
   });
@@ -17,7 +22,9 @@ export const MoodProvider = ({ children }) => {
   const [alertDismissed, setAlertDismissed] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('temankampus_mood_history_v2', JSON.stringify(history));
+    if (hasStorageConsent()) {
+      localStorage.setItem('temankampus_mood_history_v2', JSON.stringify(history));
+    }
   }, [history]);
 
   const options = initialMoodData.options;

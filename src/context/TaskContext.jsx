@@ -1,15 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import initialTasks from '../mock-data/tasks.json';
+import { hasStorageConsent } from './PrivacyContext';
 
 const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem('temankampus_tasks_v2');
-    if (saved) return JSON.parse(saved);
-    const oldSaved = localStorage.getItem('temankampus_tasks');
-    if (oldSaved && !oldSaved.includes('2024') && !oldSaved.includes('2026-09')) {
-      return JSON.parse(oldSaved);
+    try {
+      const saved = localStorage.getItem('temankampus_tasks_v2');
+      if (saved) return JSON.parse(saved);
+      const oldSaved = localStorage.getItem('temankampus_tasks');
+      if (oldSaved && !oldSaved.includes('2024') && !oldSaved.includes('2026-09')) {
+        return JSON.parse(oldSaved);
+      }
+    } catch {
+      // ignore storage errors
     }
     return initialTasks;
   });
@@ -17,7 +22,9 @@ export const TaskProvider = ({ children }) => {
   const [activeFocusTaskId, setActiveFocusTaskId] = useState('tsk_01');
 
   useEffect(() => {
-    localStorage.setItem('temankampus_tasks_v2', JSON.stringify(tasks));
+    if (hasStorageConsent()) {
+      localStorage.setItem('temankampus_tasks_v2', JSON.stringify(tasks));
+    }
   }, [tasks]);
 
   const addTask = (newTask) => {

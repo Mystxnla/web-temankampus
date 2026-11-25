@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import {
   Send,
   MessageSquare,
@@ -15,11 +15,14 @@ import {
   Calendar,
   BarChart3,
   HeartHandshake,
+  Phone,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTasks } from '../context/TaskContext';
 import { useMood } from '../context/MoodContext';
 import { getMoodMeta } from '../utils/moodIcons';
+import { detectCrisisKeyword } from '../utils/crisisDetection';
+import { ambientAudio } from '../utils/ambientAudio';
 import communityData from '../mock-data/community.json';
 
 const MOOD_SUPPORT_COPY = {
@@ -31,12 +34,13 @@ const MOOD_SUPPORT_COPY = {
 
 const DashboardPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { openHelpModal } = useOutletContext();
+  const { user, waterMl, addWater, completedFocusSessions } = useAuth();
   const { tasks, urgentTasks, toggleTaskStatus, setActiveFocusTaskId } = useTasks();
-  const { options, todayMood, logMood } = useMood();
+  const { options, todayMood, logMood, history } = useMood();
+  const breathTimersRef = useRef([]);
 
   const [activeTab, setActiveTab] = useState('tenang');
-  const [waterMl, setWaterMl] = useState(1250);
   const waterTarget = 2000;
   const [curhatInput, setCurhatInput] = useState('');
   const [showBreathing, setShowBreathing] = useState(false);
@@ -54,7 +58,23 @@ const DashboardPage = () => {
 
   const handleMoodSelect = (moodId) =>
     logMood(moodId, 'Check-in cepat dari beranda', ['Check-in Beranda']);
-  const handleAddWater = () => setWaterMl((prev) => Math.min(prev + 250, 3000));
+  const handleAddWater = () => addWater(250);
+
+  const handleToggleLofi = () => {
+    if (isPlayingLofi) {
+      ambientAudio.stop();
+      setIsPlayingLofi(false);
+    } else {
+      ambientAudio.start('rain', 65);
+      setIsPlayingLofi(true);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      ambientAudio.stop();
+    };
+  }, []);
   const handleSendCurhat = (e) => {
     e.preventDefault();
     navigate('/curhat', { state: { initialPrompt: curhatInput } });
@@ -64,26 +84,51 @@ const DashboardPage = () => {
     navigate('/focus');
   };
 
+  const clearBreathTimers = () => {
+    breathTimersRef.current.forEach((id) => clearTimeout(id));
+    breathTimersRef.current = [];
+  };
+
+  const closeBreathingModal = () => {
+    clearBreathTimers();
+    setShowBreathing(false);
+  };
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape' && showBreathing) {
+        closeBreathingModal();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+      clearBreathTimers();
+    };
+  }, [showBreathing]);
+
   const triggerBreathingExercise = () => {
+    clearBreathTimers();
     setShowBreathing(true);
     setBreathStage({ label: 'Tarik napas perlahan', seconds: 4, scale: 'scale-110' });
-    setTimeout(() => {
+    const t1 = setTimeout(() => {
       setBreathStage({ label: 'Tahan dengan tenang', seconds: 7, scale: 'scale-110' });
-      setTimeout(() => {
-        setBreathStage({
-          label: 'Hembuskan pelan lewat mulut',
-          seconds: 8,
-          scale: 'scale-90',
-        });
-        setTimeout(() => {
-          setBreathStage({
-            label: 'Satu siklus selesai. Rasakan bahumu lebih rileks',
-            seconds: 0,
-            scale: 'scale-100',
-          });
-        }, 8000);
-      }, 7000);
     }, 4000);
+    const t2 = setTimeout(() => {
+      setBreathStage({
+        label: 'Hembuskan pelan lewat mulut',
+        seconds: 8,
+        scale: 'scale-90',
+      });
+    }, 11000);
+    const t3 = setTimeout(() => {
+      setBreathStage({
+        label: 'Satu siklus selesai. Rasakan bahumu lebih rileks',
+        seconds: 0,
+        scale: 'scale-100',
+      });
+    }, 19000);
+    breathTimersRef.current = [t1, t2, t3];
   };
 
   const scheduleItems = [
@@ -181,13 +226,24 @@ const DashboardPage = () => {
             <p className="text-sm text-ink-secondary leading-relaxed max-w-2xl">
               {activeMoodSupport}
             </p>
-            <Link
-              to="/mood"
-              className="text-xs font-medium text-accent hover:underline underline-offset-4 inline-flex items-center gap-1 shrink-0"
-            >
-              <span>Catat di jurnal</span>
-              <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
-            </Link>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              {(todayMood?.moodId === 'stres' || todayMood?.moodId === 'lelah') ? (
+                <Link to="/curhat" className="btn-primary h-8 px-3 text-xs">
+                  Cerita ke Mimi
+                </Link>
+              ) : (
+                <Link to="/focus" className="btn-primary h-8 px-3 text-xs">
+                  Mulai fokus 25m
+                </Link>
+              )}
+              <Link
+                to="/mood"
+                className="btn-secondary bg-paper-card h-8 px-3 text-xs inline-flex items-center gap-1"
+              >
+                <span>Catat di jurnal</span>
+                <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
+              </Link>
+            </div>
           </div>
         )}
       </section>
@@ -197,7 +253,7 @@ const DashboardPage = () => {
         <div
           role="tablist"
           aria-label="Bagian beranda"
-          className="inline-flex p-1 rounded-lg bg-paper-raised border border-line"
+          className="inline-flex max-w-full overflow-x-auto p-1 rounded-lg bg-paper-raised border border-line"
         >
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -205,10 +261,11 @@ const DashboardPage = () => {
             return (
               <button
                 key={tab.id}
+                type="button"
                 role="tab"
                 aria-selected={active}
                 onClick={() => setActiveTab(tab.id)}
-                className={`h-8 px-3.5 rounded-md text-xs font-medium inline-flex items-center gap-2 transition-colors duration-150 ${
+                className={`h-8 px-3 rounded-md text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 transition-colors duration-150 ${
                   active
                     ? 'bg-paper-card text-ink shadow-subtle'
                     : 'text-ink-secondary hover:text-ink'
@@ -280,7 +337,8 @@ const DashboardPage = () => {
                 </div>
               </div>
               <button
-                onClick={() => setIsPlayingLofi(!isPlayingLofi)}
+                type="button"
+                onClick={handleToggleLofi}
                 aria-label={isPlayingLofi ? 'Jeda audio' : 'Putar audio'}
                 className={`h-9 px-3.5 rounded-lg text-xs font-medium inline-flex items-center gap-1.5 transition-colors duration-150 shrink-0 ${
                   isPlayingLofi
@@ -341,22 +399,43 @@ const DashboardPage = () => {
 
               <form
                 onSubmit={handleSendCurhat}
-                className="pt-4 border-t border-line flex items-center gap-2"
+                className="pt-4 border-t border-line space-y-2.5"
               >
-                <input
-                  type="text"
-                  value={curhatInput}
-                  onChange={(e) => setCurhatInput(e.target.value)}
-                  placeholder="Tulis apa yang kamu rasakan"
-                  className="input-field flex-1 text-xs"
-                />
-                <button
-                  type="submit"
-                  aria-label="Kirim ke Mimi"
-                  className="btn-primary w-9 h-9 p-0 shrink-0"
-                >
-                  <Send className="w-4 h-4" strokeWidth={1.5} />
-                </button>
+                {detectCrisisKeyword(curhatInput) && (
+                  <div
+                    role="alert"
+                    className="p-2.5 rounded-lg bg-accent-soft border border-accent/30 flex flex-wrap items-center justify-between gap-2 text-xs"
+                  >
+                    <span className="text-ink font-medium">
+                      Kamu tidak sendirian. Layanan 119 ext 8 siap membantu.
+                    </span>
+                    <button
+                      type="button"
+                      onClick={openHelpModal}
+                      className="btn-primary h-7 px-2.5 text-xs"
+                    >
+                      <Phone className="w-3 h-3" strokeWidth={1.5} />
+                      <span>Bantuan 119</span>
+                    </button>
+                  </div>
+                )}
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    aria-label="Tulis apa yang kamu rasakan untuk Mimi"
+                    value={curhatInput}
+                    onChange={(e) => setCurhatInput(e.target.value)}
+                    placeholder="Tulis apa yang kamu rasakan"
+                    className="input-field flex-1 text-xs"
+                  />
+                  <button
+                    type="submit"
+                    aria-label="Kirim ke Mimi"
+                    className="btn-primary w-9 h-9 p-0 shrink-0"
+                  >
+                    <Send className="w-4 h-4" strokeWidth={1.5} />
+                  </button>
+                </div>
               </form>
             </div>
 
@@ -385,6 +464,7 @@ const DashboardPage = () => {
                     <Link
                       key={thread.id}
                       to="/community"
+                      state={{ openThreadId: thread.id }}
                       className="block p-4 rounded-lg bg-paper border border-line hover:border-line-strong transition-colors duration-150"
                     >
                       <div className="flex items-center justify-between gap-2 mb-1.5">
@@ -420,7 +500,11 @@ const DashboardPage = () => {
                 <span className="text-xs text-ink-muted">
                   Mau berbagi cerita atau menyemangati teman lain?
                 </span>
-                <Link to="/community" className="btn-secondary h-8 px-3 text-xs">
+                <Link
+                  to="/community"
+                  state={{ openNewPost: true }}
+                  className="btn-secondary h-8 px-3 text-xs"
+                >
                   Tulis cerita
                 </Link>
               </div>
@@ -580,14 +664,14 @@ const DashboardPage = () => {
                 </span>
               </p>
               <p className="text-xs text-ink-secondary mt-2 tabular">
-                4 sesi selesai · target 6 sesi
+                {completedFocusSessions} sesi selesai · target 6 sesi
               </p>
             </div>
 
             <div className="surface-card p-5">
               <p className="text-xs text-ink-muted">Konsistensi check-in mood</p>
               <p className="font-mono text-[28px] font-medium text-ink tabular leading-none mt-2">
-                {user?.wellnessStreak || 5}{' '}
+                {history.length}{' '}
                 <span className="text-sm font-sans font-normal text-ink-muted">
                   hari
                 </span>
@@ -622,8 +706,11 @@ const DashboardPage = () => {
       {/* Breathing Modal */}
       {showBreathing && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="breathing-modal-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/35 backdrop-blur-[2px]"
-          onClick={() => setShowBreathing(false)}
+          onClick={closeBreathingModal}
         >
           <div
             className="bg-paper-card rounded-2xl p-6 max-w-sm w-full border border-line-strong shadow-float space-y-6 animate-enter"
@@ -632,11 +719,14 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Wind className="w-4 h-4 text-accent" strokeWidth={1.5} />
-                <h3 className="text-sm font-semibold text-ink">Latihan napas 4-7-8</h3>
+                <h3 id="breathing-modal-title" className="text-sm font-semibold text-ink">
+                  Latihan napas 4-7-8
+                </h3>
               </div>
               <button
-                onClick={() => setShowBreathing(false)}
-                aria-label="Tutup"
+                type="button"
+                onClick={closeBreathingModal}
+                aria-label="Tutup latihan napas"
                 className="w-7 h-7 rounded-lg text-ink-muted hover:text-ink hover:bg-paper-raised flex items-center justify-center transition-colors"
               >
                 <X className="w-4 h-4" strokeWidth={1.5} />
@@ -659,7 +749,8 @@ const DashboardPage = () => {
             </div>
 
             <button
-              onClick={() => setShowBreathing(false)}
+              type="button"
+              onClick={closeBreathingModal}
               className="btn-primary w-full"
             >
               Selesai latihan

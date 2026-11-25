@@ -28,9 +28,9 @@
   ],
   "responseRules": [
     {
-      "keywords": ["bunuh diri", "suicide", "menyakiti diri", "self-harm", "mati saja", "ga sanggup hidup", "akhiri hidup", "pengen mati"],
+      "keywords": ["bunuh diri", "suicide", "menyakiti diri", "melukai diri", "self-harm", "self harm", "mati saja", "ga sanggup hidup", "gak sanggup hidup", "akhiri hidup", "pengen mati", "ingin mati"],
       "isCrisis": true,
-      "response": "Aku sangat peduli dengan keselamatanmu. Beban yang kamu rasakan saat ini sangat berat, tetapi kamu tidak sendirian dan tidak harus menanggungnya seorang diri. Mohon segera hubungi layanan profesional bebas biaya berikut yang siap mendengarkan dan mendampingimu 24 jam:\n\n📞 Hotline Sejiwa Kemenkes: 119 ext 8 (Bebas Pulsa)\n💬 Yayasan Pulih: +62 811-8436-633 (Konseling WhatsApp)\n\nKamu berharga, dan ada bantuan yang siap menemanimu melewati masa sulit ini. Silakan klik tombol 'Bantuan Profesional' di atas sekarang juga ya."
+      "response": "Aku sangat peduli dengan keselamatanmu. Beban yang kamu rasakan saat ini sangat berat, tetapi kamu tidak sendirian dan tidak harus menanggungnya seorang diri. Mohon segera hubungi layanan profesional berikut yang siap mendengarkan dan mendampingimu:\n\n• Hotline Sejiwa Kemenkes: 119 ext 8 (Gratis 24 Jam)\n• Layanan Konseling Online Kemenkes: healing119.id\n• Yayasan Pulih (WhatsApp): +62 811-8436-633\n\nKamu berharga, dan ada bantuan yang siap menemanimu melewati masa sulit ini. Silakan klik tombol 'Butuh bantuan' di bagian atas layar kapan saja ya."
     },
     {
       "keywords": ["istirahat", "bersalah", "rehat", "capek", "lelah", "burnout"],
@@ -49,7 +49,7 @@
       "response": "Ketika daftar tugas terasa menumpuk seperti gunung, wajar jika kamu merasa bingung harus mulai dari mana. Kuncinya adalah tidak memikirkan seluruh tumpukan itu sekaligus.\n\nPilih satu tugas paling sederhana atau paling mendesak, lalu pasang timer fokus selama 15-25 menit. Seringkali, memulai langkah pertama adalah bagian tersulit, dan momentum kecil akan membantu mengembalikan kendalimu."
     },
     {
-      "keywords": ["uang", "ukt", "biaya", "finansial", "keuang~kos", "kiriman"],
+      "keywords": ["uang", "ukt", "biaya", "finansial", "keuangan", "kos", "kiriman"],
       "response": "Kekhawatiran seputar biaya kuliah dan kebutuhan hidup sehari-hari memang memberikan beban mental yang nyata bagi mahasiswa. Jangan ragu untuk mencari informasi keringanan UKT atau beasiswa internal melalui bagian kemahasiswaan kampusmu.\n\nBanyak fakultas memiliki skema bantuan advokasi mahasiswa. Jika pikiranmu terasa buntu, diskusikan situasi ini dengan orang terdekat atau rekan organisasi yang bisa membantu mencari alternatif solusi."
     },
     {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
 import {
   Play,
   Pause,
@@ -12,8 +13,11 @@ import {
   Headphones,
   BookOpen,
   Check,
+  CheckCircle2,
 } from 'lucide-react';
 import { useTasks } from '../context/TaskContext';
+import { useAuth } from '../context/AuthContext';
+import { ambientAudio } from '../utils/ambientAudio';
 import timerData from '../mock-data/timer.json';
 
 const SOUND_ICONS = {
@@ -24,36 +28,59 @@ const SOUND_ICONS = {
 };
 
 const FocusTimerPage = () => {
+  const [searchParams] = useSearchParams();
   const { tasks, activeFocusTaskId, setActiveFocusTaskId } = useTasks();
+  const { user, completedFocusSessions, recordFocusSession } = useAuth();
   const presets = timerData.presets;
   const soundscapes = timerData.soundscapes;
 
-  const [activePreset, setActivePreset] = useState('focus');
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
-  const [totalTime, setTotalTime] = useState(25 * 60);
+  const initialPresetId = searchParams.get('preset') || 'focus';
+  const initialPresetObj = presets.find((p) => p.id === initialPresetId) || presets[0];
+  const initialSound = searchParams.get('sound') || 'rain';
+
+  const [activePreset, setActivePreset] = useState(initialPresetObj.id);
+  const [timeLeft, setTimeLeft] = useState(initialPresetObj.durationMinutes * 60);
+  const [totalTime, setTotalTime] = useState(initialPresetObj.durationMinutes * 60);
   const [isRunning, setIsRunning] = useState(false);
-  const [completedSessions, setCompletedSessions] = useState(
-    timerData.stats.completedSessions
-  );
-  const [totalFocusMinutes, setTotalFocusMinutes] = useState(
-    timerData.stats.todayMinutes
-  );
-  const [activeSoundscape, setActiveSoundscape] = useState('rain');
+  const [activeSoundscape, setActiveSoundscape] = useState(initialSound);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [volume, setVolume] = useState(70);
   const [continuousMinutes, setContinuousMinutes] = useState(85);
   const [showRestAlert, setShowRestAlert] = useState(false);
+  const [sessionCompletedBanner, setSessionCompletedBanner] = useState(false);
+
+  const completedSessions = completedFocusSessions;
+  const totalFocusMinutes = user?.focusMinutesToday || timerData.stats.todayMinutes;
+
+  useEffect(() => {
+    if (isPlayingAudio) {
+      ambientAudio.start(activeSoundscape, volume);
+    } else {
+      ambientAudio.stop();
+    }
+  }, [isPlayingAudio, activeSoundscape]);
+
+  useEffect(() => {
+    ambientAudio.setVolume(volume);
+  }, [volume]);
+
+  useEffect(() => {
+    return () => {
+      ambientAudio.stop();
+    };
+  }, []);
 
   useEffect(() => {
     let interval = null;
     if (isRunning && timeLeft > 0) {
       interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-    } else if (timeLeft === 0) {
+    } else if (timeLeft === 0 && isRunning) {
       setIsRunning(false);
+      setSessionCompletedBanner(true);
       if (activePreset === 'focus') {
-        setCompletedSessions((prev) => prev + 1);
-        setTotalFocusMinutes((prev) => prev + Math.floor(totalTime / 60));
-        setContinuousMinutes((prev) => prev + Math.floor(totalTime / 60));
+        const mins = Math.floor(totalTime / 60);
+        recordFocusSession(mins);
+        setContinuousMinutes((prev) => prev + mins);
       }
     }
     return () => clearInterval(interval);
@@ -79,6 +106,10 @@ const FocusTimerPage = () => {
 
   const handleSkip = () => {
     setIsRunning(false);
+    if (activePreset === 'focus') {
+      recordFocusSession(Math.max(1, Math.floor((totalTime - timeLeft) / 60) || 25));
+      setSessionCompletedBanner(true);
+    }
     handlePresetChange(activePreset === 'focus' ? 'short_break' : 'focus');
   };
 
@@ -136,6 +167,49 @@ const FocusTimerPage = () => {
           </span>
         </div>
       </div>
+
+      {/* Session Completed Next-Step Banner */}
+      {sessionCompletedBanner && (
+        <div
+          role="status"
+          className="p-4 surface-calm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-enter"
+        >
+          <div className="flex items-start gap-3">
+            <CheckCircle2 className="w-4 h-4 text-semantic-positive shrink-0 mt-0.5" strokeWidth={1.5} />
+            <div>
+              <p className="text-sm font-medium text-ink">
+                Sesi selesai! Progres fokusmu hari ini sudah tercatat.
+              </p>
+              <p className="text-xs text-ink-secondary mt-0.5">
+                Ambil jeda 5 menit untuk mengistirahatkan mata atau tandai tugas yang selesai.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setSessionCompletedBanner(false);
+                handlePresetChange('short_break');
+                setIsRunning(true);
+              }}
+              className="btn-primary h-8 px-3 text-xs"
+            >
+              Mulai istirahat 5m
+            </button>
+            <Link to="/tasks" className="btn-secondary bg-paper-card h-8 px-3 text-xs">
+              Lihat daftar tugas
+            </Link>
+            <button
+              type="button"
+              onClick={() => setSessionCompletedBanner(false)}
+              className="btn-ghost h-8 px-2 text-xs"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Rest Alert */}
       {showRestAlert && (
@@ -268,11 +342,15 @@ const FocusTimerPage = () => {
 
           {/* Active Task Selector */}
           <div className="mt-8 pt-5 border-t border-line w-full max-w-md space-y-2">
-            <label className="text-xs font-medium text-ink-secondary flex items-center gap-1.5">
+            <label
+              htmlFor="focus-task-select"
+              className="text-xs font-medium text-ink-secondary flex items-center gap-1.5"
+            >
               <CheckSquare className="w-3.5 h-3.5 text-ink-muted" strokeWidth={1.5} />
               <span>Tugas yang sedang dikerjakan</span>
             </label>
             <select
+              id="focus-task-select"
               value={activeFocusTaskId}
               onChange={(e) => setActiveFocusTaskId(e.target.value)}
               className="input-field text-xs"
@@ -355,6 +433,7 @@ const FocusTimerPage = () => {
                 <Volume2 className="w-3.5 h-3.5 text-ink-muted shrink-0" strokeWidth={1.5} />
                 <input
                   type="range"
+                  aria-label="Volume suara latar belajar"
                   min="0"
                   max="100"
                   value={volume}

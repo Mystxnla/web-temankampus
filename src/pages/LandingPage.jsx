@@ -16,11 +16,14 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { usePrivacy } from '../context/PrivacyContext';
 import KucingMascot from '../components/KucingMascot';
+import ClinicalDisclaimerBanner from '../components/layout/ClinicalDisclaimerBanner';
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { openHelpModal, openPrivacyModal } = usePrivacy();
   const [selectedPreviewMood, setSelectedPreviewMood] = useState('baik');
 
   const features = [
@@ -121,10 +124,10 @@ const LandingPage = () => {
     <div className="min-h-screen bg-paper text-ink">
       {/* Header */}
       <header className="sticky top-0 z-50 h-16 bg-paper/95 backdrop-blur-sm border-b border-line">
-        <div className="h-full max-w-[1200px] mx-auto px-5 sm:px-8 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <KucingMascot pose="mark" size={30} className="shrink-0" />
-            <span className="text-[16px] font-semibold text-ink tracking-[-0.01em]">
+        <div className="h-full max-w-[1200px] mx-auto px-4 sm:px-8 flex items-center justify-between gap-2">
+          <Link to="/" className="flex items-center gap-2 min-w-0 shrink">
+            <KucingMascot pose="mark" size={28} className="shrink-0" />
+            <span className="text-[15px] sm:text-[16px] font-semibold text-ink tracking-[-0.01em] truncate">
               TemanKampus
             </span>
           </Link>
@@ -150,18 +153,29 @@ const LandingPage = () => {
             </a>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            <button
+              type="button"
+              onClick={openHelpModal}
+              aria-label="Bantuan krisis dan layanan konseling 119"
+              className="h-8 sm:h-9 px-2 sm:px-3 rounded-lg bg-calm-surface border border-calm-border text-xs font-medium text-accent hover:bg-accent/15 transition-colors duration-150 inline-flex items-center gap-1.5 shrink-0"
+            >
+              <HeartHandshake className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" strokeWidth={1.5} />
+              <span className="sm:hidden">119</span>
+              <span className="hidden sm:inline">Butuh bantuan</span>
+            </button>
             <Link
               to="/auth"
-              className="text-sm text-ink-secondary hover:text-ink transition-colors duration-150 px-2 py-1"
+              className="text-xs sm:text-sm text-ink-secondary hover:text-ink transition-colors duration-150 px-1.5 sm:px-2 py-1 shrink-0"
             >
               Masuk
             </Link>
             <button
+              type="button"
               onClick={() => handleDemoAccess('/dashboard')}
-              className="btn-primary h-9 px-4 text-sm"
+              className="btn-primary h-8 sm:h-9 px-2.5 sm:px-4 text-xs sm:text-sm shrink-0"
             >
-              Buka prototipe
+              Mulai gratis
             </button>
           </div>
         </div>
@@ -182,27 +196,29 @@ const LandingPage = () => {
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <button
+                type="button"
                 onClick={() => handleDemoAccess('/dashboard')}
                 className="btn-primary h-11 px-5 text-sm"
               >
-                <span>Eksplorasi prototipe</span>
+                <span>Mulai tanpa daftar</span>
                 <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
               </button>
               <button
-                onClick={() => handleDemoAccess('/tasks')}
+                type="button"
+                onClick={() => handleDemoAccess('/mood')}
                 className="btn-secondary h-11 px-5 text-sm"
               >
-                Lihat daftar tugas
+                Cek mood hari ini
               </button>
             </div>
 
             <div className="pt-4 border-t border-line flex flex-wrap items-center gap-6 text-xs text-ink-muted">
               <span className="inline-flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-ink-muted" strokeWidth={1.5} />
-                Akses demo langsung tanpa registrasi
+                Akses langsung tanpa wajib registrasi
               </span>
               <span className="font-mono tabular">4 modul terintegrasi</span>
-              <span className="font-mono tabular">Prototipe MVP</span>
+              <span className="font-mono tabular">Privat di perangkatmu</span>
             </div>
           </div>
 
@@ -289,6 +305,8 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
+
+        <ClinicalDisclaimerBanner className="mt-10" />
       </section>
 
       {/* Features */}
@@ -483,7 +501,7 @@ const LandingPage = () => {
             <span className="font-medium text-ink">TemanKampus</span>
             <span>· Prototipe MVP</span>
           </div>
-          <div className="flex flex-wrap gap-5">
+          <div className="flex flex-wrap items-center gap-5">
             {[
               { path: '/dashboard', label: 'Beranda' },
               { path: '/tasks', label: 'Tugas' },
@@ -500,6 +518,20 @@ const LandingPage = () => {
                 {item.label}
               </Link>
             ))}
+            <button
+              type="button"
+              onClick={openPrivacyModal}
+              className="hover:text-ink transition-colors duration-150"
+            >
+              Privasi & hapus data
+            </button>
+            <button
+              type="button"
+              onClick={openHelpModal}
+              className="text-accent font-medium hover:underline underline-offset-2"
+            >
+              Bantuan darurat 119
+            </button>
           </div>
           <span className="font-mono tabular">© {new Date().getFullYear()} TemanKampus</span>
         </div>

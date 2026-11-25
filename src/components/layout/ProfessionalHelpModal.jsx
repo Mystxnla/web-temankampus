@@ -1,16 +1,29 @@
 import React from 'react';
-import { Phone, HeartHandshake, ShieldAlert, X } from 'lucide-react';
+import { Phone, HeartHandshake, ShieldAlert, X, ExternalLink, LogOut } from 'lucide-react';
 import initialMoods from '../../mock-data/moods.json';
+import { triggerQuickExit } from '../../utils/crisisDetection';
 
 const ProfessionalHelpModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const hotlines = initialMoods.recommendations.emergencySupport.hotlines;
 
+  const getHotlineHref = (item) => {
+    if (item.url) return item.url;
+    if (item.tel) return `tel:${item.tel}`;
+    if (item.number.startsWith('+')) {
+      return `https://wa.me/${item.number.replace(/[^0-9]/g, '')}`;
+    }
+    return `tel:${item.number.replace(/[^0-9]/g, '')}`;
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-[2px]"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="help-modal-title"
     >
       <div
         className="bg-paper-card rounded-2xl max-w-lg w-full border border-line-strong shadow-float overflow-hidden animate-enter"
@@ -21,18 +34,22 @@ const ProfessionalHelpModal = ({ isOpen, onClose }) => {
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-medium text-accent mb-2">
               <ShieldAlert className="w-4 h-4" strokeWidth={1.5} />
-              <span>Pusat bantuan & rujukan</span>
+              <span>Pusat bantuan & rujukan krisis</span>
             </div>
-            <h2 className="text-lg font-semibold text-ink leading-snug">
+            <h2
+              id="help-modal-title"
+              className="text-lg font-semibold text-ink leading-snug"
+            >
               Layanan konseling & dukungan profesional
             </h2>
             <p className="text-xs text-ink-secondary mt-1.5 leading-relaxed">
-              Jika kamu berada dalam situasi berat atau membutuhkan pendampingan profesional, layanan berikut dapat dihubungi secara rahasia.
+              Jika kamu berada dalam situasi berat atau membutuhkan pendampingan segera, layanan resmi berikut dapat dihubungi secara rahasia.
             </p>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            aria-label="Tutup"
+            aria-label="Tutup jendela bantuan"
             className="w-8 h-8 rounded-lg text-ink-muted hover:text-ink hover:bg-paper-raised flex items-center justify-center transition-colors duration-150 shrink-0"
           >
             <X className="w-4 h-4" strokeWidth={1.5} />
@@ -41,33 +58,39 @@ const ProfessionalHelpModal = ({ isOpen, onClose }) => {
 
         {/* Hotlines */}
         <div className="p-6 space-y-3 max-h-[60vh] overflow-y-auto">
-          {hotlines.map((item, idx) => (
-            <div
-              key={idx}
-              className="p-4 rounded-xl bg-paper-raised/60 border border-line flex items-center justify-between gap-4"
-            >
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-ink">{item.name}</p>
-                <div className="flex flex-wrap items-center gap-2 mt-1">
-                  <span className="font-mono text-xs font-medium text-accent tabular">
-                    {item.number}
-                  </span>
-                  <span className="text-xs text-ink-muted">· {item.type}</span>
-                </div>
-              </div>
-              <a
-                href={
-                  item.number.startsWith('+')
-                    ? `https://wa.me/${item.number.replace(/[^0-9]/g, '')}`
-                    : `tel:${item.number}`
-                }
-                className="btn-primary h-8 px-3 text-xs shrink-0"
+          {hotlines.map((item, idx) => {
+            const isExternal = Boolean(item.url || item.number.startsWith('+'));
+            return (
+              <div
+                key={idx}
+                className="p-4 rounded-xl bg-paper-raised/60 border border-line flex items-center justify-between gap-4"
               >
-                <Phone className="w-3.5 h-3.5" strokeWidth={1.5} />
-                <span>Hubungi</span>
-              </a>
-            </div>
-          ))}
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-ink">{item.name}</p>
+                  <div className="flex flex-wrap items-center gap-2 mt-1">
+                    <span className="font-mono text-xs font-medium text-accent tabular">
+                      {item.number}
+                    </span>
+                    <span className="text-xs text-ink-muted">· {item.type}</span>
+                  </div>
+                </div>
+                <a
+                  href={getHotlineHref(item)}
+                  target={isExternal ? '_blank' : undefined}
+                  rel={isExternal ? 'noopener noreferrer' : undefined}
+                  aria-label={`Hubungi ${item.name}`}
+                  className="btn-primary h-8 px-3 text-xs shrink-0"
+                >
+                  {item.url ? (
+                    <ExternalLink className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  ) : (
+                    <Phone className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  )}
+                  <span>{item.url ? 'Buka' : 'Hubungi'}</span>
+                </a>
+              </div>
+            );
+          })}
 
           {/* Campus counseling */}
           <div className="p-4 rounded-xl bg-semantic-positive-soft border border-line flex items-start gap-3">
@@ -85,13 +108,28 @@ const ProfessionalHelpModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-paper-raised/50 border-t border-line flex items-center justify-between gap-4">
+        <div className="px-6 py-4 bg-paper-raised/50 border-t border-line flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <p className="text-xs text-ink-muted">
-            TemanKampus adalah pendamping harian, bukan pengganti layanan darurat medis.
+            TemanKampus bukan alat diagnosis medis dan bukan pengganti layanan darurat.
           </p>
-          <button onClick={onClose} className="btn-secondary h-8 px-4 text-xs shrink-0">
-            Tutup
-          </button>
+          <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+            <button
+              type="button"
+              onClick={triggerQuickExit}
+              title="Keluar cepat ke halaman netral"
+              className="btn-secondary h-8 px-3 text-xs"
+            >
+              <LogOut className="w-3.5 h-3.5" strokeWidth={1.5} />
+              <span>Keluar cepat</span>
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="btn-primary h-8 px-4 text-xs"
+            >
+              Tutup
+            </button>
+          </div>
         </div>
       </div>
     </div>
