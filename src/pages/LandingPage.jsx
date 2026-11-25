@@ -125,7 +125,11 @@ const LandingPage = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 h-16 bg-paper/95 backdrop-blur-sm border-b border-line">
         <div className="h-full max-w-[1200px] mx-auto px-4 sm:px-8 flex items-center justify-between gap-2">
-          <Link to="/" className="flex items-center gap-2 min-w-0 shrink">
+          <Link
+            to="/"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center gap-2 min-w-0 shrink"
+          >
             <KucingMascot pose="mark" size={28} className="shrink-0" />
             <span className="text-[15px] sm:text-[16px] font-semibold text-ink tracking-[-0.01em] truncate">
               TemanKampus
@@ -244,7 +248,11 @@ const LandingPage = () => {
               {/* Preview body */}
               <div className="mt-4 space-y-3">
                 {/* Urgent task row */}
-                <div className="p-3.5 rounded-lg bg-paper-raised/70 border border-line flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleDemoAccess('/tasks')}
+                  className="w-full text-left p-3.5 rounded-lg bg-paper-raised/70 border border-line hover:border-line-strong hover:bg-paper-raised transition-colors flex items-center justify-between gap-3"
+                >
                   <div className="min-w-0">
                     <p className="text-xs text-ink-muted">Metodologi Penelitian</p>
                     <p className="text-sm font-medium text-ink truncate mt-0.5">
@@ -254,12 +262,16 @@ const LandingPage = () => {
                   <span className="font-mono text-xs text-accent font-medium tabular shrink-0">
                     23:59 WIB
                   </span>
-                </div>
+                </button>
 
                 {/* Focus & Mascot row */}
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-stretch">
-                  <div className="sm:col-span-7 p-3.5 rounded-lg bg-paper-card border border-line flex flex-col justify-between gap-3">
-                    <div className="flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => handleDemoAccess('/focus')}
+                    className="sm:col-span-7 text-left p-3.5 rounded-lg bg-paper-card border border-line hover:border-line-strong transition-colors flex flex-col justify-between gap-3"
+                  >
+                    <div className="flex items-center justify-between w-full">
                       <span className="text-xs text-ink-muted">Ruang fokus</span>
                       <span className="font-mono text-xs text-ink-secondary tabular">
                         Sesi 4 / 6
@@ -274,14 +286,18 @@ const LandingPage = () => {
                     <div className="h-1.5 w-full rounded-full bg-paper-raised overflow-hidden">
                       <div className="h-full w-2/3 rounded-full bg-accent" />
                     </div>
-                  </div>
+                  </button>
 
-                  <div className="sm:col-span-5 p-3.5 rounded-lg bg-paper-raised/50 border border-line flex flex-col items-center justify-center text-center">
+                  <button
+                    type="button"
+                    onClick={() => handleDemoAccess('/mood')}
+                    className="sm:col-span-5 p-3.5 rounded-lg bg-paper-raised/50 border border-line hover:border-line-strong hover:bg-paper-raised transition-colors flex flex-col items-center justify-center text-center"
+                  >
                     <KucingMascot pose="happy" size={88} />
                     <p className="text-[11px] text-ink-secondary mt-1">
                       Ritme harian terjaga
                     </p>
-                  </div>
+                  </button>
                 </div>
 
                 {/* Mimi prompt row */}

@@ -536,15 +536,33 @@ const TasksPage = () => {
                 {tasksForSelectedDay.map((t) => (
                   <div
                     key={t.id}
-                    className="p-3 rounded-lg bg-paper border border-line space-y-1"
+                    className="p-3 rounded-lg bg-paper border border-line hover:border-line-strong transition-colors space-y-2"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] text-ink-muted">{t.course}</span>
-                      <span className="font-mono text-[11px] text-accent tabular">
+                      <span className="text-[11px] text-ink-muted truncate">{t.course}</span>
+                      <span className="font-mono text-[11px] text-accent tabular shrink-0">
                         {t.dueLabel}
                       </span>
                     </div>
                     <p className="text-xs font-medium text-ink">{t.title}</p>
+                    <div className="flex items-center gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(t)}
+                        className="btn-secondary h-7 px-2.5 text-[11px]"
+                      >
+                        Edit
+                      </button>
+                      {t.status !== 'Selesai' && (
+                        <button
+                          type="button"
+                          onClick={() => handleStartFocus(t.id)}
+                          className="btn-primary h-7 px-2.5 text-[11px]"
+                        >
+                          Fokus
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

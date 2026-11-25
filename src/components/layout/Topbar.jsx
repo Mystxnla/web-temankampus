@@ -125,8 +125,9 @@ const Topbar = ({ onOpenHelp, onOpenPrivacy }) => {
       {/* Page context */}
       <div className="flex items-center gap-3 min-w-0">
         <Link
-          to="/dashboard"
-          aria-label="Beranda TemanKampus"
+          to="/"
+          title="Kembali ke halaman utama TemanKampus"
+          aria-label="Halaman utama TemanKampus"
           className="shrink-0 lg:hidden"
         >
           <KucingMascot pose="mark" size={28} />
