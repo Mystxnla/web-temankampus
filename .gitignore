@@ -45,3 +45,6 @@ logs/
 .idea/
 .vscode/
 *.code-workspace
+
+# Vercel
+.vercel
