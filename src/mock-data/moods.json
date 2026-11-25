@@ -115,10 +115,11 @@
     "emergencySupport": {
       "title": "Layanan Konseling & Bantuan Mahasiswa",
       "hotlines": [
-        { "name": "Layanan Kesehatan Jiwa Kemenkes (Sejiwa)", "number": "119 ext 8", "type": "Gratis 24 Jam" },
+        { "name": "Layanan Kesehatan Jiwa Kemenkes (Sejiwa)", "number": "119 ext 8", "tel": "119", "type": "Gratis 24 Jam" },
+        { "name": "Healing119.id (Layanan Konseling Kemenkes)", "number": "healing119.id", "url": "https://healing119.id", "type": "Konseling Online Resmi" },
         { "name": "Yayasan Pulih (Dukungan Trauma & Konseling)", "number": "+62 811-8436-633", "type": "WhatsApp Konseling" },
-        { "name": "Pusat Konseling Mahasiswa (PKM Kampus)", "number": "(021) 786-7222", "type": "Senin-Jumat 08:00 - 16:00" },
-        { "name": "Halo Kemenkes", "number": "1500-567", "type": "Hotline Nasional" }
+        { "name": "Pusat Konseling Mahasiswa (PKM Kampus)", "number": "(021) 786-7222", "tel": "0217867222", "type": "Senin-Jumat 08:00 - 16:00" },
+        { "name": "Halo Kemenkes", "number": "1500-567", "tel": "1500567", "type": "Hotline Nasional" }
       ]
     }
   }

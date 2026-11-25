@@ -71,7 +71,9 @@ const Sidebar = () => {
       <div>
         {/* Brand */}
         <Link
-          to="/dashboard"
+          to="/"
+          title="Kembali ke halaman utama TemanKampus"
+          aria-label="TemanKampus — Kembali ke halaman utama"
           className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-paper-raised transition-colors duration-150"
         >
           <KucingMascot pose="mark" size={32} className="shrink-0" />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useOutletContext, useLocation } from 'react-router-dom';
 import {
   Search,
   Plus,
@@ -8,16 +9,28 @@ import {
   Share2,
   Check,
   Send,
+  Phone,
+  ExternalLink,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { hasStorageConsent } from '../context/PrivacyContext';
+import { detectCrisisKeyword } from '../utils/crisisDetection';
+import ClinicalDisclaimerBanner from '../components/layout/ClinicalDisclaimerBanner';
 import initialCommunity from '../mock-data/community.json';
 
 const CommunityPage = () => {
+  const { openHelpModal } = useOutletContext();
+  const location = useLocation();
   const { user } = useAuth();
   const [threads, setThreads] = useState(() => {
-    const saved = localStorage.getItem('temankampus_community_threads');
-    return saved ? JSON.parse(saved) : initialCommunity.threads;
+    try {
+      const saved = localStorage.getItem('temankampus_community_threads');
+      return saved ? JSON.parse(saved) : initialCommunity.threads;
+    } catch {
+      return initialCommunity.threads;
+    }
   });
+  const [huggedIds, setHuggedIds] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('Semua');
   const [searchQuery, setSearchQuery] = useState('');
   const [isNewPostModalOpen, setIsNewPostModalOpen] = useState(false);
@@ -33,8 +46,25 @@ const CommunityPage = () => {
   const [replyAnonymous, setReplyAnonymous] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('temankampus_community_threads', JSON.stringify(threads));
+    if (hasStorageConsent()) {
+      localStorage.setItem('temankampus_community_threads', JSON.stringify(threads));
+    }
   }, [threads]);
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') {
+        if (isNewPostModalOpen) setIsNewPostModalOpen(false);
+        if (activeThreadDetail) setActiveThreadDetail(null);
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isNewPostModalOpen, activeThreadDetail]);
+
+  const hasCrisisInNewPost =
+    detectCrisisKeyword(newPost.title) || detectCrisisKeyword(newPost.content);
+  const hasCrisisInReply = detectCrisisKeyword(replyContent);
 
   const categories = initialCommunity.categories;
 
@@ -47,13 +77,38 @@ const CommunityPage = () => {
     return matchCat && matchSearch;
   });
 
+  useEffect(() => {
+    if (location.state?.openNewPost) {
+      setIsNewPostModalOpen(true);
+      window.history.replaceState({}, document.title);
+    } else if (location.state?.openThreadId) {
+      const target = threads.find((t) => t.id === location.state.openThreadId);
+      if (target) setActiveThreadDetail(target);
+      window.history.replaceState({}, document.title);
+    } else if (location.hash) {
+      const hashId = location.hash.replace('#', '');
+      const target = threads.find((t) => t.id === hashId);
+      if (target) setActiveThreadDetail(target);
+    }
+  }, [location.state, location.hash]);
+
   const handleHug = (threadId, e) => {
     e?.stopPropagation();
+    const alreadyHugged = huggedIds.includes(threadId);
+    const delta = alreadyHugged ? -1 : 1;
+    setHuggedIds((prev) =>
+      alreadyHugged ? prev.filter((id) => id !== threadId) : [...prev, threadId]
+    );
     setThreads((prev) =>
-      prev.map((th) => (th.id === threadId ? { ...th, hugs: th.hugs + 1 } : th))
+      prev.map((th) =>
+        th.id === threadId ? { ...th, hugs: Math.max(0, th.hugs + delta) } : th
+      )
     );
     if (activeThreadDetail?.id === threadId) {
-      setActiveThreadDetail((prev) => ({ ...prev, hugs: prev.hugs + 1 }));
+      setActiveThreadDetail((prev) => ({
+        ...prev,
+        hugs: Math.max(0, prev.hugs + delta),
+      }));
     }
   };
 
@@ -146,6 +201,8 @@ const CommunityPage = () => {
       </div>
 
       {/* Search & Categories */}
+      <ClinicalDisclaimerBanner compact />
+
       <section className="space-y-3">
         <div className="relative max-w-md">
           <Search
@@ -154,6 +211,7 @@ const CommunityPage = () => {
           />
           <input
             type="text"
+            aria-label="Cari topik diskusi komunitas"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari topik diskusi"
@@ -194,7 +252,15 @@ const CommunityPage = () => {
           filteredThreads.map((thread) => (
             <article
               key={thread.id}
+              role="button"
+              tabIndex={0}
               onClick={() => setActiveThreadDetail(thread)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setActiveThreadDetail(thread);
+                }
+              }}
               className="surface-card p-5 cursor-pointer hover:border-line-strong transition-colors duration-150 space-y-3"
             >
               <div className="flex items-center justify-between gap-2 text-xs">
@@ -222,10 +288,19 @@ const CommunityPage = () => {
 
               <div className="pt-3 border-t border-line flex items-center gap-2">
                 <button
+                  type="button"
+                  aria-pressed={huggedIds.includes(thread.id)}
                   onClick={(e) => handleHug(thread.id, e)}
-                  className="h-8 px-2.5 rounded-lg text-xs text-ink-secondary hover:bg-paper-raised hover:text-accent inline-flex items-center gap-1.5 transition-colors duration-150 tabular"
+                  className={`h-8 px-2.5 rounded-lg text-xs inline-flex items-center gap-1.5 transition-colors duration-150 tabular ${
+                    huggedIds.includes(thread.id)
+                      ? 'bg-accent-soft text-accent font-medium'
+                      : 'text-ink-secondary hover:bg-paper-raised hover:text-accent'
+                  }`}
                 >
-                  <Heart className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  <Heart
+                    className={`w-3.5 h-3.5 ${huggedIds.includes(thread.id) ? 'fill-accent' : ''}`}
+                    strokeWidth={1.5}
+                  />
                   <span>{thread.hugs} dukungan</span>
                 </button>
 
@@ -265,6 +340,9 @@ const CommunityPage = () => {
       {/* New Post Modal */}
       {isNewPostModalOpen && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="new-post-modal-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-[2px]"
           onClick={() => setIsNewPostModalOpen(false)}
         >
@@ -273,7 +351,9 @@ const CommunityPage = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="px-6 py-4 border-b border-line flex items-center justify-between">
-              <h2 className="text-base font-semibold text-ink">Tulis cerita baru</h2>
+              <h2 id="new-post-modal-title" className="text-base font-semibold text-ink">
+                Tulis cerita baru
+              </h2>
               <button
                 onClick={() => setIsNewPostModalOpen(false)}
                 aria-label="Tutup"
@@ -324,11 +404,44 @@ const CommunityPage = () => {
                 <textarea
                   rows={4}
                   required
+                  aria-label="Isi cerita komunitas"
                   value={newPost.content}
                   onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
                   placeholder="Ceritakan pengalaman atau pertanyaanmu secara terbuka"
                   className="w-full p-3 rounded-lg bg-paper-card border border-line-strong text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent resize-none"
                 />
+                {hasCrisisInNewPost && (
+                  <div
+                    role="alert"
+                    className="mt-2 p-3 rounded-xl bg-accent-soft border border-accent/30 space-y-2"
+                  >
+                    <p className="text-xs font-medium text-ink">
+                      Jika kamu sedang berada dalam situasi krisis, layanan profesional 24 jam siap membantumu sekarang:
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <a href="tel:119" className="btn-primary h-7 px-2.5 text-xs">
+                        <Phone className="w-3 h-3" strokeWidth={1.5} />
+                        <span>119 ext 8</span>
+                      </a>
+                      <a
+                        href="https://healing119.id"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-secondary h-7 px-2.5 text-xs"
+                      >
+                        <ExternalLink className="w-3 h-3" strokeWidth={1.5} />
+                        <span>Healing119.id</span>
+                      </a>
+                      <button
+                        type="button"
+                        onClick={openHelpModal}
+                        className="btn-secondary h-7 px-2.5 text-xs"
+                      >
+                        Kontak lainnya
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <label className="flex items-center gap-2 text-xs text-ink-secondary cursor-pointer">
@@ -363,6 +476,9 @@ const CommunityPage = () => {
       {/* Thread Detail Modal */}
       {activeThreadDetail && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="thread-detail-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-[2px]"
           onClick={() => setActiveThreadDetail(null)}
         >
@@ -398,6 +514,44 @@ const CommunityPage = () => {
               <p className="text-sm text-ink leading-relaxed whitespace-pre-line">
                 {activeThreadDetail.content}
               </p>
+
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  aria-pressed={huggedIds.includes(activeThreadDetail.id)}
+                  onClick={(e) => handleHug(activeThreadDetail.id, e)}
+                  className={`h-8 px-3 rounded-lg text-xs inline-flex items-center gap-1.5 transition-colors tabular border ${
+                    huggedIds.includes(activeThreadDetail.id)
+                      ? 'bg-accent-soft text-accent border-accent/30 font-medium'
+                      : 'bg-paper text-ink-secondary border-line hover:bg-paper-raised'
+                  }`}
+                >
+                  <Heart
+                    className={`w-3.5 h-3.5 ${
+                      huggedIds.includes(activeThreadDetail.id) ? 'fill-accent' : ''
+                    }`}
+                    strokeWidth={1.5}
+                  />
+                  <span>{activeThreadDetail.hugs} dukungan</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => handleShare(activeThreadDetail, e)}
+                  className="h-8 px-3 rounded-lg text-xs bg-paper border border-line text-ink-secondary hover:bg-paper-raised inline-flex items-center gap-1.5 transition-colors"
+                >
+                  {copiedId === activeThreadDetail.id ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-semantic-positive" strokeWidth={1.5} />
+                      <span className="text-semantic-positive">Tautan tersalin</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+                      <span>Bagikan</span>
+                    </>
+                  )}
+                </button>
+              </div>
 
               <div className="pt-4 border-t border-line space-y-3">
                 <h3 className="text-xs font-medium text-ink-secondary">
@@ -436,9 +590,27 @@ const CommunityPage = () => {
               onSubmit={handleAddReply}
               className="p-4 border-t border-line bg-paper space-y-2.5"
             >
+              {hasCrisisInReply && (
+                <div
+                  role="alert"
+                  className="p-2.5 rounded-lg bg-accent-soft border border-accent/30 flex flex-wrap items-center justify-between gap-2 text-xs"
+                >
+                  <span className="text-ink font-medium">
+                    Butuh dukungan segera? Hubungi 119 ext 8 atau Healing119.id.
+                  </span>
+                  <button
+                    type="button"
+                    onClick={openHelpModal}
+                    className="text-accent font-medium hover:underline"
+                  >
+                    Buka kontak
+                  </button>
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <input
                   type="text"
+                  aria-label="Tulis balasan diskusi"
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
                   placeholder="Tulis balasan yang suportif"

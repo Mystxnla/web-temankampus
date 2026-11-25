@@ -23,8 +23,8 @@ export default {
         // Warm pine-charcoal ink (softer than harsh pure black)
         ink: {
           DEFAULT: "#222926",
-          secondary: "#525D58",
-          muted: "#707B76",
+          secondary: "#4D5853",
+          muted: "#59645F",
         },
         line: {
           DEFAULT: "rgba(34, 41, 38, 0.08)",

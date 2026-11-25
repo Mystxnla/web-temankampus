@@ -11,8 +11,27 @@ import {
   X,
   AlertTriangle,
   Clock,
+  Pencil,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { useTasks } from '../context/TaskContext';
+
+const MONTH_NAMES = [
+  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+];
+const MONTH_SHORT = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+  'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des',
+];
+
+const formatDateToDueLabel = (isoDate) => {
+  if (!isoDate) return 'Segera';
+  const [y, m, d] = isoDate.split('-').map(Number);
+  if (!y || !m || !d) return isoDate;
+  return `${d} ${MONTH_SHORT[m - 1] || ''}, 23:59`;
+};
 
 const PRIORITY_META = {
   Tinggi: {
@@ -35,7 +54,7 @@ const PRIORITY_META = {
 const TasksPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { tasks, addTask, toggleTaskStatus, deleteTask, setActiveFocusTaskId } = useTasks();
+  const { tasks, addTask, editTask, toggleTaskStatus, deleteTask, setActiveFocusTaskId } = useTasks();
 
   const [viewMode, setViewMode] = useState('list');
   const [statusFilter, setStatusFilter] = useState('Semua');
@@ -43,7 +62,10 @@ const TasksPage = () => {
   const [courseFilter, setCourseFilter] = useState('Semua');
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState(null);
   const [taskToDelete, setTaskToDelete] = useState(null);
+  const [calYear, setCalYear] = useState(2026);
+  const [calMonth, setCalMonth] = useState(10); // 0-indexed: 10 = November
   const [selectedCalDay, setSelectedCalDay] = useState(13);
 
   useEffect(() => {
@@ -51,15 +73,54 @@ const TasksPage = () => {
     if (q !== null) setSearchQuery(q);
   }, [searchParams]);
 
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') {
+        if (isModalOpen) {
+          setIsModalOpen(false);
+          setEditingTaskId(null);
+        }
+        if (taskToDelete) setTaskToDelete(null);
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isModalOpen, taskToDelete]);
+
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
     course: 'Metodologi Penelitian',
-    dueDate: '2026-11-13T23:59',
-    dueLabel: '13 Nov, 23:59',
+    dueDateOnly: '2026-11-14',
     priority: 'Tinggi',
     estimatedMinutes: 45,
   });
+
+  const openAddModal = () => {
+    setEditingTaskId(null);
+    setNewTask({
+      title: '',
+      description: '',
+      course: 'Metodologi Penelitian',
+      dueDateOnly: `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(selectedCalDay).padStart(2, '0')}`,
+      priority: 'Sedang',
+      estimatedMinutes: 45,
+    });
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (task) => {
+    setEditingTaskId(task.id);
+    setNewTask({
+      title: task.title || '',
+      description: task.description || '',
+      course: task.course || '',
+      dueDateOnly: task.dueDate ? task.dueDate.slice(0, 10) : '2026-11-14',
+      priority: task.priority || 'Sedang',
+      estimatedMinutes: task.estimatedMinutes || 45,
+    });
+    setIsModalOpen(true);
+  };
 
   const courses = ['Semua', ...Array.from(new Set(tasks.map((t) => t.course)))];
 
@@ -81,20 +142,22 @@ const TasksPage = () => {
   const handleCreateTask = (e) => {
     e.preventDefault();
     if (!newTask.title.trim()) return;
-    addTask({
-      ...newTask,
+    const payload = {
+      title: newTask.title.trim(),
+      description: newTask.description.trim(),
+      course: newTask.course.trim() || 'Umum',
+      dueDate: `${newTask.dueDateOnly}T23:59:00`,
+      dueLabel: formatDateToDueLabel(newTask.dueDateOnly),
+      priority: newTask.priority,
       estimatedMinutes: Number(newTask.estimatedMinutes) || 30,
-    });
+    };
+    if (editingTaskId) {
+      editTask(editingTaskId, payload);
+    } else {
+      addTask(payload);
+    }
     setIsModalOpen(false);
-    setNewTask({
-      title: '',
-      description: '',
-      course: 'Metodologi Penelitian',
-      dueDate: '2026-11-14T23:59',
-      dueLabel: '14 Nov, 23:59',
-      priority: 'Sedang',
-      estimatedMinutes: 45,
-    });
+    setEditingTaskId(null);
   };
 
   const confirmDelete = () => {
@@ -104,16 +167,21 @@ const TasksPage = () => {
     }
   };
 
-  const getTaskDay = (dueDate) => {
+  const getTaskDateParts = (dueDate) => {
     if (!dueDate) return null;
-    const parts = dueDate.split('-');
-    if (parts.length >= 3) {
-      return parseInt(parts[2].substring(0, 2), 10);
+    const parts = dueDate.slice(0, 10).split('-').map(Number);
+    if (parts.length === 3 && !parts.some(Number.isNaN)) {
+      return { year: parts[0], month: parts[1] - 1, day: parts[2] };
     }
     return null;
   };
 
-  const tasksForSelectedDay = tasks.filter((t) => getTaskDay(t.dueDate) === selectedCalDay);
+  const isTaskOnDay = (task, day) => {
+    const p = getTaskDateParts(task.dueDate);
+    return p && p.year === calYear && p.month === calMonth && p.day === day;
+  };
+
+  const tasksForSelectedDay = tasks.filter((t) => isTaskOnDay(t, selectedCalDay));
 
   const activeCount = tasks.filter((t) => t.status !== 'Selesai').length;
   const doneCount = tasks.filter((t) => t.status === 'Selesai').length;
@@ -121,9 +189,30 @@ const TasksPage = () => {
     (t) => t.priority === 'Tinggi' && t.status !== 'Selesai'
   ).length;
 
-  // November 2026 starts on Sunday (offset 6 for Mon-Sun grid)
-  const calendarDays = Array.from({ length: 30 }, (_, i) => i + 1);
-  const leadingBlanks = 6;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const firstDayJs = new Date(calYear, calMonth, 1).getDay(); // 0=Sun..6=Sat
+  const leadingBlanks = (firstDayJs + 6) % 7; // Monday-first grid
+  const calendarDays = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+  const handlePrevMonth = () => {
+    if (calMonth === 0) {
+      setCalMonth(11);
+      setCalYear((y) => y - 1);
+    } else {
+      setCalMonth((m) => m - 1);
+    }
+    setSelectedCalDay(1);
+  };
+
+  const handleNextMonth = () => {
+    if (calMonth === 11) {
+      setCalMonth(0);
+      setCalYear((y) => y + 1);
+    } else {
+      setCalMonth((m) => m + 1);
+    }
+    setSelectedCalDay(1);
+  };
 
   return (
     <div className="space-y-6">
@@ -159,7 +248,7 @@ const TasksPage = () => {
             ))}
           </div>
 
-          <button onClick={() => setIsModalOpen(true)} className="btn-primary text-xs h-9">
+          <button type="button" onClick={openAddModal} className="btn-primary text-xs h-9">
             <Plus className="w-4 h-4" strokeWidth={1.5} />
             <span>Tambah tugas</span>
           </button>
@@ -197,6 +286,7 @@ const TasksPage = () => {
           />
           <input
             type="text"
+            aria-label="Cari tugas atau mata kuliah"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari tugas atau mata kuliah"
@@ -275,6 +365,7 @@ const TasksPage = () => {
                     <div className="flex items-start gap-3 min-w-0 flex-1">
                       <input
                         type="checkbox"
+                        aria-label={`Tandai tugas ${task.title}`}
                         checked={isDone}
                         onChange={() => toggleTaskStatus(task.id)}
                         className="mt-1 w-4 h-4 rounded border-line-strong accent-accent cursor-pointer shrink-0"
@@ -330,9 +421,20 @@ const TasksPage = () => {
                       )}
 
                       <button
+                        type="button"
+                        onClick={() => openEditModal(task)}
+                        title="Edit tugas"
+                        aria-label={`Edit tugas ${task.title}`}
+                        className="w-8 h-8 rounded-lg text-ink-muted hover:text-ink hover:bg-paper-raised flex items-center justify-center transition-colors duration-150 active:scale-[0.98]"
+                      >
+                        <Pencil className="w-3.5 h-3.5" strokeWidth={1.5} />
+                      </button>
+
+                      <button
+                        type="button"
                         onClick={() => setTaskToDelete(task)}
                         title="Hapus tugas"
-                        aria-label="Hapus tugas"
+                        aria-label={`Hapus tugas ${task.title}`}
                         className="w-8 h-8 rounded-lg text-ink-muted hover:text-semantic-danger hover:bg-semantic-danger-soft flex items-center justify-center transition-colors duration-150 active:scale-[0.98]"
                       >
                         <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
@@ -348,10 +450,30 @@ const TasksPage = () => {
         /* Calendar View */
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           <div className="lg:col-span-8 surface-card p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-medium text-ink">November 2026</h2>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handlePrevMonth}
+                  aria-label="Bulan sebelumnya"
+                  className="w-7 h-7 rounded-md border border-line bg-paper hover:bg-paper-raised flex items-center justify-center text-ink-secondary"
+                >
+                  <ChevronLeft className="w-4 h-4" strokeWidth={1.5} />
+                </button>
+                <h2 className="text-sm font-medium text-ink min-w-[120px] text-center">
+                  {MONTH_NAMES[calMonth]} {calYear}
+                </h2>
+                <button
+                  type="button"
+                  onClick={handleNextMonth}
+                  aria-label="Bulan berikutnya"
+                  className="w-7 h-7 rounded-md border border-line bg-paper hover:bg-paper-raised flex items-center justify-center text-ink-secondary"
+                >
+                  <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
+                </button>
+              </div>
               <span className="font-mono text-xs text-ink-muted tabular">
-                Tanggal dipilih: {selectedCalDay} Nov
+                {selectedCalDay} {MONTH_SHORT[calMonth]}
               </span>
             </div>
 
@@ -365,12 +487,13 @@ const TasksPage = () => {
                 <div key={`blank-${i}`} />
               ))}
               {calendarDays.map((day) => {
-                const dayTasks = tasks.filter((t) => getTaskDay(t.dueDate) === day);
+                const dayTasks = tasks.filter((t) => isTaskOnDay(t, day));
                 const isSelected = selectedCalDay === day;
-                const isToday = day === 13;
+                const isToday = calYear === 2026 && calMonth === 10 && day === 13;
                 return (
                   <button
                     key={day}
+                    type="button"
                     onClick={() => setSelectedCalDay(day)}
                     className={`h-12 rounded-lg border flex flex-col items-center justify-center gap-1 transition-colors duration-150 ${
                       isSelected
@@ -397,7 +520,7 @@ const TasksPage = () => {
           <div className="lg:col-span-4 surface-card p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-medium text-ink">
-                Tenggat {selectedCalDay} November
+                Tenggat {selectedCalDay} {MONTH_NAMES[calMonth]}
               </h3>
               <span className="font-mono text-xs text-ink-muted tabular">
                 {tasksForSelectedDay.length}
@@ -413,15 +536,33 @@ const TasksPage = () => {
                 {tasksForSelectedDay.map((t) => (
                   <div
                     key={t.id}
-                    className="p-3 rounded-lg bg-paper border border-line space-y-1"
+                    className="p-3 rounded-lg bg-paper border border-line hover:border-line-strong transition-colors space-y-2"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] text-ink-muted">{t.course}</span>
-                      <span className="font-mono text-[11px] text-accent tabular">
+                      <span className="text-[11px] text-ink-muted truncate">{t.course}</span>
+                      <span className="font-mono text-[11px] text-accent tabular shrink-0">
                         {t.dueLabel}
                       </span>
                     </div>
                     <p className="text-xs font-medium text-ink">{t.title}</p>
+                    <div className="flex items-center gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(t)}
+                        className="btn-secondary h-7 px-2.5 text-[11px]"
+                      >
+                        Edit
+                      </button>
+                      {t.status !== 'Selesai' && (
+                        <button
+                          type="button"
+                          onClick={() => handleStartFocus(t.id)}
+                          className="btn-primary h-7 px-2.5 text-[11px]"
+                        >
+                          Fokus
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -433,6 +574,9 @@ const TasksPage = () => {
       {/* Add Task Modal */}
       {isModalOpen && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="add-task-modal-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-[2px]"
           onClick={() => setIsModalOpen(false)}
         >
@@ -441,7 +585,9 @@ const TasksPage = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="px-6 py-4 border-b border-line flex items-center justify-between">
-              <h2 className="text-base font-semibold text-ink">Tambah tugas baru</h2>
+              <h2 id="add-task-modal-title" className="text-base font-semibold text-ink">
+                {editingTaskId ? 'Edit tugas kuliah' : 'Tambah tugas baru'}
+              </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
                 aria-label="Tutup"
@@ -496,22 +642,30 @@ const TasksPage = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
-                    Label tenggat
+                  <label
+                    htmlFor="task-due-date"
+                    className="block text-xs font-medium text-ink-secondary mb-1.5"
+                  >
+                    Tanggal tenggat
                   </label>
                   <input
-                    type="text"
-                    value={newTask.dueLabel}
-                    onChange={(e) => setNewTask({ ...newTask, dueLabel: e.target.value })}
-                    placeholder="14 Nov, 23:59"
+                    id="task-due-date"
+                    type="date"
+                    required
+                    value={newTask.dueDateOnly}
+                    onChange={(e) => setNewTask({ ...newTask, dueDateOnly: e.target.value })}
                     className="input-field font-mono text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-ink-secondary mb-1.5">
+                  <label
+                    htmlFor="task-est-minutes"
+                    className="block text-xs font-medium text-ink-secondary mb-1.5"
+                  >
                     Estimasi (menit)
                   </label>
                   <input
+                    id="task-est-minutes"
                     type="number"
                     min="10"
                     max="300"
@@ -548,7 +702,7 @@ const TasksPage = () => {
                   Batal
                 </button>
                 <button type="submit" className="btn-primary">
-                  Simpan tugas
+                  {editingTaskId ? 'Simpan perubahan' : 'Simpan tugas'}
                 </button>
               </div>
             </form>
@@ -559,6 +713,9 @@ const TasksPage = () => {
       {/* Delete Confirmation Modal */}
       {taskToDelete && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-task-modal-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-[2px]"
           onClick={() => setTaskToDelete(null)}
         >
@@ -571,7 +728,9 @@ const TasksPage = () => {
                 <AlertTriangle className="w-4 h-4" strokeWidth={1.5} />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-ink">Hapus tugas ini?</h3>
+                <h3 id="delete-task-modal-title" className="text-sm font-semibold text-ink">
+                  Hapus tugas ini?
+                </h3>
                 <p className="text-xs text-ink-secondary mt-1 leading-relaxed">
                   Tugas "{taskToDelete.title}" akan dihapus dari daftar aktifmu.
                 </p>
